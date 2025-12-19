@@ -1,0 +1,110 @@
+# ============================================
+# Data directories (contain database files)
+# ============================================
+chroma-data/
+n8n-data/
+*.db
+*.sqlite
+
+# ============================================
+# Secrets and tokens (NEVER commit these!)
+# ============================================
+*token*.txt
+*secret*.txt
+*password*.txt
+*credentials*.txt
+webex-bot-token.txt
+webhook-id.txt
+.env
+.env.local
+
+# ============================================
+# Personal documents (keep your docs private)
+# ============================================
+documents/*
+# But allow sample documents for demonstrations
+!documents/sample*.md
+!documents/sample*.txt
+!documents/example*.md
+
+# ============================================
+# Python
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# ============================================
+# macOS
+# ============================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ============================================
+# Temporary files
+# ============================================
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+.#*
+
+# ============================================
+# Backup files
+# ============================================
+*.bak
+*.backup
+backup-*/
+old-*/
+
+# ============================================
+# IDE / Editor
+# ============================================
+.vscode/
+.idea/
+*.sublime-*
+*.code-workspace
+
+# ============================================
+# OS / System
+# ============================================
+Thumbs.db
+Desktop.ini
+
+# ============================================
+# Large files
+# ============================================
+*.iso
+*.dmg
+*.pkg
+*.zip
+*.tar.gz
+
+# ============================================
+# Testing
+# ============================================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ============================================
+# Node modules (if using n8n locally)
+# ============================================
+node_modules/
