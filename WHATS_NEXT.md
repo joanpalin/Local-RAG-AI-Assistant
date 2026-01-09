@@ -53,12 +53,12 @@
 
 **Congratulations!** You now have a fully functional local AI system that:
 
-- âœ… **Processes documents privately** - Everything stays on your network (no external APIs)
-- âœ… **Answers questions accurately** - RAG provides context from your specific documents
-- âœ… **Responds in multiple ways** - Python CLI, n8n chat interface, and Webex Teams bot
-- âœ… **Handles real documents** - Supports .txt, .doc, and .docx files
-- âœ… **Works like a colleague** - Natural language Q&A in your team chat
-- âœ… **Costs nothing to run** - After initial setup, it's completely free
+- ✓ **Processes documents privately** - Everything stays on your network (no external APIs)
+- ✓ **Answers questions accurately** - RAG provides context from your specific documents
+- ✓ **Responds in multiple ways** - Python CLI, n8n chat interface, and Webex Teams bot
+- ✓ **Handles real documents** - Supports .txt, .doc, and .docx files
+- ✓ **Works like a colleague** - Natural language Q&A in your team chat
+- ✓ **Costs nothing to run** - After initial setup, it's completely free
 
 **Think about what you've accomplished:**
 - Built an AI system from scratch (without being a developer)
@@ -117,11 +117,11 @@ This guide provides concrete next steps organized by:
 ### 🎯 Implementation Best Practices
 
 **Before implementing any feature:**
-1. âœ… Read the entire section
-2. âœ… Check prerequisites and dependencies
-3. âœ… Back up your working system (see Quick Win #5)
-4. âœ… Test in isolation before combining features
-5. âœ… Document what you changed (for troubleshooting later)
+1. ✓ Read the entire section
+2. ✓ Check prerequisites and dependencies
+3. ✓ Back up your working system (see Quick Win #5)
+4. ✓ Test in isolation before combining features
+5. ✓ Document what you changed (for troubleshooting later)
 
 **General advice:**
 - **Implement incrementally** - Don't try to add everything at once
@@ -190,7 +190,7 @@ from datetime import datetime
 def list_documents():
     """List all documents with their metadata"""
     
-    print("\n🔍 Connecting to ChromaDB...")
+    print("\n📋 Connecting to ChromaDB...")
     
     try:
         # Connect to ChromaDB
@@ -269,59 +269,53 @@ if __name__ == "__main__":
 chmod +x ~/cisco-rag-demo/list_documents.py
 ```
 
-**Run it:**
+**Usage:**
 ```bash
-cd ~/cisco-rag-demo
-./list_documents.py
+~/cisco-rag-demo/list_documents.py
 ```
 
 **Expected output:**
 ```
-🔍 Connecting to ChromaDB...
+📋 Connecting to ChromaDB...
 ✅ Connected to collection: cisco_docs
-   Collection ID: abcd-1234-efgh-5678
+   Collection ID: 12345678-1234-1234-1234-123456789abc
 
-📊 Found 2 documents with 15 total chunks:
+📊 Found 3 documents with 15 total chunks:
 
-1. Network_Assessment_Q3_2024.txt
-   └─ Chunks: 8
-   └─ Uploaded: 2024-12-15
+1. Boston Network Assessment Q3 2024
+   └─ Chunks: 5
+   └─ Uploaded: 2024-12-18
 
-2. Budget_Proposal_FY2025.txt
+2. Budget Proposal FY2024
    └─ Chunks: 7
-   └─ Uploaded: 2024-12-16
 
-✅ Total: 2 documents, 15 chunks
+3. Security Audit Report
+   └─ Chunks: 3
+
+✅ Total: 3 documents, 15 chunks
 ```
 
 ---
 
-#### Implementation: Delete Document Script
+#### Implementation: Delete Documents Script
 
-Create a script to remove documents from the collection.
+Create a script to remove documents you no longer need.
 
 **Create `~/cisco-rag-demo/delete_document.py`:**
 
 ```python
 #!/usr/bin/env python3
 """
-Delete a document from ChromaDB by filename
+Delete a document from ChromaDB collection
 """
 
 import chromadb
 import sys
 
-def delete_document(filename):
+def delete_document(source_name):
     """Delete all chunks from a specific document"""
     
-    print(f"\n🗑️  Deleting document: {filename}")
-    print("⚠️  This action cannot be undone!")
-    
-    # Confirm deletion
-    confirm = input("\nType 'DELETE' to confirm: ")
-    if confirm != "DELETE":
-        print("❌ Deletion cancelled")
-        return
+    print(f"\n🗑️  Deleting document: {source_name}")
     
     try:
         # Connect to ChromaDB
@@ -333,51 +327,55 @@ def delete_document(filename):
         # Get collection
         collections = client.list_collections()
         if not collections:
-            print("❌ No collections found")
-            return
+            print("❌ No collections found.")
+            return False
         
         collection = client.get_collection(collections[0].id)
         
-        # Get all items
+        # Get all chunks for this source
         results = collection.get()
         
-        # Find chunks matching this document
-        delete_ids = []
-        for i, metadata in enumerate(results['metadatas']):
-            if metadata.get('source', '') == filename:
-                delete_ids.append(results['ids'][i])
+        # Find IDs matching the source
+        ids_to_delete = []
+        for i, doc_id in enumerate(results['ids']):
+            metadata = results['metadatas'][i]
+            if metadata.get('source') == source_name:
+                ids_to_delete.append(doc_id)
         
-        if not delete_ids:
-            print(f"❌ Document not found: {filename}")
-            print("\n📋 Available documents:")
-            
-            # Show available documents
-            docs = set()
-            for metadata in results['metadatas']:
-                docs.add(metadata.get('source', 'Unknown'))
-            
-            for doc in sorted(docs):
-                print(f"   • {doc}")
-            return
+        if not ids_to_delete:
+            print(f"❌ No document found with source: {source_name}")
+            print("\n💡 Use list_documents.py to see available documents")
+            return False
+        
+        print(f"   Found {len(ids_to_delete)} chunks to delete")
+        
+        # Confirm deletion
+        response = input(f"\n⚠️  Delete {len(ids_to_delete)} chunks? (yes/no): ")
+        if response.lower() != 'yes':
+            print("❌ Deletion cancelled")
+            return False
         
         # Delete the chunks
-        print(f"\n🗑️  Deleting {len(delete_ids)} chunks...")
-        collection.delete(ids=delete_ids)
+        collection.delete(ids=ids_to_delete)
         
-        print(f"✅ Successfully deleted {filename}")
-        print(f"   Removed {len(delete_ids)} chunks")
+        print(f"✅ Deleted {len(ids_to_delete)} chunks from '{source_name}'")
+        return True
         
     except Exception as e:
         print(f"❌ Error: {str(e)}")
-        return
+        return False
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: ./delete_document.py <filename>")
-        print("Example: ./delete_document.py Network_Assessment_Q3_2024.txt")
+    if len(sys.argv) < 2:
+        print("Usage: python3 delete_document.py '<document source name>'")
+        print("\nExample:")
+        print("  python3 delete_document.py 'Boston Network Assessment Q3 2024'")
+        print("\nTo see available documents:")
+        print("  python3 list_documents.py")
         sys.exit(1)
     
-    delete_document(sys.argv[1])
+    source_name = sys.argv[1]
+    delete_document(source_name)
 ```
 
 **Make it executable:**
@@ -385,1793 +383,1358 @@ if __name__ == "__main__":
 chmod +x ~/cisco-rag-demo/delete_document.py
 ```
 
-**Use it:**
+**Usage:**
 ```bash
-# Delete a specific document
-./delete_document.py Network_Assessment_Q3_2024.txt
+# List documents first
+~/cisco-rag-demo/list_documents.py
+
+# Delete specific document
+~/cisco-rag-demo/delete_document.py "Boston Network Assessment Q3 2024"
 ```
 
 ---
 
-#### n8n Workflow Option
+#### Success Criteria
 
-**If you prefer a visual interface**, you can add document management to n8n:
+✓ Document management is working when:
+- Can list all documents with metadata
+- Can delete specific documents
+- Changes reflected in queries
+- Scripts run without errors
 
-**New workflow features:**
-1. **List Documents** - HTTP Request to ChromaDB → Format as table → Display
-2. **Delete Document** - Form input (filename) → Find chunks → Delete → Confirm
-
-**Implementation steps:**
-1. Open n8n: `http://localhost:5678`
-2. Create new workflow
-3. Add "HTTP Request" node:
-   - Method: GET
-   - URL: `http://chromadb:8000/api/v1/collections/{collection_id}`
-4. Add "Code" node to format results as HTML table
-5. Add "Webhook" node to display the table
-
-**💡 Tip:** This is a great learning exercise if you want to understand n8n better!
-
----
-
-#### Benefits Summary
-
-**What you gain:**
-- âœ… **Visibility** - Always know what documents are loaded
-- âœ… **Control** - Remove outdated or incorrect documents
-- âœ… **Confidence** - Verify uploads worked correctly
-- âœ… **Maintenance** - Clean up test documents
-- âœ… **Documentation** - Track what content your AI knows about
-
-**When to use this:**
-- After uploading multiple documents
-- Before important demos or presentations
-- When query results seem wrong (check if correct doc is loaded)
-- Regular system maintenance
+**Benefit:** You now have full control over your document collection!
 
 ---
 
 ### 1.2: Customize Bot Personality
 
-**Current state:** Generic AI responses with no specific tone or format
+**Current state:** Bot has generic, neutral responses
 
-**Improvement:** Customize how your bot responds to match your use case and audience
+**Improvement:** Give your bot a distinctive personality and response style
 
 **Ratings:**
 - **Difficulty:** ⭐ Easy  
-- **Value:** ⭐⭐ Medium (High for specific audiences)  
+- **Value:** ⭐⭐ Medium-High  
 - **Time:** 15-30 minutes
-- **Prerequisites:** Working n8n workflows from Part 2
-
----
-
-#### What You'll Change
-
-**Customization options:**
-- **System prompt** - The "personality" instructions given to the AI
-- **Response format** - Structure (bullets, paragraphs, executive summary)
-- **Response length** - Word limits and level of detail
-- **Tone** - Professional, friendly, technical, casual
-- **Special instructions** - Always cite sources, use specific terminology, etc.
-
-**Why this matters:**
-
-Think of this like configuring a network device for different network segments. A DMZ router has different security policies than an internal router. Similarly, your AI should adapt its responses based on who's using it:
-
-- **For executives:** Brief summaries with key takeaways
-- **For engineers:** Technical details with specific references
-- **For support teams:** Step-by-step troubleshooting guidance
-- **For customers:** Friendly, easy-to-understand explanations
-
----
-
-#### Implementation: Edit n8n Workflows
-
-The personality is controlled by the **system prompt** in your n8n workflows. You'll modify the "Build Prompt" or "Set" node that creates the prompt sent to Ollama.
-
-**Step 1: Open your workflow**
-
-```bash
-# Navigate to n8n
-open http://localhost:5678
-```
-
-1. Click on "Workflows" in the left menu
-2. Open "RAG Query Chat" workflow
-3. Find the node that builds the prompt (usually named "Build Prompt" or "Set")
-
-**Step 2: Locate the system prompt**
-
-Look for JavaScript code that creates the prompt. It typically looks like this:
-
-```javascript
-const systemPrompt = `You are a helpful AI assistant. Answer questions based on the provided context.`;
-```
-
----
-
-#### Personality Templates
-
-**Replace the generic prompt with one of these templates:**
-
----
-
-**Template 1: Professional Cisco Engineer**
-
-```javascript
-const systemPrompt = `You are a senior Cisco network engineer with 20+ years of experience.
-
-RESPONSE GUIDELINES:
-• Provide technically accurate, detailed answers
-• Use Cisco terminology and best practices
-• Reference specific technologies, protocols, and standards
-• Cite document sections when possible
-• Keep responses under 500 words
-• Use bullet points for lists and specifications
-
-TONE: Professional, authoritative, technically precise
-
-When answering questions:
-1. Start with a direct answer
-2. Provide technical context
-3. Reference the source document
-4. End with actionable recommendations if applicable
-
-Example response format:
-"Based on the network assessment, [direct answer]. The document indicates [technical details]. I recommend [action items if relevant]."`;
-```
-
----
-
-**Template 2: Friendly IT Assistant**
-
-```javascript
-const systemPrompt = `You are a friendly and helpful IT assistant who makes complex topics accessible.
-
-RESPONSE GUIDELINES:
-• Use clear, simple language that anyone can understand
-• Explain technical terms when you use them
-• Break down complex topics into digestible pieces
-• Be encouraging and supportive
-• Keep responses conversational and under 400 words
-• Use analogies to make concepts relatable
-
-TONE: Friendly, approachable, patient
-
-When answering questions:
-1. Acknowledge the question warmly
-2. Provide a clear, simple explanation
-3. Use an analogy if it helps
-4. Mention the source for reference
-5. Offer to explain further if needed
-
-Example response format:
-"Great question! [simple answer]. Think of it like [analogy]. According to [document], [details]. Let me know if you'd like me to explain any part in more detail!"`;
-```
-
----
-
-**Template 3: Executive Briefing Style**
-
-```javascript
-const systemPrompt = `You are an executive briefing assistant providing concise, high-level summaries.
-
-RESPONSE GUIDELINES:
-• Start with the bottom line (conclusion first)
-• Use executive summary format
-• Highlight key takeaways and business impact
-• Keep responses under 300 words
-• Use numbered lists for key points
-• Avoid unnecessary technical details
-
-TONE: Professional, concise, business-focused
-
-Response structure (use this format for EVERY response):
-**Summary:** [One-sentence answer]
-
-**Key Points:**
-1. [Main point 1]
-2. [Main point 2]
-3. [Main point 3]
-
-**Business Impact:** [What this means for the organization]
-
-**Source:** Based on [document name]`;
-```
-
----
-
-**Template 4: Technical Support Specialist**
-
-```javascript
-const systemPrompt = `You are a technical support specialist helping users troubleshoot issues.
-
-RESPONSE GUIDELINES:
-• Provide step-by-step troubleshooting guidance
-• Use numbered steps for procedures
-• Explain what each step does
-• Anticipate follow-up questions
-• Keep responses actionable and clear
-• Maximum 500 words
-
-TONE: Patient, methodical, solution-focused
-
-Response format:
-**Issue:** [Restate the problem]
-
-**Solution:** [Brief overview]
-
-**Steps:**
-1. [First action with explanation]
-2. [Second action with explanation]
-3. [Continue as needed]
-
-**Expected Result:** [What success looks like]
-
-**If this doesn't work:** [Next troubleshooting step]
-
-**Reference:** [Document source]`;
-```
-
----
-
-**Template 5: Compliance & Security Focus**
-
-```javascript
-const systemPrompt = `You are a security and compliance specialist for IT documentation.
-
-RESPONSE GUIDELINES:
-• Always mention security implications
-• Highlight compliance requirements
-• Reference policies and standards
-• Flag potential risks
-• Use precise, unambiguous language
-• Keep responses under 400 words
-
-TONE: Authoritative, security-conscious, detailed
-
-When answering:
-1. Provide the factual answer
-2. Note any security considerations
-3. Mention relevant compliance standards
-4. Cite the specific document section
-5. Recommend security best practices if applicable
-
-Always include:
-**Security Note:** [Any security implications]
-**Compliance:** [Relevant standards or requirements]
-**Source:** [Document reference with section/page]`;
-```
-
----
-
-#### Advanced: Response Formatting
-
-**Add structured formatting to responses:**
-
-```javascript
-// Add this to your prompt to enforce specific format
-const formatInstructions = `
-
-FORMAT YOUR RESPONSE EXACTLY AS:
-
-**Summary:** [One-sentence answer]
-
-**Details:**
-• [Point 1]
-• [Point 2]  
-• [Point 3]
-
-**Source:** Based on [specific document and section]
-
-Do not deviate from this format.`;
-
-const systemPrompt = `[Your personality template]` + formatInstructions;
-```
-
----
-
-#### Testing Your Changes
-
-**Step 1: Save the workflow**
-- Click "Save" in the upper right corner of n8n
-
-**Step 2: Test with the same question using different personalities**
-
-Ask: *"What's the network uptime?"*
-
-**With Generic Prompt:**
-```
-The network uptime is 99.94% according to the assessment document.
-```
-
-**With Professional Engineer:**
-```
-Based on the Q3 2024 Network Assessment, the Boston datacenter 
-achieved 99.94% uptime during the quarter, which translates to 
-approximately 26 minutes of downtime over 3 months.
-
-Technical Details:
-• MTTR (Mean Time To Repair): 2.4 hours
-• Incident Count: 5 total (2 planned, 3 unplanned)
-• Primary cause: Power fluctuations affecting redundant supplies
-
-This exceeds our 99.9% SLA target. I recommend documenting the 
-unplanned outage procedures that achieved the 2.4-hour MTTR.
-
-Source: Network_Assessment_Q3_2024.txt, Section 3: Reliability Metrics
-```
-
-**With Friendly Assistant:**
-```
-Great question! Your network has been very reliable - 99.94% uptime! 
-
-To put that in perspective, it's like having a service that works 
-perfectly 99.94% of the time. In practical terms, your network was 
-down for only about 26 minutes over the entire 3-month quarter.
-
-The assessment document notes there were 5 incidents total, but only 
-3 were unexpected problems (the other 2 were planned maintenance). 
-That's actually really impressive!
-
-Source: Q3 2024 Network Assessment
-
-Would you like to know more about what caused those 3 unplanned outages?
-```
-
----
-
-#### Best Practices
-
-**Do:**
-- âœ… Match personality to your audience
-- âœ… Keep instructions clear and specific
-- âœ… Test with multiple queries before deploying
-- âœ… Get feedback from actual users
-- âœ… Save your original prompt as backup
-- âœ… Document which workflow uses which personality
-
-**Don't:**
-- âŒ Make prompts too long (over 500 words gets ignored)
-- âŒ Use contradictory instructions
-- âŒ Change personality mid-conversation (confusing for users)
-- âŒ Make claims the AI can't verify from documents
-
----
-
-#### Benefits Summary
-
-**What you gain:**
-- âœ… **Better fit for audience** - Executives get summaries, engineers get details
-- âœ… **Consistent tone** - Professional voice matches your organization
-- âœ… **Improved usability** - Responses formatted for easy reading
-- âœ… **Higher adoption** - Users trust AI that "sounds right" for their context
-- âœ… **Customization** - Adapt the system to your specific use case
-
-**When to customize:**
-- Before sharing with executives or leadership
-- When deploying to different teams (support vs. engineering)
-- After user feedback requests specific format changes
-- When demonstrating to potential users
-
----
-
-### 1.3: Add Response Caching
-
-**Current state:** Every query runs the full RAG pipeline, even for repeated questions
-
-**Improvement:** Cache question-answer pairs for instant responses to common queries
-
-**Ratings:**
-- **Difficulty:** ⭐⭐ Medium  
-- **Value:** ⭐⭐⭐ High (for systems with repeated queries)  
-- **Time:** 45-60 minutes
-- **Prerequisites:** Working n8n workflows, basic JavaScript understanding
-
----
-
-#### What You'll Add
-
-**New capability:**
-- Store question-answer pairs in memory
-- Check cache before running RAG pipeline
-- Return instant responses (< 1 second) for cached queries
-- Configurable cache expiration (24 hours default)
-- Cache invalidation when documents change
-
-**Why this matters:**
-
-Think of caching like routing tables in network devices. Instead of computing the path every time a packet arrives, routers cache frequently-used routes for instant lookup. Similarly, your AI can cache frequently-asked questions for instant responses.
-
-**Real-world scenarios:**
-- Someone asks "What's our support phone number?" daily → Instant answer
-- Multiple people ask "What's the project timeline?" → First person waits 8 seconds, everyone else gets <1 second response
-- Common queries during presentations → Smooth, fast demos
-
-**Performance improvement:**
-- Without cache: Every query takes 5-10 seconds (embedding + search + generation)
-- With cache: Cached queries take <1 second (direct lookup)
-
----
-
-#### How Caching Works
-
-```
-First Query (Cache Miss):
-â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-Question: "What's the budget?"
-  ↓
-Check cache → Not found
-  ↓
-Run full RAG pipeline (8 seconds)
-  ↓
-Get answer: "$250,000"
-  ↓
-Store in cache: 
-  {"question": "What's the budget?", "answer": "$250,000", "timestamp": ...}
-  ↓
-Return answer
-
-Subsequent Query (Cache Hit):
-â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-Question: "What's the budget?"
-  ↓
-Check cache → Found! (< 1 second)
-  ↓
-Return cached answer: "$250,000"
-```
-
----
-
-#### Implementation: n8n Workflow Modification
-
-You'll modify your existing "RAG Query Chat" workflow to add caching logic.
-
-**Step 1: Open workflow in n8n**
-
-1. Navigate to `http://localhost:5678`
-2. Open "RAG Query Chat" workflow
-3. You'll add nodes BEFORE the "Generate Embedding" node
-
----
-
-**Step 2: Add "Check Cache" node**
-
-Add a **Code** node right after the webhook trigger:
-
-**Node name:** "Check Cache"  
-**Operation:** Run Once for All Items
-
-**Code:**
-```javascript
-// Get the question from the input
-const question = $input.all()[0].json.question;
-
-// Normalize question for cache lookup (lowercase, trim whitespace)
-const cacheKey = question.toLowerCase().trim();
-
-// Get cache from global storage (or initialize empty)
-let cache = await this.getWorkflowStaticData('global').cache;
-if (!cache) {
-  cache = {};
-}
-
-// Cache expiration time (24 hours in milliseconds)
-const CACHE_DURATION = 24 * 60 * 60 * 1000;
-const now = Date.now();
-
-// Check if question is in cache and not expired
-if (cache[cacheKey]) {
-  const cachedEntry = cache[cacheKey];
-  const age = now - cachedEntry.timestamp;
-  
-  if (age < CACHE_DURATION) {
-    // Cache hit! Return cached answer
-    return {
-      json: {
-        question: question,
-        answer: cachedEntry.answer,
-        cached: true,
-        cache_age_minutes: Math.round(age / 60000)
-      }
-    };
-  } else {
-    // Cache expired, remove it
-    delete cache[cacheKey];
-    await this.getWorkflowStaticData('global').cache = cache;
-  }
-}
-
-// Cache miss - continue to RAG pipeline
-return {
-  json: {
-    question: question,
-    cached: false
-  }
-};
-```
-
----
-
-**Step 3: Add conditional branching**
-
-After the "Check Cache" node, add an **IF** node:
-
-**Node name:** "Is Cached?"  
-**Conditions:**
-- If `{{ $json.cached }}` equals `true` → Go to "Return Answer"
-- Otherwise → Continue to "Generate Embedding" (existing RAG flow)
-
-This splits the workflow:
-- Cached queries skip the RAG pipeline
-- New queries go through full processing
-
----
-
-**Step 4: Add "Store in Cache" node**
-
-After your AI generates an answer (before returning to user), add another **Code** node:
-
-**Node name:** "Store in Cache"  
-**Operation:** Run Once for All Items
-
-**Code:**
-```javascript
-// Get question and answer from previous nodes
-const question = $('Check Cache').all()[0].json.question;
-const answer = $json.response; // Adjust based on your workflow
-
-// Normalize cache key
-const cacheKey = question.toLowerCase().trim();
-
-// Get current cache
-let cache = await this.getWorkflowStaticData('global').cache;
-if (!cache) {
-  cache = {};
-}
-
-// Store the Q&A pair with timestamp
-cache[cacheKey] = {
-  answer: answer,
-  timestamp: Date.now(),
-  original_question: question
-};
-
-// Save cache back to global storage
-await this.getWorkflowStaticData('global').cache = cache;
-
-// Pass through the response
-return {
-  json: {
-    question: question,
-    answer: answer,
-    cached: false
-  }
-};
-```
-
----
-
-**Step 5: Add cache statistics (optional)**
-
-Add a node to show cache performance:
-
-**Node name:** "Cache Stats"
-
-**Code:**
-```javascript
-const cache = await this.getWorkflowStaticData('global').cache || {};
-
-return {
-  json: {
-    cache_size: Object.keys(cache).length,
-    cached_queries: Object.keys(cache)
-  }
-};
-```
-
----
-
-#### Testing the Cache
-
-**Test 1: First query (cache miss)**
-
-```
-Question: "What's the project budget?"
-Response time: ~8 seconds
-Response includes: "cached": false
-```
-
-**Test 2: Repeat query (cache hit)**
-
-```
-Question: "What's the project budget?"
-Response time: <1 second  
-Response includes: "cached": true, "cache_age_minutes": 0
-```
-
-**Test 3: Similar query (cache miss)**
-
-```
-Question: "What is the budget for the project?"
-Response time: ~8 seconds
-Note: Different wording = different cache key
-```
-
----
-
-#### Advanced: Smarter Cache Matching
-
-**Problem:** "What's the budget?" and "What is the budget?" should match
-
-**Solution:** Normalize questions more aggressively
-
-```javascript
-function normalizeQuestion(question) {
-  return question
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s]/g, '') // Remove punctuation
-    .replace(/\s+/g, ' ')     // Normalize whitespace
-    .replace(/what's/g, 'what is')
-    .replace(/it's/g, 'it is')
-    // Add more normalizations as needed
-}
-
-const cacheKey = normalizeQuestion(question);
-```
-
----
-
-#### Cache Management
-
-**Clear the entire cache:**
-
-Add a separate workflow or HTTP endpoint:
-
-```javascript
-// Clear cache workflow
-await this.getWorkflowStaticData('global').cache = {};
-return { json: { message: "Cache cleared" } };
-```
-
-**Clear cache when documents change:**
-
-Add this to your "Document Upload" workflow:
-
-```javascript
-// After successful document upload
-await this.getWorkflowStaticData('global').cache = {};
-console.log("Cache cleared due to document update");
-```
-
----
-
-#### Benefits Summary
-
-**What you gain:**
-- âœ… **Instant responses** - <1 second for cached queries (vs. 5-10 seconds)
-- âœ… **Reduced load** - Less compute/API usage for common questions
-- âœ… **Better demos** - Fast responses impress stakeholders
-- âœ… **Cost savings** - Fewer Ollama API calls (matters if scaling)
-- âœ… **Improved UX** - Users notice and appreciate the speed
-
-**When to use:**
-- Systems with frequently repeated questions
-- During demos or presentations
-- High-traffic periods (many users asking similar questions)
-- When response time is critical
-
-**When NOT to use:**
-- Documents change frequently (cache becomes stale)
-- Every question is unique (no cache hits)
-- Users expect "fresh" answers each time
-
----
-
-### 1.4: Static Tunnel URL for Production
-
-**Current state:** Free tunnel service (localhost.run) provides a URL that changes daily, requiring webhook updates
-
-**Improvement:** Paid tunnel with permanent URL
-
-**Ratings:**
-- **Difficulty:** ⭐ Easy (just money + configuration)  
-- **Value:** ⭐⭐⭐⭐ Critical for production  
-- **Cost:** $10-20/month  
-- **Time:** 15-30 minutes one-time setup
 - **Prerequisites:** Working Webex bot from Part 3
 
 ---
 
-#### What You'll Get
+#### What You'll Customize
 
-**Benefits of paid tunnel:**
-- âœ… **Static URL** - Never changes (no more daily webhook updates)
-- âœ… **Custom subdomain** - `your-company-rag.ngrok.io` instead of random letters
-- âœ… **Higher reliability** - 99.9% uptime guarantee
-- âœ… **Better rate limits** - Won't hit "too many requests" errors
-- âœ… **Reserved capacity** - Guaranteed bandwidth
-- âœ… **Professional appearance** - Branded URL for your organization
+**Response characteristics you can modify:**
+- **Tone:** Professional, friendly, technical, casual
+- **Verbosity:** Concise bullets vs detailed explanations
+- **Format:** Markdown formatting, emojis, structure
+- **Behavior:** How it handles unknowns, errors, ambiguity
+- **Personality:** Helpful assistant, expert consultant, teammate
 
-**Why this matters for production:**
+**Why this matters:**
+A well-tuned personality makes your bot more engaging and appropriate for your team's culture. A bot for executives needs different tone than one for engineers.
 
-Free tunnels are great for testing, but production systems need reliability. Think of it like having a static IP address versus DHCP. For critical infrastructure, you want predictability.
-
-**When you MUST do this:**
-- Before sharing with your team company-wide
-- Before demos to leadership or customers
-- Any "always-on" production deployment
-- When reliability matters more than cost
-
-**When free tunnels are fine:**
-- Personal testing and development
-- Proof-of-concept demonstrations
-- Learning and experimentation
-- Temporary projects
+**Real-world examples:**
+- **Tech team:** "Here's what I found in the docs..." (technical, precise)
+- **Sales team:** "Great question! Let me check that for you 📊" (enthusiastic, emoji-friendly)
+- **Executive team:** "According to Q3 assessment..." (formal, concise)
 
 ---
 
-#### Option 1: ngrok (Recommended)
+#### Implementation: Modify Bot Prompt
 
-**Why ngrok:**
-- Most popular and reliable
-- Excellent documentation
-- Easy macOS integration
-- Free tier exists, Pro is affordable
+**Edit your n8n Webex workflow:**
 
-**Pricing:**
-- Free: Rotating URLs, lower limits
-- Personal ($8/month): Static domain + custom subdomain
-- Pro ($20/month): Multiple domains, higher limits
+1. Open n8n: `http://localhost:5678`
+2. Open "Webex RAG Bot" workflow
+3. Find the **"Build Prompt"** node (Code node)
+4. Modify the prompt template
 
-**Setup steps:**
+**Current generic prompt:**
+```javascript
+const prompt = `Based on the following context from documents, answer the question. 
+Keep the answer concise but informative. If the answer is not in the context, 
+say "I don't have enough information to answer that."
 
-**Step 1: Sign up for ngrok**
+Context:
+${context}
 
-1. Visit: `https://ngrok.com/`
-2. Create account (use work email)
-3. Choose "Personal" plan ($8/month)
-4. Note your auth token
+Question: ${question}
 
-**Step 2: Install ngrok**
+Answer:`;
+```
+
+---
+
+**Example 1: Technical Expert Personality**
+
+```javascript
+const prompt = `You are a network engineering AI assistant with access to company documentation.
+
+INSTRUCTIONS:
+- Be precise and technical in your responses
+- Use industry terminology appropriately
+- Include relevant details (model numbers, configurations, metrics)
+- Cite specific document sections when available
+- If information is missing, say exactly what you'd need to know
+
+DOCUMENTATION CONTEXT:
+${context}
+
+QUESTION: ${question}
+
+TECHNICAL RESPONSE:`;
+```
+
+---
+
+**Example 2: Friendly Colleague Personality**
+
+```javascript
+const prompt = `You're a helpful AI teammate who has read our company docs. 
+Answer questions naturally like you're helping a colleague. Keep it conversational 
+but accurate.
+
+Here's what I found in the docs:
+${context}
+
+They asked: ${question}
+
+My answer:`;
+```
+
+---
+
+**Example 3: Executive Brief Style**
+
+```javascript
+const prompt = `Provide executive-level summary responses: concise, high-level, 
+action-oriented. Lead with the key takeaway, then support with relevant details.
+
+Relevant Information:
+${context}
+
+Question: ${question}
+
+Executive Summary:`;
+```
+
+---
+
+**Example 4: Support Specialist Personality**
+
+```javascript
+const prompt = `You're a helpful support specialist. Answer questions clearly 
+and offer to help further. Use a warm, professional tone.
+
+Documentation:
+${context}
+
+Customer Question: ${question}
+
+Support Response:
+[Provide clear answer, then end with: "Let me know if you need more details on this!"]
+
+Answer:`;
+```
+
+---
+
+#### Additional Customization Options
+
+**1. Add emojis for visual appeal:**
+
+```javascript
+const prompt = `📚 Based on company documentation, here's what I found...
+
+Context:
+${context}
+
+❓ Question: ${question}
+
+✅ Answer:`;
+```
+
+**2. Add formatting instructions:**
+
+```javascript
+const prompt = `Answer the question using this format:
+- Start with a one-sentence summary
+- Use bullet points for details
+- Bold important terms with **asterisks**
+- Keep total response under 100 words
+
+Context:
+${context}
+
+Question: ${question}
+
+Answer:`;
+```
+
+**3. Add safety rails:**
+
+```javascript
+const prompt = `RULES:
+- ONLY use information from the provided context
+- NEVER make up or guess information
+- If unsure, say "I don't have enough information"
+- If the context is ambiguous, ask for clarification
+- Always cite which document you're referencing
+
+Context:
+${context}
+
+Question: ${question}
+
+Answer:`;
+```
+
+---
+
+#### Testing Your Customizations
+
+**After modifying the prompt:**
+
+1. **Save workflow** in n8n
+2. **Send test message** to bot in Webex
+3. **Evaluate response:**
+   - Does it match your intended personality?
+   - Is tone appropriate for audience?
+   - Is it too verbose or too concise?
+4. **Iterate:** Adjust prompt and test again
+
+**A/B testing with team:**
+- Test both versions with 2-3 users
+- Gather feedback on which they prefer
+- Choose based on actual user preference
+
+---
+
+#### Success Criteria
+
+✓ Bot personality is working when:
+- Responses match your intended tone
+- Team feedback is positive
+- Responses are appropriately detailed
+- Style is consistent across queries
+
+**Benefit:** Your bot feels more integrated with your team's communication style!
+
+---
+
+### 1.3: Response Caching (Speed Improvement)
+
+**Current state:** Every query processes from scratch, even identical questions
+
+**Improvement:** Cache responses to identical queries for instant replies
+
+**Ratings:**
+- **Difficulty:** ⭐⭐ Medium  
+- **Value:** ⭐⭐⭐ High (if you have repeat queries)  
+- **Time:** 45-60 minutes
+- **Prerequisites:** Working RAG system, basic Python knowledge
+
+---
+
+#### What Caching Solves
+
+**Problem:** Same questions get asked repeatedly
+- "What's the network uptime?" → 8 seconds to process every time
+- "What switches need upgrading?" → 8 seconds every time
+
+**With caching:**
+- First query: 8 seconds (processes normally)
+- Identical query: < 1 second (returns cached result)
+
+**When caching helps most:**
+- FAQ-style questions asked often
+- Demo environments (same queries repeated)
+- Status checks (uptime, inventory, etc.)
+- High query volume with pattern repetition
+
+---
+
+#### Implementation: Python Cache Layer
+
+**Create `~/cisco-rag-demo/cached_query.py`:**
+
+```python
+#!/usr/bin/env python3
+"""
+Cached RAG query system - stores responses for repeat questions
+"""
+
+import requests
+import sys
+import json
+import hashlib
+import time
+from pathlib import Path
+
+# Configuration
+OLLAMA_URL = "http://localhost:11434"
+CHROMA_URL = "http://localhost:8000/api/v1"
+COLLECTION_NAME = "cisco_docs"
+CACHE_DIR = Path.home() / "cisco-rag-demo" / "query_cache"
+CACHE_EXPIRY = 3600  # Cache expires after 1 hour (in seconds)
+
+def setup_cache():
+    """Create cache directory if it doesn't exist"""
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+def get_cache_key(query):
+    """Generate cache key from query text"""
+    return hashlib.md5(query.lower().encode()).hexdigest()
+
+def get_cached_response(query):
+    """Check if we have a cached response for this query"""
+    cache_key = get_cache_key(query)
+    cache_file = CACHE_DIR / f"{cache_key}.json"
+    
+    if not cache_file.exists():
+        return None
+    
+    # Load cache
+    with open(cache_file, 'r') as f:
+        cache_data = json.load(f)
+    
+    # Check if expired
+    age = time.time() - cache_data['timestamp']
+    if age > CACHE_EXPIRY:
+        cache_file.unlink()  # Delete expired cache
+        return None
+    
+    print(f"✅ Cache hit! (saved {cache_data['processing_time']:.1f}s)")
+    print(f"   Cached {int(age)}s ago")
+    return cache_data['response']
+
+def save_to_cache(query, response, processing_time):
+    """Save response to cache"""
+    cache_key = get_cache_key(query)
+    cache_file = CACHE_DIR / f"{cache_key}.json"
+    
+    cache_data = {
+        'query': query,
+        'response': response,
+        'timestamp': time.time(),
+        'processing_time': processing_time
+    }
+    
+    with open(cache_file, 'w') as f:
+        json.dump(cache_data, f, indent=2)
+    
+    print(f"💾 Response cached for future queries")
+
+def query_rag(query):
+    """Standard RAG query (from Part 2)"""
+    # [Include full RAG query code from Part 2's query_rag.py]
+    # This is the existing query logic
+    # Returns: (answer, processing_time)
+    pass  # Implement based on Part 2 script
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python3 cached_query.py '<your question>'")
+        return 1
+    
+    setup_cache()
+    query = ' '.join(sys.argv[1:])
+    
+    # Check cache first
+    cached = get_cached_response(query)
+    if cached:
+        print("\n" + "="*60)
+        print("ANSWER (from cache):")
+        print("="*60)
+        print(cached)
+        print("="*60)
+        return 0
+    
+    # Not cached - process normally
+    print("🔍 Processing query (not in cache)...")
+    start_time = time.time()
+    
+    answer = query_rag(query)
+    
+    processing_time = time.time() - start_time
+    
+    # Save to cache
+    save_to_cache(query, answer, processing_time)
+    
+    print("\n" + "="*60)
+    print("ANSWER:")
+    print("="*60)
+    print(answer)
+    print("="*60)
+    print(f"\n⏱️  Processing time: {processing_time:.2f}s")
+    
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+**Make executable:**
+```bash
+chmod +x ~/cisco-rag-demo/cached_query.py
+```
+
+---
+
+#### Cache Management Commands
+
+**View cache statistics:**
+```bash
+# Count cached queries
+ls -1 ~/cisco-rag-demo/query_cache/ | wc -l
+
+# Show cache size
+du -sh ~/cisco-rag-demo/query_cache/
+```
+
+**Clear cache:**
+```bash
+# Clear all cache
+rm -rf ~/cisco-rag-demo/query_cache/*
+
+# Clear old cache only (older than 1 day)
+find ~/cisco-rag-demo/query_cache/ -name "*.json" -mtime +1 -delete
+```
+
+---
+
+#### Success Criteria
+
+✓ Caching is working when:
+- First query takes normal time (~8s)
+- Repeat query returns instantly (<1s)
+- Cache files visible in cache directory
+- Cache expires appropriately
+
+**Benefit:** Frequently asked questions get instant responses!
+
+---
+
+### 1.4: Static Tunnel URL (Production Improvement)
+
+**Current state:** Free tunnel URL changes every restart
+
+**Improvement:** Get a permanent URL that never changes
+
+**Ratings:**
+- **Difficulty:** ⭐ Easy (requires paid service)  
+- **Value:** ⭐⭐⭐ High (for production use)  
+- **Time:** 15 minutes
+- **Cost:** $8-10/month (ngrok paid tier)
+- **Prerequisites:** Working Webex bot
+
+---
+
+#### Why Static URL Matters
+
+**Problem with free tunnels:**
+- URL changes every restart
+- Must re-register webhook each time
+- Breaks if connection drops
+- Not suitable for production
+
+**With static URL:**
+- URL never changes
+- Register webhook once
+- Survives restarts
+- Professional appearance
+- Reliable for team use
+
+---
+
+#### Option 1: ngrok Paid Tier (Recommended)
+
+**Step 1: Upgrade to ngrok Pro**
+
+1. Visit: https://ngrok.com/pricing
+2. Choose **Pro plan** ($8/month or $10/month for better features)
+3. Sign up and pay
+
+**Step 2: Get Your Static Domain**
+
+1. Log into ngrok dashboard
+2. Go to **"Cloud Edge" → "Domains"**
+3. Click **"Create Domain"** or **"+ New Domain"**
+4. Choose subdomain: `your-company-rag.ngrok.app`
+5. Save domain
+
+**Step 3: Use Static Domain**
 
 ```bash
-# Download ngrok
-curl -o /tmp/ngrok.zip https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-darwin-arm64.zip
-
-# Extract
-cd /tmp && unzip ngrok.zip
-
-# Move to applications
-sudo mv ngrok /usr/local/bin/
-
-# Verify installation
-ngrok version
-```
-
-**Expected output:**
-```
-ngrok version 3.x.x
-```
-
-**Step 3: Authenticate**
-
-```bash
-# Add your auth token (get from ngrok dashboard)
-ngrok config add-authtoken <YOUR_AUTH_TOKEN>
-```
-
-**Step 4: Reserve your domain**
-
-In the ngrok dashboard:
-1. Go to "Cloud Edge" → "Domains"
-2. Click "New Domain"
-3. Choose subdomain: `your-company-rag.ngrok.app`
-4. Copy the domain name
-
-**Step 5: Start ngrok with static domain**
-
-```bash
-# Start tunnel with your reserved domain
+# Start ngrok with your static domain
 ngrok http --domain=your-company-rag.ngrok.app 5678
 ```
 
-**Expected output:**
+**Output shows:**
 ```
-ngrok                                                                                                                                                        
-
-Session Status                online
-Account                       Your Name (Plan: Personal)
-Version                       3.x.x
-Region                        United States (us)
-Web Interface                 http://127.0.0.1:4040
-Forwarding                    https://your-company-rag.ngrok.app -> http://localhost:5678
-
-Connections                   ttl     opn     rt1     rt5     p50     p90
-                              0       0       0.00    0.00    0.00    0.00
+Forwarding  https://your-company-rag.ngrok.app -> http://localhost:5678
 ```
 
-✅ **Success:** Your URL is now permanent! It will never change.
+**This URL never changes!**
 
 ---
 
-**Step 6: Register webhook ONCE**
-
-Now that you have a permanent URL, you only need to register your webhook ONE TIME.
+**Step 4: Register Webhook Once**
 
 ```bash
-# Set your permanent URL
-TUNNEL_URL="https://your-company-rag.ngrok.app"
+source ~/cisco-rag-demo/credentials/webex_bot.txt
 
-# Set your bot token
-BOT_TOKEN="<your-webex-bot-token>"
-
-# Register webhook
+# Register with static URL
 curl -X POST https://webexapis.com/v1/webhooks \
   -H "Authorization: Bearer $BOT_TOKEN" \
   -H "Content-Type: application/json" \
-  -d "{
-    \"name\": \"RAG Bot Messages - PRODUCTION\",
-    \"targetUrl\": \"${TUNNEL_URL}/webhook/webex-bot\",
-    \"resource\": \"messages\",
-    \"event\": \"created\"
-  }"
+  -d '{
+    "name": "RAG Bot Messages",
+    "targetUrl": "https://your-company-rag.ngrok.app/webhook/webex-webhook",
+    "resource": "messages",
+    "event": "created"
+  }'
 ```
 
-**Expected output:**
-```json
-{
-  "id": "Y2lzY29zcGFyazovL...",
-  "name": "RAG Bot Messages - PRODUCTION",
-  "targetUrl": "https://your-company-rag.ngrok.app/webhook/webex-bot",
-  "resource": "messages",
-  "event": "created",
-  "status": "active"
-}
-```
+**Never need to update webhook URL again!**
 
 ---
 
-**Step 7: Run ngrok on startup (optional)**
+#### Option 2: localhost.run with SSH Config
 
-Create a launch script so ngrok starts automatically:
+**For those who want to stay free:**
 
-**Create `~/start-rag-system.sh`:**
+You can make localhost.run more stable (though URL still changes):
 
+**Create SSH config:**
 ```bash
+cat >> ~/.ssh/config << 'EOF'
+Host localhost.run
+    StrictHostKeyChecking no
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+EOF
+```
+
+**Use keep-alive script:**
+```bash
+cat > ~/cisco-rag-demo/tunnel-keepalive.sh << 'EOF'
 #!/bin/bash
-# Start all RAG system components
+while true; do
+    ssh -R 80:localhost:5678 localhost.run
+    echo "Tunnel disconnected. Reconnecting in 5 seconds..."
+    sleep 5
+done
+EOF
 
-echo "🚀 Starting RAG System with Production Tunnel..."
-
-# Start ChromaDB container
-echo "📊 Starting ChromaDB..."
-podman start chromadb
-
-# Start n8n container  
-echo "🔧 Starting n8n..."
-podman start n8n
-
-# Wait for n8n to be ready
-sleep 5
-
-# Start ngrok with static domain
-echo "🌐 Starting ngrok tunnel..."
-ngrok http --domain=your-company-rag.ngrok.app 5678 &
-
-echo "✅ RAG System is running!"
-echo "   n8n: http://localhost:5678"
-echo "   Public URL: https://your-company-rag.ngrok.app"
-echo ""
-echo "📱 Your Webex bot is ready to use!"
-```
-
-**Make it executable:**
-```bash
-chmod +x ~/start-rag-system.sh
-```
-
-**Run it:**
-```bash
-~/start-rag-system.sh
+chmod +x ~/cisco-rag-demo/tunnel-keepalive.sh
 ```
 
 ---
 
-#### Option 2: Cloudflare Tunnel (Free Alternative)
+#### Comparison: Free vs Paid
 
-**If you want free and permanent:**
-
-Cloudflare Tunnel (formerly Argo Tunnel) is completely free and provides permanent URLs, but requires more setup.
-
-**Pros:**
-- âœ… Completely free
-- âœ… Permanent URL
-- âœ… No connection limits
-- âœ… DDoS protection included
-
-**Cons:**
-- âŒ More complex setup
-- âŒ Requires domain name
-- âŒ Steeper learning curve
-
-**Setup overview:**
-1. Sign up for Cloudflare (free)
-2. Add your domain to Cloudflare
-3. Install `cloudflared`
-4. Create tunnel: `cloudflared tunnel create rag-bot`
-5. Route subdomain: `cloudflared tunnel route dns rag-bot rag.yourdomain.com`
-6. Run tunnel: `cloudflared tunnel run rag-bot`
-
-**Full documentation:** `https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/`
+| Feature | Free (localhost.run) | Paid (ngrok Pro) |
+|---------|---------------------|------------------|
+| **URL Stability** | Changes each restart | Static forever |
+| **Webhook Updates** | After every restart | Once (never again) |
+| **Reliability** | Moderate (disconnects) | High (stays up) |
+| **Cost** | Free | $8-10/month |
+| **Professional** | No (random URLs) | Yes (custom domain) |
+| **Best for** | Testing/demos | Production use |
 
 ---
 
-#### Option 3: Tailscale Funnel (Team Access)
+#### Success Criteria
 
-**If you only need team access (not public):**
+✓ Static URL is working when:
+- URL doesn't change after restart
+- Webhook works without re-registration
+- Team can bookmark URL reliably
+- Survives network interruptions
 
-Tailscale Funnel allows secure access for team members without exposing your system publicly.
-
-**Pros:**
-- âœ… Free for personal use
-- âœ… Secure (VPN-based)
-- âœ… No public exposure
-- âœ… Works for distributed teams
-
-**Cons:**
-- âŒ Requires Tailscale account
-- âŒ Team members need Tailscale installed
-- âŒ Not suitable for external users
+**Benefit:** No more updating webhooks! Production-ready reliability!
 
 ---
 
-#### Comparison Table
+### 1.5: Backup Strategy (Critical for Safety)
 
-| Feature | Free Tunnel | ngrok ($8/mo) | Cloudflare (Free) | Tailscale (Team) |
-|---------|-------------|---------------|-------------------|------------------|
-| **URL Changes** | Daily | Never | Never | Never |
-| **Reliability** | Medium | High | High | High |
-| **Rate Limits** | Low | High | Unlimited | Unlimited |
-| **Setup Time** | 5 min | 15 min | 45 min | 30 min |
-| **Public Access** | Yes | Yes | Yes | No (team only) |
-| **Cost** | $0 | $8-20/mo | $0 | $0 |
-| **Best For** | Testing | Production | Free production | Team-only |
+**Current state:** No backups - one mistake loses everything
 
----
-
-#### Benefits Summary
-
-**What you gain:**
-- âœ… **No daily maintenance** - Set it up once, works forever
-- âœ… **Professional appearance** - Branded URL inspires confidence
-- âœ… **Demo reliability** - Never worry about URLs changing mid-demo
-- âœ… **Production-ready** - Suitable for company-wide deployment
-- âœ… **Peace of mind** - System "just works" without intervention
-
-**ROI calculation:**
-- Time saved: 5 minutes/day × 20 workdays = 100 minutes/month
-- At $100/hour rate = $167/month value
-- Cost: $8-20/month
-- **Net benefit: $147-159/month in time savings alone**
-
----
-
-### 1.5: Basic Backup Strategy
-
-**Current state:** All documents and configuration in containers with no backup
-
-**Improvement:** Simple backup process for your data and workflows
+**Improvement:** Automated backup system for all data
 
 **Ratings:**
 - **Difficulty:** ⭐ Easy  
 - **Value:** ⭐⭐⭐⭐ Critical  
-- **Time:** 20 minutes setup + 5 minutes per backup
-- **Prerequisites:** Working system
+- **Time:** 30 minutes
+- **Prerequisites:** Working system, external drive recommended
 
 ---
 
-#### What You'll Back Up
+#### What Needs Backup
 
-**Critical data to preserve:**
+**Critical data:**
 1. **ChromaDB data** - All your document vectors
-2. **n8n workflows** - Your workflow JSON files
-3. **Python scripts** - Any custom scripts you created
-4. **Environment configuration** - Ollama models, settings
+2. **n8n workflows** - Your automation
+3. **Credentials** - Bot tokens, API keys
+4. **Scripts** - Custom Python scripts you wrote
 
-**Why this matters:**
-
-Backups are like network configuration backups. You don't need them until you REALLY need them. One accidental `podman rm` command or system crash shouldn't cost you hours of work.
+**If lost:**
+- ChromaDB data → Re-upload and re-process all documents (hours)
+- n8n workflows → Rebuild workflows from scratch (hours)
+- Credentials → Regenerate, update everywhere (30 min)
+- Scripts → Lost custom work
 
 ---
 
-#### Quick Backup Script
+#### Implementation: Comprehensive Backup Script
 
-**Create `~/cisco-rag-demo/backup.sh`:**
+**Create `~/cisco-rag-demo/backup-system.sh`:**
 
 ```bash
 #!/bin/bash
-# Quick backup script for RAG system
+# Comprehensive system backup
 
-BACKUP_DIR=~/rag-backups
 DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_PATH="${BACKUP_DIR}/rag_backup_${DATE}"
+BACKUP_DIR=~/rag-backups
+BACKUP_NAME="rag-backup-$DATE"
+BACKUP_PATH="$BACKUP_DIR/$BACKUP_NAME"
 
-echo "🗂️  Creating backup: ${DATE}"
-mkdir -p "${BACKUP_PATH}"
+echo "🔐 Starting RAG System Backup"
+echo "================================"
+echo ""
 
-# Backup ChromaDB data
-echo "📊 Backing up ChromaDB data..."
-podman exec chromadb tar czf - /chroma/chroma > "${BACKUP_PATH}/chromadb_data.tar.gz"
+# Create backup directory
+mkdir -p "$BACKUP_PATH"
 
-# Backup n8n workflows
-echo "🔧 Backing up n8n workflows..."
-podman exec n8n tar czf - /home/node/.n8n > "${BACKUP_PATH}/n8n_data.tar.gz"
+echo "📦 Backing up ChromaDB data..."
+cp -r ~/cisco-rag-demo/chroma-data "$BACKUP_PATH/chroma-data"
+echo "   ✅ ChromaDB data backed up"
 
-# Backup Python scripts
-echo "🐍 Backing up Python scripts..."
-tar czf "${BACKUP_PATH}/scripts.tar.gz" -C ~/cisco-rag-demo *.py *.sh 2>/dev/null || true
+echo "📦 Backing up n8n workflows..."
+cp -r ~/cisco-rag-demo/n8n-data "$BACKUP_PATH/n8n-data"
+echo "   ✅ n8n data backed up"
 
-# Create backup manifest
-echo "📋 Creating manifest..."
-cat > "${BACKUP_PATH}/manifest.txt" << EOF
-RAG System Backup
-Date: $(date)
-Components:
-- ChromaDB data (document vectors)
-- n8n workflows and configuration
-- Python scripts
+echo "📦 Backing up credentials..."
+if [ -d ~/cisco-rag-demo/credentials ]; then
+    cp -r ~/cisco-rag-demo/credentials "$BACKUP_PATH/credentials"
+    echo "   ✅ Credentials backed up"
+fi
 
-Restore instructions: See restore.sh in backup directory
-EOF
+echo "📦 Backing up scripts..."
+if [ -d ~/cisco-rag-demo/scripts ]; then
+    cp -r ~/cisco-rag-demo/scripts "$BACKUP_PATH/scripts"
+    echo "   ✅ Scripts backed up"
+fi
 
-# Calculate backup size
-BACKUP_SIZE=$(du -sh "${BACKUP_PATH}" | cut -f1)
+echo "📦 Backing up workflows..."
+if [ -d ~/cisco-rag-demo/workflows ]; then
+    cp -r ~/cisco-rag-demo/workflows "$BACKUP_PATH/workflows"
+    echo "   ✅ Workflow JSONs backed up"
+fi
 
-echo "✅ Backup complete!"
-echo "   Location: ${BACKUP_PATH}"
-echo "   Size: ${BACKUP_SIZE}"
-echo "   Files:"
-ls -lh "${BACKUP_PATH}"
+# Create archive
+echo ""
+echo "📦 Creating compressed archive..."
+cd "$BACKUP_DIR"
+tar -czf "${BACKUP_NAME}.tar.gz" "$BACKUP_NAME"
+rm -rf "$BACKUP_NAME"
+
+# Calculate size
+SIZE=$(du -h "${BACKUP_NAME}.tar.gz" | cut -f1)
+
+echo ""
+echo "================================"
+echo "✅ Backup Complete!"
+echo "================================"
+echo "   Location: ${BACKUP_DIR}/${BACKUP_NAME}.tar.gz"
+echo "   Size: $SIZE"
+echo ""
+
+# Cleanup old backups (keep last 7 days)
+echo "🧹 Cleaning old backups (keeping last 7)..."
+find "$BACKUP_DIR" -name "rag-backup-*.tar.gz" -mtime +7 -delete
+echo ""
+
+echo "💾 Backup Summary:"
+ls -lh "$BACKUP_DIR" | grep "rag-backup"
+echo ""
+echo "================================"
 ```
 
-**Make it executable:**
+**Make executable:**
 ```bash
-chmod +x ~/cisco-rag-demo/backup.sh
-```
-
-**Run it:**
-```bash
-~/cisco-rag-demo/backup.sh
+chmod +x ~/cisco-rag-demo/backup-system.sh
 ```
 
 ---
 
 #### Restore Script
 
-**Create `~/cisco-rag-demo/restore.sh`:**
+**Create `~/cisco-rag-demo/restore-system.sh`:**
 
 ```bash
 #!/bin/bash
-# Restore RAG system from backup
+# Restore system from backup
 
-if [ $# -eq 0 ]; then
-    echo "Usage: ./restore.sh <backup_directory>"
-    echo "Example: ./restore.sh ~/rag-backups/rag_backup_20241220_143022"
+if [ -z "$1" ]; then
+    echo "Usage: ./restore-system.sh <backup-file>"
+    echo ""
+    echo "Available backups:"
+    ls -lh ~/rag-backups/ | grep "rag-backup"
     exit 1
 fi
 
-BACKUP_PATH=$1
-
-if [ ! -d "${BACKUP_PATH}" ]; then
-    echo "❌ Backup directory not found: ${BACKUP_PATH}"
-    exit 1
-fi
+BACKUP_FILE="$1"
 
 echo "⚠️  WARNING: This will overwrite current data!"
-echo "Restoring from: ${BACKUP_PATH}"
-read -p "Type 'RESTORE' to continue: " confirm
+echo "   Backup file: $BACKUP_FILE"
+echo ""
+read -p "Continue? (yes/no): " confirm
 
-if [ "$confirm" != "RESTORE" ]; then
+if [ "$confirm" != "yes" ]; then
     echo "❌ Restore cancelled"
-    exit 1
+    exit 0
 fi
 
-echo "🔄 Starting restore..."
-
-# Stop containers
-echo "⏸️  Stopping containers..."
+echo ""
+echo "🔄 Stopping services..."
 podman stop chromadb n8n
 
-# Restore ChromaDB
-if [ -f "${BACKUP_PATH}/chromadb_data.tar.gz" ]; then
-    echo "📊 Restoring ChromaDB..."
-    podman start chromadb
-    sleep 3
-    cat "${BACKUP_PATH}/chromadb_data.tar.gz" | podman exec -i chromadb tar xzf - -C /
-    podman stop chromadb
+echo "📦 Extracting backup..."
+TEMP_DIR=$(mktemp -d)
+tar -xzf "$BACKUP_FILE" -C "$TEMP_DIR"
+
+BACKUP_NAME=$(basename "$BACKUP_FILE" .tar.gz)
+
+echo "🔄 Restoring ChromaDB data..."
+rm -rf ~/cisco-rag-demo/chroma-data
+cp -r "$TEMP_DIR/$BACKUP_NAME/chroma-data" ~/cisco-rag-demo/
+
+echo "🔄 Restoring n8n data..."
+rm -rf ~/cisco-rag-demo/n8n-data
+cp -r "$TEMP_DIR/$BACKUP_NAME/n8n-data" ~/cisco-rag-demo/
+
+echo "🔄 Restoring credentials..."
+if [ -d "$TEMP_DIR/$BACKUP_NAME/credentials" ]; then
+    rm -rf ~/cisco-rag-demo/credentials
+    cp -r "$TEMP_DIR/$BACKUP_NAME/credentials" ~/cisco-rag-demo/
 fi
 
-# Restore n8n
-if [ -f "${BACKUP_PATH}/n8n_data.tar.gz" ]; then
-    echo "🔧 Restoring n8n..."
-    podman start n8n
-    sleep 3
-    cat "${BACKUP_PATH}/n8n_data.tar.gz" | podman exec -i n8n tar xzf - -C /
-    podman stop n8n
+echo "🔄 Restoring scripts..."
+if [ -d "$TEMP_DIR/$BACKUP_NAME/scripts" ]; then
+    cp -r "$TEMP_DIR/$BACKUP_NAME/scripts" ~/cisco-rag-demo/
 fi
 
-# Restore scripts
-if [ -f "${BACKUP_PATH}/scripts.tar.gz" ]; then
-    echo "🐍 Restoring scripts..."
-    tar xzf "${BACKUP_PATH}/scripts.tar.gz" -C ~/cisco-rag-demo/
-fi
+# Cleanup
+rm -rf "$TEMP_DIR"
 
-# Start containers
-echo "▶️  Starting containers..."
+echo "🔄 Starting services..."
 podman start chromadb n8n
+sleep 10
 
+echo ""
 echo "✅ Restore complete!"
-echo "🔍 Verify your system: ~/cisco-rag-demo/system-check.sh"
+echo ""
+echo "Next steps:"
+echo "  1. Verify services: podman ps"
+echo "  2. Test a query: ~/cisco-rag-demo/query_rag.py 'test'"
+echo "  3. Check n8n: http://localhost:5678"
 ```
 
-**Make it executable:**
+**Make executable:**
 ```bash
-chmod +x ~/cisco-rag-demo/restore.sh
+chmod +x ~/cisco-rag-demo/restore-system.sh
 ```
 
 ---
 
 #### Automated Backup Schedule
 
-**Set up daily backups using cron:**
+**Option 1: Manual backups (recommended at first)**
+```bash
+# Run daily backup manually
+~/cisco-rag-demo/backup-system.sh
+```
+
+**Option 2: Automated via cron (advanced)**
 
 ```bash
 # Edit crontab
 crontab -e
 
-# Add this line for daily backup at 2 AM:
-0 2 * * * ~/cisco-rag-demo/backup.sh >> ~/rag-backups/backup.log 2>&1
+# Add this line (runs daily at 2 AM)
+0 2 * * * ~/cisco-rag-demo/backup-system.sh
 ```
 
 ---
 
-#### Backup Best Practices
+#### Backup to External Storage
 
-**Backup frequency:**
-- âœ… **Before major changes** - Always!
-- âœ… **After uploading important documents**
-- âœ… **Weekly for active systems**
-- âœ… **Daily for production systems**
+**For extra safety, copy to external drive:**
 
-**Retention policy:**
-- Keep last 7 daily backups
-- Keep last 4 weekly backups  
-- Keep last 3 monthly backups
+```bash
+# After backup runs
+cp ~/rag-backups/rag-backup-*.tar.gz /Volumes/ExternalDrive/rag-backups/
+```
 
-**Storage locations:**
-- Local machine (fast, but not safe from hardware failure)
-- Network drive (better, protects against local failure)
-- Cloud storage (best, protects against site disasters)
+**Or use cloud storage:**
+```bash
+# Copy to Dropbox, Google Drive, etc.
+cp ~/rag-backups/rag-backup-*.tar.gz ~/Dropbox/rag-backups/
+```
+
+---
+
+#### Success Criteria
+
+✓ Backup system is working when:
+- Backup script runs without errors
+- Backup files created successfully
+- Can restore from backup
+- Old backups cleaned automatically
+- Backup size reasonable
+
+**Benefit:** Peace of mind! Your work is safe!
 
 ---
 
 ## Part 2: Feature Additions
 
-These improvements add new capabilities to your system. Choose based on your needs.
+More substantial additions that expand capabilities.
 
 ---
 
-### 2.1: Add File Format Support
+### 2.1: Additional File Format Support
 
-**Current state:** Only supports .txt, .doc, and .docx files
+**Current state:** Only supports .txt, .md, .doc, .docx
 
-**Improvement:** Support PDFs, Excel, PowerPoint, and other formats
+**Improvement:** Add support for PDF, Excel, PowerPoint, and more
 
 **Ratings:**
 - **Difficulty:** ⭐⭐ Medium  
 - **Value:** ⭐⭐⭐ High  
-- **Time:** 2-4 hours
-- **Prerequisites:** Working document upload system
+- **Time:** 1-2 hours
+- **Prerequisites:** Python knowledge, working document upload
 
-**Implementation guide:** See [GUIDE_2_RAG_SYSTEM.md](./GUIDE_2_RAG_SYSTEM.md) for detailed PDF support instructions
+---
 
-**Key steps:**
-1. Install Python libraries (`pdfplumber`, `openpyxl`, `python-pptx`)
-2. Create parser functions for each file type
-3. Modify document upload script to detect file type
-4. Test with sample files
+#### Supported Formats Overview
 
-**Benefits:**
-- âœ… Work with your existing document library
-- âœ… No need to convert formats
-- âœ… Support enterprise documents (financial reports, presentations)
+**Text formats (already working):**
+- .txt, .md - Plain text
+- .doc, .docx - Microsoft Word
+
+**New formats to add:**
+- **.pdf** - PDF documents (most requested!)
+- **.xlsx, .xls** - Excel spreadsheets
+- **.pptx, .ppt** - PowerPoint presentations
+- **.csv** - Comma-separated values
+- **.html** - Web pages
+
+---
+
+#### Implementation: PDF Support (Most Important)
+
+**Install PDF processing library:**
+
+```bash
+pip3 install PyPDF2 --break-system-packages
+```
+
+**Update your `load_document.py` script:**
+
+```python
+#!/usr/bin/env python3
+"""
+Enhanced document loader with multi-format support
+"""
+
+import requests
+import sys
+import uuid
+from pathlib import Path
+import PyPDF2
+import docx  # For .docx files
+
+# ... (keep existing configuration) ...
+
+def read_file(filepath):
+    """Read file content based on extension"""
+    path = Path(filepath)
+    ext = path.suffix.lower()
+    
+    try:
+        if ext == '.pdf':
+            return read_pdf(filepath)
+        elif ext == '.docx':
+            return read_docx(filepath)
+        elif ext == '.txt' or ext == '.md':
+            with open(filepath, 'r', encoding='utf-8') as f:
+                return f.read()
+        else:
+            raise ValueError(f"Unsupported file format: {ext}")
+    except Exception as e:
+        print(f"Error reading file: {e}")
+        return None
+
+def read_pdf(filepath):
+    """Extract text from PDF"""
+    text = []
+    
+    with open(filepath, 'rb') as file:
+        pdf_reader = PyPDF2.PdfReader(file)
+        
+        print(f"   PDF has {len(pdf_reader.pages)} pages")
+        
+        for page_num, page in enumerate(pdf_reader.pages, 1):
+            print(f"   Processing page {page_num}...", end=' ')
+            page_text = page.extract_text()
+            text.append(page_text)
+            print("✓")
+    
+    return '\n\n'.join(text)
+
+def read_docx(filepath):
+    """Extract text from DOCX"""
+    doc = docx.Document(filepath)
+    
+    paragraphs = []
+    for para in doc.paragraphs:
+        if para.text.strip():
+            paragraphs.append(para.text)
+    
+    return '\n\n'.join(paragraphs)
+
+def load_document(filepath, source_name=None):
+    """Load a document into ChromaDB"""
+    # Get collection ID
+    collection_id = get_collection_id()
+    if not collection_id:
+        return False
+    
+    # Read file using appropriate method
+    text = read_file(filepath)
+    if text is None:
+        return False
+    
+    # ... (rest of existing upload logic) ...
+```
+
+---
+
+#### Testing PDF Support
+
+**Create test PDF or use existing one:**
+
+```bash
+# Upload a PDF file
+python3 ~/cisco-rag-demo/scripts/load_document.py \
+  ~/Documents/network_report.pdf \
+  "Network Report PDF"
+```
+
+**Verify it works:**
+```bash
+python3 ~/cisco-rag-demo/scripts/query_rag.py \
+  "What is in the network report?"
+```
+
+---
+
+#### Excel Support (For Data Tables)
+
+**Install Excel library:**
+```bash
+pip3 install openpyxl --break-system-packages
+```
+
+**Add to `load_document.py`:**
+
+```python
+import openpyxl
+
+def read_excel(filepath):
+    """Extract text from Excel spreadsheet"""
+    workbook = openpyxl.load_workbook(filepath)
+    
+    text_parts = []
+    
+    for sheet_name in workbook.sheetnames:
+        sheet = workbook[sheet_name]
+        text_parts.append(f"Sheet: {sheet_name}\n")
+        
+        for row in sheet.iter_rows(values_only=True):
+            # Convert row to text
+            row_text = ' | '.join([str(cell) if cell else '' for cell in row])
+            if row_text.strip():
+                text_parts.append(row_text)
+    
+    return '\n'.join(text_parts)
+```
+
+**Update `read_file()` function:**
+```python
+elif ext in ['.xlsx', '.xls']:
+    return read_excel(filepath)
+```
+
+---
+
+#### Success Criteria
+
+✓ Multi-format support working when:
+- Can load PDF documents
+- Can load Excel spreadsheets
+- Extracted text is readable
+- Queries return accurate information
+- All formats work in same system
+
+**Benefit:** Work with any document type your team uses!
 
 ---
 
 ### 2.2: Conversation History & Context
 
-**Current state:** Each query is independent - bot has no memory of previous questions
+**Current state:** Each query independent, no memory of previous questions
 
-**Improvement:** Bot remembers conversation context and can answer follow-up questions
+**Improvement:** Bot remembers conversation context within a session
 
 **Ratings:**
-- **Difficulty:** ⭐⭐⭐ Hard  
-- **Value:** ⭐⭐⭐⭐ Very High  
-- **Time:** 3-5 hours
-- **Prerequisites:** Working Webex bot, understanding of n8n global storage
+- **Difficulty:** ⭐⭐⭐ Medium-Hard  
+- **Value:** ⭐⭐⭐ High  
+- **Time:** 2-3 hours
+- **Prerequisites:** Working Webex bot, n8n experience
 
-**What this enables:**
+---
 
-**Without context:**
+#### What Conversation History Enables
+
+**Current behavior:**
 ```
-User: "What's our project timeline?"
-Bot: "The project runs from Jan 2025 to June 2025."
+User: "What's the network uptime?"
+Bot: "99.94% in Q3 2024"
 
-User: "What's the budget?"
-Bot: "The budget is $250,000."
-
-User: "When is phase 2?"
-Bot: "I need more context. Which project's phase 2?"
-```
-
-**With context:**
-```
-User: "What's our project timeline?"
-Bot: "The datacenter refresh project runs from Jan 2025 to June 2025."
-
-User: "What's the budget?"
-Bot: "The datacenter refresh budget is $250,000, allocated across 3 phases."
-
-User: "When is phase 2?"
-Bot: "Phase 2 of the datacenter refresh begins in March 2025 and focuses 
-on network infrastructure upgrades."
+User: "What caused the outages?"
+Bot: "I don't have enough information" 
+     (forgot we're talking about network)
 ```
 
-**Implementation overview:**
-
-1. Store conversation history per user/room
-2. Include last 3-5 messages in RAG prompt
-3. Clear history after inactivity or on "reset" command
-4. Manage memory usage (limit history length)
-
-**Detailed guide available in:** [Advanced_RAG_Techniques.md](./Advanced_RAG_Techniques.md)
-
----
-
-### 2.3: Multi-Collection Support
-
-**Current state:** All documents stored in one collection (`cisco_docs`)
-
-**Improvement:** Separate collections for different document types or teams
-
-**Ratings:**
-- **Difficulty:** ⭐⭐⭐ Hard  
-- **Value:** ⭐⭐⭐ High (for teams with multiple document sets)  
-- **Time:** 4-6 hours
-
-**Use cases:**
-- **Finance** collection (budgets, invoices) vs. **Engineering** collection (assessments, diagrams)
-- **Public** documents vs. **Confidential** documents
-- **Current** documentation vs. **Archive** documents
-
-**Benefits:**
-- Better organization
-- Access control per collection
-- Focused search results
-- Easier maintenance
-
----
-
-### 2.4: Rate Limiting & Access Control
-
-**Current state:** Anyone with bot access can query unlimited times
-
-**Improvement:** Rate limits and user permissions
-
-**Ratings:**
-- **Difficulty:** ⭐⭐⭐ Hard  
-- **Value:** ⭐⭐ Medium (⭐⭐⭐⭐ High for shared systems)  
-- **Time:** 3-4 hours
-
-**What you'll implement:**
-- Maximum queries per user per hour
-- Daily query limits
-- User whitelist/blacklist
-- Admin override commands
-- Usage tracking
-
----
-
-## Part 3: Production Readiness
-
-Make your system reliable enough for company-wide deployment.
-
----
-
-### 3.1: Cloud Deployment
-
-**Current state:** Runs on your local Mac
-
-**Improvement:** Deploy to cloud for 24/7 availability
-
-**Ratings:**
-- **Difficulty:** ⭐⭐⭐⭐ Advanced  
-- **Value:** ⭐⭐⭐⭐ Critical for production  
-- **Time:** 1-2 days
-- **Cost:** $50-200/month depending on usage
-
-**Options:**
-
-1. **AWS EC2** - Most flexible, requires AWS knowledge
-2. **DigitalOcean Droplet** - Simpler, good docs
-3. **Google Cloud Run** - Serverless, auto-scaling
-4. **Dedicated server** - Maximum control
-
-**Key considerations:**
-- GPU vs. CPU instances (GPU is faster but more expensive)
-- RAM requirements (16GB minimum for llama3.2:3b)
-- Storage for documents and models
-- Network bandwidth for file uploads
-
----
-
-### 3.2: Monitoring & Alerting
-
-**Current state:** No visibility into system health or usage
-
-**Improvement:** Real-time monitoring and alerts
-
-**Ratings:**
-- **Difficulty:** ⭐⭐⭐ Hard  
-- **Value:** ⭐⭐⭐⭐ High for production  
-- **Time:** 4-6 hours
-
-**What to monitor:**
-- Container uptime
-- Response times
-- Error rates
-- Query volume
-- Document count
-- System resources (CPU, RAM, disk)
-
-**Alert on:**
-- Container crashes
-- Response time > 30 seconds
-- Error rate > 5%
-- Disk space < 10%
-
----
-
-### 3.3: Security Hardening
-
-**Current state:** Basic security, suitable for testing
-
-**Improvement:** Enterprise-grade security
-
-**Ratings:**
-- **Difficulty:** ⭐⭐⭐⭐ Advanced  
-- **Value:** ⭐⭐⭐⭐⭐ Critical for sensitive data  
-- **Time:** 1-2 days
-
-**Security measures:**
-1. Enable HTTPS for all connections
-2. Add authentication to n8n
-3. Implement API keys for webhook access
-4. Encrypt sensitive data at rest
-5. Enable audit logging
-6. Regular security updates
-7. Network segmentation
-
----
-
-## Part 4: Advanced RAG Techniques
-
-Improve answer accuracy and quality with advanced retrieval methods.
-
-### 4.1: Hybrid Search (Semantic + Keyword)
-
-**Current state:** Pure vector search (finds documents by meaning)
-
-**Improvement:** Combine semantic search with keyword matching
-
-**Value:** Better recall for specific terms (product names, IDs, technical codes)
-
-### 4.2: Query Expansion
-
-**Current state:** Search uses exact query words
-
-**Improvement:** Automatically add synonyms and related terms
-
-**Example:**
-- Query: "network downtime"
-- Expanded: "network downtime outage failure unavailability offline"
-
-### 4.3: Result Re-ranking
-
-**Current state:** Use top 3 chunks as-is
-
-**Improvement:** Retrieve 10 chunks, re-rank for relevance, use top 3
-
-**Benefit:** More accurate results, fewer hallucinations
-
-### 4.4: Answer Citations
-
-**Current state:** AI provides answer without specific sources
-
-**Improvement:** Cite exact document sections
-
-**Example output:**
+**With history:**
 ```
-Answer: The network uptime is 99.94% [1], with mean time to 
-repair of 2.4 hours [2].
+User: "What's the network uptime?"
+Bot: "99.94% in Q3 2024"
 
-Sources:
-[1] Network Assessment 2024, Page 3, Section "Q3 Performance"
-[2] Network Assessment 2024, Page 7, Section "Incident Analysis"
+User: "What caused the outages?"
+Bot: "The outages in Q3 2024 were caused by 
+      power fluctuations in Building A"
+     (remembers context!)
 ```
 
 ---
 
-## Part 5: Integration Expansion
+#### Implementation Strategy
 
-Add more platforms beyond Webex.
+**Store conversation history per user/room:**
+- User asks question → Store in memory
+- Bot responds → Store in memory
+- Next question → Include previous Q&A as context
+- Session expires after 30 minutes of inactivity
 
-### 5.1: Slack Integration
+**Storage options:**
+1. **Simple:** In-memory (lost on restart)
+2. **Better:** File-based (survives restart)
+3. **Best:** Database (Redis, SQLite)
 
-**Difficulty:** ⭐⭐ Medium  
-**Time:** 2-3 hours  
-**Value:** ⭐⭐⭐ High if team uses Slack
-
-**Very similar to Webex setup:**
-1. Create Slack app
-2. Get bot token
-3. Subscribe to message events
-4. Modify n8n workflow for Slack API format
-5. Test in Slack workspace
-
-### 5.2: Microsoft Teams Integration
-
-**Difficulty:** ⭐⭐⭐ Hard (Teams bot framework is complex)  
-**Time:** 4-6 hours  
-**Value:** ⭐⭐⭐⭐ High for Microsoft-centric organizations
-
-### 5.3: Email Integration
-
-**Difficulty:** ⭐⭐⭐ Hard  
-**Time:** 3-4 hours  
-**Use case:** Async Q&A, batch processing
-
-**Flow:**
-1. User emails rag-bot@company.com
-2. System receives via IMAP or Email API
-3. Extract question from email body
-4. Process with RAG pipeline
-5. Reply via SMTP
-
-### 5.4: Custom Web Interface
-
-**Difficulty:** ⭐⭐⭐⭐ Advanced (requires web development)  
-**Time:** 8-12 hours  
-**Value:** ⭐⭐⭐⭐ High for public-facing systems
-
-**Build a custom chat interface:**
-- HTML/CSS/JavaScript frontend
-- Calls your n8n webhook API
-- File upload form
-- Chat history UI
-- Mobile-responsive design
+We'll implement option 2 (file-based) as a balance.
 
 ---
 
-## Part 6: Performance & Cost Optimization
+#### Implementation: File-Based Session Memory
 
-### 6.1: Model Selection
+**Update Webex n8n workflow:**
 
-**Current:** llama3.2:3b (2GB, good balance)
+**Add new Code node** after "Extract Data" node:
 
-**Options:**
+```javascript
+// Session Management Node
+const roomId = $json.roomId;
+const question = $json.question;
+const sessionDir = '/data/sessions';  // n8n data directory
+const sessionFile = `${sessionDir}/${roomId}.json`;
 
-**Faster/Smaller:**
-- `llama3.2:1b` (1GB) - 2x faster, slightly less accurate
-- Good for high-volume, simple queries
+// Load session history
+let history = [];
+try {
+    const fs = require('fs');
+    if (fs.existsSync(sessionFile)) {
+        const data = fs.readFileSync(sessionFile, 'utf8');
+        history = JSON.parse(data);
+        
+        // Remove old messages (keep last hour)
+        const oneHourAgo = Date.now() - (60 * 60 * 1000);
+        history = history.filter(h => h.timestamp > oneHourAgo);
+    }
+} catch (error) {
+    console.log('No history found or error loading');
+}
 
-**Slower/Larger:**
-- `llama3.1:8b` (4.7GB) - More accurate, better reasoning
-- Good for complex analysis, low volume
+// Add current question to history
+history.push({
+    type: 'question',
+    text: question,
+    timestamp: Date.now()
+});
 
-### 6.2: Compute Optimization
+// Format conversation context for prompt
+const conversationContext = history
+    .slice(-6)  // Last 3 exchanges (6 messages)
+    .map(h => `${h.type === 'question' ? 'User' : 'Bot'}: ${h.text}`)
+    .join('\n');
 
-**Strategies:**
-- Use smaller chunks (faster search, less context)
-- Reduce number of retrieved chunks (2 instead of 3)
-- Enable caching (implemented in Part 1.3)
-- Batch processing for multiple queries
-- Async processing for non-urgent queries
+return [{
+    json: {
+        question: question,
+        roomId: roomId,
+        history: history,
+        conversationContext: conversationContext
+    }
+}];
+```
 
-### 6.3: Storage Management
+---
 
-**Current:** All documents stored indefinitely
+**Update "Build Prompt" node:**
 
-**Improvements:**
-- Archive old documents
-- Compress infrequently accessed collections
-- Implement document expiration policies
-- Clean up duplicate documents
+```javascript
+// Modified Build Prompt with conversation history
+const results = items[0].json;
+const documents = results.documents[0];
+const metadatas = results.metadatas[0];
+const conversationContext = $('Session Management').item.json.conversationContext;
+
+// Format document context
+const docContext = documents.map((doc, i) => {
+    const meta = metadatas[i];
+    return `Source: ${meta.source}\nChunk ${meta.chunk_index}/${meta.total_chunks}\n\n${doc}`;
+}).join('\n\n---\n\n');
+
+// Get current question
+const question = $('Extract Data').item.json.question;
+
+// Build prompt WITH conversation history
+const prompt = `You are having a conversation with a user. Here's the recent conversation:
+
+${conversationContext}
+
+Here's relevant information from documents:
+${docContext}
+
+Current question: ${question}
+
+Provide a natural response that takes the conversation history into account. If the question refers to something discussed earlier, use that context.
+
+Answer:`;
+
+return [{ json: { prompt: prompt } }];
+```
+
+---
+
+**Add "Save Response" node after "Generate Answer":**
+
+```javascript
+// Save Response to History
+const roomId = $('Extract Data').item.json.roomId;
+const response = $json.response;
+const history = $('Session Management').item.json.history;
+const sessionDir = '/data/sessions';
+const sessionFile = `${sessionDir}/${roomId}.json`;
+
+// Add bot response to history
+history.push({
+    type: 'response',
+    text: response,
+    timestamp: Date.now()
+});
+
+// Save updated history
+try {
+    const fs = require('fs');
+    
+    // Create directory if doesn't exist
+    if (!fs.existsSync(sessionDir)) {
+        fs.mkdirSync(sessionDir, { recursive: true });
+    }
+    
+    fs.writeFileSync(sessionFile, JSON.stringify(history, null, 2));
+} catch (error) {
+    console.error('Error saving history:', error);
+}
+
+return items;  // Pass through to next node
+```
+
+---
+
+#### Testing Conversation History
+
+**Test conversation flow:**
+
+```
+You: "What's the Boston office network uptime?"
+Bot: "99.94% in Q3 2024"
+
+You: "What caused the outages?"
+Bot: "The outages in the Boston office network during Q3 2024 
+      were caused by power fluctuations in Building A."
+
+You: "How many were there?"
+Bot: "There were five outages during Q3 2024 in Boston office..."
+```
+
+**Each follow-up understands the context!**
+
+---
+
+#### Session Cleanup Script
+
+**Create periodic cleanup:**
+
+```bash
+cat > ~/cisco-rag-demo/cleanup-sessions.sh << 'EOF'
+#!/bin/bash
+# Clean up old session files
+
+SESSION_DIR=~/cisco-rag-demo/n8n-data/sessions
+
+# Delete sessions older than 24 hours
+find "$SESSION_DIR" -name "*.json" -mtime +1 -delete
+
+echo "✅ Old sessions cleaned"
+EOF
+
+chmod +x ~/cisco-rag-demo/cleanup-sessions.sh
+
+# Run daily via cron
+# crontab -e
+# 0 3 * * * ~/cisco-rag-demo/cleanup-sessions.sh
+```
+
+---
+
+#### Success Criteria
+
+✓ Conversation history working when:
+- Bot remembers previous questions
+- Follow-up questions work naturally
+- Context maintained within session
+- Old sessions cleaned automatically
+
+**Benefit:** Natural, flowing conversations with your bot!
 
 ---
 
 ## Implementation Priority Matrix
 
-### High Value, Easy (Do First) 🎯
+Use this matrix to decide what to implement first based on your needs.
 
-1. âœ… Better document management (Quick Win 1.1)
-2. âœ… Customize bot personality (Quick Win 1.2)
-3. âœ… Static tunnel URL (Quick Win 1.4) - If sharing with team
-4. âœ… Basic backups (Quick Win 1.5)
+### Priority Quadrants
 
-**Time investment:** 2-3 hours total  
-**Impact:** Immediate improvement in usability and reliability
+```
+High Value, Low Effort (DO FIRST!)
+┌─────────────────────────────────┐
+│ • Document Management (1.1)     │
+│ • Bot Personality (1.2)         │
+│ • Backups (1.5)                 │
+│ • Static URL (1.4)              │
+└─────────────────────────────────┘
 
----
+High Value, High Effort (PLAN CAREFULLY)
+┌─────────────────────────────────┐
+│ • Conversation History (2.2)    │
+│ • PDF Support (2.1)             │
+│ • Cloud Deployment (3.1)        │
+│ • Monitoring (3.3)              │
+└─────────────────────────────────┘
 
-### High Value, Hard (Plan Carefully) 📋
+Low Value, Low Effort (NICE TO HAVE)
+┌─────────────────────────────────┐
+│ • Response Caching (1.3)        │
+│ • Additional integrations       │
+│ • Custom web interface          │
+└─────────────────────────────────┘
 
-5. Conversation history (Feature 2.2)
-6. Monitoring & alerting (Production 3.2)
-7. Cloud deployment (Production 3.1) - For 24/7 access
-8. Answer citations (Advanced 4.4)
-
-**Time investment:** 1-2 weeks  
-**Impact:** Production-grade system, suitable for company-wide deployment
-
----
-
-### Medium Value, Medium Effort (Nice to Have) ðŸ'¼
-
-9. Response caching (Quick Win 1.3)
-10. Multi-collection support (Feature 2.3)
-11. Additional file formats (Feature 2.1)
-12. Rate limiting (Feature 2.4)
-13. Slack/Teams integration (Integration 5.1-5.2)
-
-**Time investment:** 1-2 weeks  
-**Impact:** More flexible, feature-rich system
-
----
-
-### Lower Priority (Future) 🔮
-
-14. Hybrid search (Advanced 4.1)
-15. Query expansion (Advanced 4.2)
-16. Result re-ranking (Advanced 4.3)
-17. Custom web interface (Integration 5.4)
-18. Email integration (Integration 5.3)
-
-**Time investment:** 2-4 weeks  
-**Impact:** Marginal improvements, nice for specialized use cases
+Low Value, High Effort (AVOID FOR NOW)
+┌─────────────────────────────────┐
+│ • Advanced RAG techniques       │
+│ • Multi-collection support      │
+│ • Custom model training         │
+└─────────────────────────────────┘
+```
 
 ---
 
 ## Recommended Roadmap
 
-### 🎯 Week 1-2: Foundation (Quick Wins)
+### 🎯 Phase 1: Core Improvements (Week 1)
 
-**Goal:** Make your current system more professional and usable
+**Goal:** Make system usable and safe
 
-**Tasks:**
-- [x] Implement document management (list, delete)
-- [x] Customize bot personality for your audience
-- [x] Set up basic backups
-- [x] Get static tunnel URL (if deploying to team)
-- [x] Create admin scripts for common tasks
+**Implement:**
+1. ✓ Document Management (1.1) - 30 min
+2. ✓ Backup System (1.5) - 30 min
+3. ✓ Bot Personality (1.2) - 15 min
 
-**Success criteria:**
-- You can manage documents without guessing what's loaded
-- Bot responses match your organization's tone
-- You have working backups to restore from
-- URL doesn't change (if using paid tunnel)
-
-**Time commitment:** 3-4 hours  
-**Difficulty:** Easy - Perfect for getting started
+**Time:** 1-2 hours  
+**Outcome:** System is manageable and protected
 
 ---
 
-### ðŸ"š Month 1: Production Basics
+### 🚀 Phase 2: Production Ready (Weeks 2-3)
 
-**Goal:** Make it reliable enough for daily team use
+**Goal:** Safe to share with team
 
-**Tasks:**
-- [ ] Deploy to cloud OR set up always-on local hosting
-- [ ] Add basic monitoring (uptime, response time)
-- [ ] Implement automated daily backups
-- [ ] Document troubleshooting procedures
-- [ ] Test disaster recovery process
+**Implement:**
+1. ✓ Static Tunnel URL (1.4) - 15 min
+2. ✓ PDF Support (2.1) - 1 hour
+3. ✓ Monitoring basics (3.3) - 1 hour
 
-**Success criteria:**
-- System available 24/7
-- You get alerts if something breaks
-- Recovery from failure takes < 30 minutes
-- Team members can self-serve common issues
-
-**Time commitment:** 8-12 hours  
-**Difficulty:** Medium - Requires careful testing
+**Time:** 3-4 hours  
+**Outcome:** Reliable enough for team use
 
 ---
 
-### ðŸš€ Month 2: Feature Expansion
+### 💡 Phase 3: Advanced Features (Month 2)
 
-**Goal:** Add capabilities users are requesting
+**Goal:** Enhanced user experience
 
-**Tasks:**
-- [ ] Conversation history (if users ask follow-up questions)
-- [ ] Additional file formats (PDFs, if needed)
-- [ ] Multi-collection support (if managing multiple doc sets)
-- [ ] Response caching (if queries are repeated)
+**Implement based on feedback:**
+- Conversation History (2.2) - If users need it
+- Response Caching (1.3) - If performance matters
+- Additional integrations - If team uses other platforms
 
-**Success criteria:**
-- Users can have natural conversations (follow-up questions work)
-- System handles all your document types
-- Performance improves for common queries
-- Different teams can have separate document collections
-
-**Time commitment:** 12-16 hours  
-**Difficulty:** Medium-Hard - Complex features
+**Time:** Variable  
+**Outcome:** Features users actually want
 
 ---
 
-### ðŸŽ" Month 3: Advanced Capabilities
+### ⚡ Path 1: Team Deployment
 
-**Goal:** Optimize for accuracy and add integrations
-
-**Tasks:**
-- [ ] Answer citations (verify response accuracy)
-- [ ] Additional integrations (Slack, Teams, email)
-- [ ] Hybrid search (better retrieval for specific terms)
-- [ ] Custom web interface (if needed)
-
-**Success criteria:**
-- Users can verify where answers come from
-- Multiple platforms supported
-- Search finds relevant documents more consistently
-- Public access via web (if required)
-
-**Time commitment:** 16-24 hours  
-**Difficulty:** Hard - Requires deeper technical knowledge
-
----
-
-### âš¡ Month 4+: Optimization & Scale
-
-**Goal:** Handle growth efficiently
-
-**Tasks:**
-- [ ] Performance tuning based on metrics
-- [ ] Cost optimization (model selection, caching strategy)
-- [ ] Storage management (archival, cleanup)
-- [ ] Advanced security (if handling sensitive data)
-- [ ] Team training & documentation
-
-**Success criteria:**
-- System handles 10x current query volume
-- Cost per query decreases
-- Response time remains consistent under load
-- Team members can troubleshoot independently
-
-**Time commitment:** Ongoing  
-**Difficulty:** Advanced - Requires monitoring and iteration
-
----
-
-## Success Metrics & Tracking
-
-### ðŸ"Š Track These Metrics
-
-**Performance Metrics:**
-- âœ… **Response time** - Target: < 10 seconds per query
-- âœ… **Uptime** - Target: > 99.5% (allow for maintenance)
-- âœ… **Error rate** - Target: < 1% of queries
-- âœ… **Cache hit rate** - Target: > 30% for active systems
-
-**Usage Metrics:**
-- âœ… **Queries per day** - Track growth and peak times
-- âœ… **Unique users** - Measure adoption
-- âœ… **Documents accessed** - Which docs are most valuable
-- âœ… **User satisfaction** - Survey or thumbs up/down
-
-**Quality Metrics:**
-- âœ… **Answer accuracy** - User feedback on correctness
-- âœ… **Citation correctness** - Verify sources are accurate
-- âœ… **Response relevance** - Does answer address question
-
-**Cost Metrics:**
-- âœ… **Hosting cost** - Track monthly spend
-- âœ… **Cost per query** - Optimize for efficiency
-- âœ… **Storage growth** - Plan capacity needs
-
----
-
-### ðŸ"ˆ How to Track Metrics
-
-**Option 1: Simple logging in n8n**
-
-Add logging nodes to your workflows:
-
-```javascript
-// Log query metrics
-const metrics = {
-  timestamp: Date.now(),
-  user_id: $json.user_id,
-  question: $json.question,
-  response_time_ms: Date.now() - $json.start_time,
-  cached: $json.cached || false,
-  chunks_retrieved: 3
-};
-
-// Store in n8n database or external logging service
-return { json: metrics };
-```
-
-**Option 2: Export to spreadsheet**
-
-Create n8n workflow that exports daily metrics to Google Sheets:
-- Total queries
-- Average response time
-- Error count
-- Top users
-- Most asked questions
-
-**Option 3: Professional monitoring (advanced)**
-
-Integrate with:
-- Grafana for dashboards
-- Prometheus for metrics collection
-- ELK stack for log analysis
-
----
-
-### ðŸŽ¯ Setting Goals
-
-**Month 1 Goals:**
-- Deploy to 5 beta users
-- Achieve < 15 second response time
-- Zero data loss (backups working)
-- < 5% error rate
-
-**Month 3 Goals:**
-- Deploy to entire team (20+ users)
-- Achieve < 10 second response time
-- 99% uptime
-- > 80% user satisfaction (survey)
-
-**Month 6 Goals:**
-- Handle 100+ queries/day
-- < 8 second response time
-- > 30% cache hit rate
-- Multiple platform integrations
-
----
-
-## Getting Started: Choose Your Path
-
-### 🎯 Path 1: Production Ready
-
-**Best for:** Teams that need reliability first
+**Best for:** Sharing with 5+ team members
 
 **Focus areas:**
-1. Quick Wins (Weeks 1-2)
-2. Production Readiness (Month 1)
-3. Monitoring & Backups (Month 1)
-4. Feature additions based on usage
+1. Production Readiness (Month 1)
+2. Quick Wins first (Week 1)
+3. Monitoring and reliability
+4. Static URL immediately
 
-**Outcome:** Rock-solid system you can rely on daily
+**Outcome:** Reliable system for team use
 
 ---
 
-### ðŸŽ¨ Path 2: Feature Rich
+### 🔬 Path 2: Advanced Capabilities
 
-**Best for:** Power users who want maximum capabilities
+**Best for:** Power users wanting maximum capability
 
 **Focus areas:**
 1. Quick Wins (Weeks 1-2)
@@ -2183,7 +1746,7 @@ Integrate with:
 
 ---
 
-### âš¡ Path 3: Scale & Performance
+### ⚡ Path 3: Scale & Performance
 
 **Best for:** Organizations anticipating high usage
 
@@ -2213,7 +1776,7 @@ Integrate with:
 
 ## General Recommendations
 
-### âœ… Start Here (Everyone Should Do This)
+### ✓ Start Here (Everyone Should Do This)
 
 **Week 1 priorities:**
 1. Implement document management (Critical for usability)
@@ -2244,18 +1807,18 @@ Integrate with:
 ### ⚠️ Avoid These Mistakes
 
 **Don't:**
-- âŒ Implement everything at once (leads to confusion and bugs)
-- âŒ Skip backups (one mistake can cost hours of work)
-- âŒ Deploy to everyone before testing with a small group
-- âŒ Optimize prematurely (make it work, then make it fast)
-- âŒ Ignore user feedback (build what users actually need)
+- ✗ Implement everything at once (leads to confusion and bugs)
+- ✗ Skip backups (one mistake can cost hours of work)
+- ✗ Deploy to everyone before testing with a small group
+- ✗ Optimize prematurely (make it work, then make it fast)
+- ✗ Ignore user feedback (build what users actually need)
 
 **Do:**
-- âœ… Implement incrementally and test each change
-- âœ… Always have a working backup before major changes
-- âœ… Start with 5-10 beta users and gather feedback
-- âœ… Measure first, optimize second
-- âœ… Ask users what features would help them most
+- ✓ Implement incrementally and test each change
+- ✓ Always have a working backup before major changes
+- ✓ Start with 5-10 beta users and gather feedback
+- ✓ Measure first, optimize second
+- ✓ Ask users what features would help them most
 
 ---
 
@@ -2266,21 +1829,21 @@ Integrate with:
 Let's recap what you've accomplished:
 
 **Your system can:**
-- âœ… Answer questions about your specific documents
-- âœ… Process information completely privately on your network
-- âœ… Respond via multiple interfaces (Python, web, Webex)
-- âœ… Cite sources and provide accurate information
-- âœ… Run 24/7 at zero ongoing cost
+- ✓ Answer questions about your specific documents
+- ✓ Process information completely privately on your network
+- ✓ Respond via multiple interfaces (Python, web, Webex)
+- ✓ Cite sources and provide accurate information
+- ✓ Run 24/7 at zero ongoing cost
 
 **This guide provides paths to:**
-- âœ… Make it production-ready (reliability, security, monitoring)
-- âœ… Add powerful features (conversation history, citations, multi-platform)
-- âœ… Scale for your needs (cloud deployment, optimization)
-- âœ… Extend to new use cases (additional integrations, file types)
+- ✓ Make it production-ready (reliability, security, monitoring)
+- ✓ Add powerful features (conversation history, citations, multi-platform)
+- ✓ Scale for your needs (cloud deployment, optimization)
+- ✓ Extend to new use cases (additional integrations, file types)
 
 ---
 
-### ðŸ'­ Remember
+### 💭 Remember
 
 **Your system is already valuable.**
 
@@ -2294,33 +1857,10 @@ Everything in this guide is an *enhancement*, not a requirement. The system you 
 - Don't let perfect be the enemy of good
 
 **Most important:**
-- âœ… Focus on what matters to YOU and your users
-- âœ… Enjoy what you've built - you did something remarkable!
-- âœ… Share your knowledge - help others build similar systems
-- âœ… Keep learning - AI is evolving rapidly
-
----
-
-### ðŸ"š Additional Resources
-
-**For deeper learning:**
-- [RAG Concepts Explained](./Prerequisites_and_Learning.md)
-- [Comprehensive Troubleshooting](./TROUBLESHOOTING.md)
-- [n8n Documentation](https://docs.n8n.io/)
-- [ChromaDB Documentation](https://docs.trychroma.com/)
-- [Ollama Documentation](https://ollama.ai/docs/)
-
-**Community resources:**
-- n8n Community Forum
-- RAG/LLM subreddits
-- ChromaDB Discord
-- Local AI/ML meetups
-
-**Professional development:**
-- Attend Cisco Live 2026 to see similar demos
-- Present your system to colleagues (teaching reinforces learning)
-- Write blog posts about your experience
-- Contribute improvements back to this repository
+- ✓ Focus on what matters to YOU and your users
+- ✓ Enjoy what you've built - you did something remarkable!
+- ✓ Share your knowledge - help others build similar systems
+- ✓ Keep learning - AI is evolving rapidly
 
 ---
 
@@ -2340,14 +1880,6 @@ Thank you for building with this system! Your success proves that local AI is pr
 
 Pick one improvement from the Quick Wins section and start today. You've got this! 🚀
 
----
-
-**Document Version:** 1.0.0  
-**Last Updated:** December 19, 2024  
-**Part of:** Local AI Document Assistant for Enterprise IT  
-**Repository:** github.com/your-org/local-rag-webex-bot
-
----
 
 ## Appendix: Quick Reference
 
@@ -2405,21 +1937,6 @@ curl http://localhost:11434/api/generate -d '{
 
 ---
 
-### Emergency Contacts
-
-**When things break:**
-1. Check [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
-2. Run diagnostic: `~/cisco-rag-demo/system-check.sh`
-3. Check container logs: `podman logs <container>`
-4. Restore from backup if needed: `~/cisco-rag-demo/restore.sh`
-
-**Support resources:**
-- Project documentation in `/docs` folder
-- Community forum: [link]
-- GitHub issues: [link]
-
----
-
 ### Feature Implementation Checklist
 
 When implementing any new feature:
@@ -2434,6 +1951,3 @@ When implementing any new feature:
 - [ ] Update your documentation
 - [ ] Create another backup after success
 
----
-
-**END OF GUIDE**
