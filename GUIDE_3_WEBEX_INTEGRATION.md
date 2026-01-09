@@ -2370,7 +2370,7 @@ cd ~/cisco-rag-demo
 
 ### What You've Accomplished
 
-🎉 **CONGRATULATIONS!** You've built a complete, production-ready system!
+🎉 **CONGRATULATIONS!** You've built a complete, pilot-ready system!
 
 **Your achievement:**
 
