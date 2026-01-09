@@ -1,6 +1,6 @@
 # Local RAG System with Enterprise Messaging Integration
 
-> **Privacy-first AI document analysis with Webex Teams integration. No external APIs, full control, runs on your Mac.**
+> **Privacy-first AI document analysis with Webex Teams integration. No external APIs, full control, runs on your local machine.**
 
 [📸 Add demo GIF/screenshot here showing Webex conversation]
 
@@ -14,8 +14,8 @@ Bot responds: "According to the Q4 assessment, network uptime
 
 ## ✨ What This Is
 
-A complete, production-ready system that lets you:
-- 📄 **Upload technical documents** (network assessments, reports, policies)
+A complete, pilot-ready system that lets you:
+- 📄 **Upload technical documents** (FAQs, reports, policies)
 - 💬 **Ask questions in Webex Teams** (or Python/web interface)
 - 🤖 **Get AI-powered answers** based on YOUR documents
 - 🔒 **Keep everything local** - no data sent to OpenAI, Anthropic, etc.
@@ -30,13 +30,13 @@ A complete, production-ready system that lets you:
 Choose your path:
 
 ### 👶 Complete Beginner (Never used terminal?)
-**Time:** 4-6 hours  
+**Time:** 8-10 hours  
 **Path:** [Prerequisites Guide](PREREQUISITES_AND_LEARNING.md) → [Environment Setup](GUIDE_1_ENVIRONMENT_SETUP.md) → [RAG System](GUIDE_2_RAG_SYSTEM.md)
 
 Start here if you're new to command-line tools or containers.
 
 ### 🛠️ Some IT Experience (Used terminal before)
-**Time:** 2-3 hours  
+**Time:** 4-6 hours  
 **Path:** [Environment Setup](GUIDE_1_ENVIRONMENT_SETUP.md) → [RAG System](GUIDE_2_RAG_SYSTEM.md) → [Webex Integration](GUIDE_3_WEBEX_INTEGRATION.md)
 
 Start here if you're comfortable with basic Unix commands.
@@ -104,7 +104,7 @@ Then add [Webex Integration](GUIDE_3_WEBEX_INTEGRATION.md) for messaging.
 
 ```
 ┌─────────────────────────────────────────────────┐
-│  Your Mac (macOS M4 Pro with 24GB RAM)        │
+│          Your Local Machine                     │
 │                                                 │
 │  ┌─────────────┐  ┌──────────────┐            │
 │  │   Ollama    │  │   Podman     │            │
@@ -196,13 +196,13 @@ Even if you're a beginner, by completing this project you'll understand:
 ## 🚦 System Requirements
 
 ### Hardware
-- **Required:** Apple Silicon Mac (M1/M2/M3/M4) with 16GB RAM minimum
+- **Used in the lab:** Apple Silicon Mac M4 with 16GB RAM 
 - **Recommended:** 24GB+ RAM for better performance
 - **Storage:** 50GB free disk space
-- **Why Mac?** This guide is optimized for macOS. Linux adaptation is straightforward; Windows requires WSL2.
+- **OS** This guide is optimized for macOS. Linux adaptation is straightforward; Windows requires WSL2. You can use any AI assistant and provide this current guide and ask for the equivalent in Windows
 
 ### Software
-- **macOS:** Sonoma (14.0) or later (Monterey 12.0+ works but not optimized)
+- **Used in the lab:** Sonoma (14.0) 
 - **Internet:** Required for initial setup and Webex integration
 - **Optional:** Homebrew (package manager) - highly recommended
 
@@ -215,56 +215,18 @@ Even if you're a beginner, by completing this project you'll understand:
 
 ## ⚡ Performance Benchmarks
 
-On Mac M4 Pro (24GB RAM):
+On Mac M4 Pro (16GB RAM):
 
 | Operation | Time | Notes |
 |-----------|------|-------|
 | Document upload (5 pages) | 30-60 sec | One-time per document |
 | First query after startup | 10-15 sec | Model loading (cold start) |
-| Subsequent queries | 5-8 sec | ✅ Target performance |
+| Subsequent queries | 5-8 sec |  Target performance |
 | Webex bot response | 5-10 sec | End-to-end with webhook |
 
 **Optimization tips:**
-- Pre-load models before demos (saves 5 sec on first query)
 - Keep system running between queries (avoid cold starts)
 - Use SSD storage (faster database access)
-- Close memory-intensive apps (browsers, Slack) during demos
-
----
-
-## 🎬 Demo Scenarios
-
-### Scenario 1: Network Assessment Query
-```
-👤 User: "What equipment needs to be replaced in Boston?"
-
-🤖 Bot: "Based on the assessment, the Boston office requires 
-        immediate replacement of 15 Cisco 3850 switches that 
-        reached end-of-support in October 2024. Priority: High.
-        Budget estimate: $45K."
-```
-
-### Scenario 2: Budget Planning
-```
-👤 User: "What is the proposed FY2025 network infrastructure budget?"
-
-🤖 Bot: "The FY2025 network infrastructure budget is $340,000,
-        broken down as: Hardware refresh $120K, Security upgrades
-        $85K, WAN optimization $75K, Monitoring tools $40K, 
-        Contingency $20K."
-```
-
-### Scenario 3: Risk Assessment
-```
-👤 User: "List the high priority network risks"
-
-🤖 Bot: "Three high-priority risks identified:
-        1. End-of-life equipment (Boston switches)
-        2. Single point of failure in core routing
-        3. Insufficient backup bandwidth on WAN links
-        
-        Detailed risk mitigation plans are in the assessment."
-```
 
 ---
 
@@ -278,9 +240,8 @@ Your documents never leave your infrastructure. Perfect for:
 - Any sensitive corporate information
 
 ### Cost Efficiency
-- **Initial setup:** $0 (using open source tools)
+- **Initial setup:** $0 (using open source tools and local machine)
 - **Ongoing costs:** $0 (runs on existing hardware)
-- **Compare to:** OpenAI API costs $0.03/1K tokens (adds up fast)
 
 ### Full Control
 - Choose your own AI models
@@ -308,14 +269,13 @@ Understanding RAG systems gives you:
 - ✅ Real troubleshooting chronicles
 
 ### Sample Files
-- ✅ Network assessment document templates
 - ✅ Working n8n workflow JSONs
 - ✅ Python scripts (load, query)
 - ✅ Configuration templates
 - ✅ Quick setup scripts
 
 ### Tested & Verified
-- ✅ Production-tested on macOS (M4 Pro)
+- ✅ Production-tested on macOS M4 
 - ✅ All commands verified working
 - ✅ Common errors documented
 - ✅ Performance benchmarked
@@ -370,7 +330,7 @@ Unlike typical "AI tutorials" that assume coding knowledge:
 - Uses analogies to familiar concepts (routers, switches, VLANs)
 - Every command explained before execution
 - Comprehensive troubleshooting from real deployment experience
-- Production-ready, not just proof-of-concept
+- pilot-ready, not just installation guide
 
 ---
 
@@ -403,7 +363,7 @@ Unlike typical "AI tutorials" that assume coding knowledge:
 
 ## 🔄 Development Status
 
-### Current Version: 1.0 (Production Ready)
+### Current Version: 1.0 (Pilot Ready)
 
 **Completed Features:**
 - ✅ Core RAG system with vector storage
@@ -413,13 +373,6 @@ Unlike typical "AI tutorials" that assume coding knowledge:
 - ✅ Webex bot integration with @mention support
 - ✅ Form-based document upload
 - ✅ Comprehensive documentation (8 guides, 50K+ words)
-
-**Tested On:**
-- ✅ macOS Sonoma (M4 Pro, 24GB RAM)
-- ✅ Podman 5.x
-- ✅ ChromaDB 0.4.24 (HTTP API)
-- ✅ Ollama with llama3.2:3b
-- ✅ n8n latest (Docker image)
 
 **Known Limitations:**
 - ⚠️ Free tunnel URLs change on restart (use paid ngrok/localhost.run for production)
@@ -512,7 +465,7 @@ See [LICENSE](LICENSE) file for full legal text.
 This project was built to demonstrate that:
 - Privacy-preserving AI is practical for enterprise use
 - Local deployment is viable on consumer hardware
-- You don't need expensive cloud services for AI
+- You don't need expensive cloud services for AI pilots
 - Open source AI is production-ready
 - IT engineers can build AI systems without coding backgrounds
 
@@ -557,15 +510,6 @@ Special thanks to the open source communities behind Ollama, ChromaDB, n8n, and 
 - 🐛 [Report Bugs](../../issues/new?template=bug_report.md) - Found a problem?
 - ✨ [Request Features](../../issues/new?template=feature_request.md) - Ideas for improvements?
 
-### Professional Support
-For enterprise deployments or custom development:
-- Consulting services available
-- Training workshops for teams
-- Custom integration development
-- Production deployment assistance
-
-Contact information: [Add your contact details or remove this section]
-
 ---
 
 ## 🚀 Quick Links
@@ -603,21 +547,10 @@ If you find this project useful:
 
 ---
 
-## 📊 Project Stats
-
-[Add badges here once repository is live]
-- ![GitHub stars](https://img.shields.io/github/stars/yourusername/repo?style=social)
-- ![GitHub forks](https://img.shields.io/github/forks/yourusername/repo?style=social)
-- ![GitHub issues](https://img.shields.io/github/issues/yourusername/repo)
-- ![Documentation](https://img.shields.io/badge/docs-comprehensive-brightgreen)
-- ![License](https://img.shields.io/badge/license-MIT-blue)
-
----
-
 ## 📜 Version History
 
-### v1.0.0 (December 2024) - Initial Release
-**🎉 First production-ready release**
+### v1.0.0 (December 2025) - Initial Release
+**🎉 First lab-ready release**
 
 **Features:**
 - ✅ Complete documentation suite (8 comprehensive guides)
@@ -648,33 +581,6 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 ---
 
-## 🗺️ Roadmap
-
-### v1.1 (Q1 2025) - Enhancements
-- [ ] Multi-collection support
-- [ ] Conversation history
-- [ ] Additional document formats (PDF, XLSX)
-- [ ] Performance tuning guide
-- [ ] Docker Compose alternative
-
-### v1.2 (Q2 2025) - Advanced Features
-- [ ] Web UI for document management
-- [ ] User authentication
-- [ ] Query analytics dashboard
-- [ ] Multiple LLM model support
-- [ ] Slack integration
-
-### v2.0 (Q3 2025) - Enterprise Features
-- [ ] Multi-user support
-- [ ] Role-based access control
-- [ ] Cloud deployment guide (AWS/Azure)
-- [ ] Kubernetes deployment
-- [ ] Monitoring and logging
-
-See [WHATS_NEXT.md](WHATS_NEXT.md) for detailed roadmap and feature requests.
-
----
-
 ## 🎓 Learning Resources
 
 ### For Beginners
@@ -686,13 +592,6 @@ See [WHATS_NEXT.md](WHATS_NEXT.md) for detailed roadmap and feature requests.
 - [Advanced Customization](WHATS_NEXT.md) - Tune for your needs
 - [Performance Optimization](docs/Performance.md) - Get faster responses
 - [Security Best Practices](docs/Security.md) - Production deployment
-
-### Video Tutorials
-[📸 Add YouTube playlist link when available]
-- Installation walkthrough
-- First document upload
-- Webex integration demo
-- Troubleshooting common issues
 
 ---
 
@@ -715,23 +614,7 @@ See [WHATS_NEXT.md](WHATS_NEXT.md) for detailed roadmap and feature requests.
 - No cloud credentials required (except optional Webex)
 - Regular updates recommended for underlying components
 
-### Compliance
-This architecture supports:
-- HIPAA (healthcare)
-- SOC2 (enterprise)
-- GDPR (EU data protection)
-- Data sovereignty requirements
-
 See [Security Guide](docs/Security.md) for hardening recommendations.
-
----
-
-## 🌟 Featured By
-
-[Add media mentions, blog posts, conference presentations]
-
-- Cisco Live 2026 - AI/ML Track Demo
-- [Add other features]
 
 ---
 
@@ -741,6 +624,6 @@ See [Security Guide](docs/Security.md) for hardening recommendations.
 
 ---
 
-*Last Updated: December 2024*  
+*Last Updated: January 2026*  
 *Documentation Version: 1.0.0*  
 *Project Status: Production Ready*
