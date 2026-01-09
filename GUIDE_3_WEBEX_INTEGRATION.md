@@ -38,7 +38,7 @@
 - 📱 **Mobile access** - Query from phone/tablet via Webex app
 - 👥 **Team collaboration** - Share bot with colleagues
 - 💼 **Enterprise-ready** - IT-approved messaging platform
-- 🌍 **Access anywhere** - As long as your Mac is on
+- 🌍 **Access anywhere** - As long as your local machine is on
 
 **Time investment:** ~45 minutes to complete setup
 
@@ -71,19 +71,19 @@ cd ~/cisco-rag-demo
 ### Why Add Webex Integration?
 
 **Your current setup:**
-- ✅ Works great on your Mac
+- ✅ Works great on your local machine
 - ✅ Chat interface in n8n
 - ✅ Python scripts for queries
-- ❌ Only accessible when sitting at your Mac
-- ❌ Not mobile-friendly
-- ❌ Can't share with team easily
+- ✗ Only accessible when sitting at your machine
+- ✗ Not mobile-friendly
+- ✗ Can't share with team easily
 
 **After Webex integration:**
 - ✅ Query from anywhere (via Webex mobile app)
 - ✅ Share bot with team members
 - ✅ Works in group spaces (with @mentions)
 - ✅ Familiar interface (no training needed)
-- ✅ Still 100% private (all processing on your Mac)
+- ✅ Still 100% private (all processing on your local machine)
 
 ---
 
@@ -96,11 +96,11 @@ cd ~/cisco-rag-demo
       ↓
 [2] Message sent to Webex Cloud
       ↓
-[3] Webex sends notification (webhook) to your Mac
+[3] Webex sends notification (webhook) to your machine
       ↓
 [4] Tunnel forwards through your firewall
       ↓
-[5] n8n on your Mac receives notification
+[5] n8n on your machine receives notification
       ↓
 [6] n8n fetches full message from Webex
       ↓
@@ -114,7 +114,7 @@ cd ~/cisco-rag-demo
 ```
 
 **Total time:** 5-10 seconds  
-**Where processing happens:** On your Mac  
+**Where processing happens:** On your local machine  
 **Data privacy:** Never leaves your infrastructure
 
 ---
@@ -124,10 +124,10 @@ cd ~/cisco-rag-demo
 **Visual representation:**
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  WEBEX CLOUD                        │
+┌────────────────────────────────────────────────────┐
+│                  WEBEX CLOUD                       │
 │  (Cisco's servers - handles message routing)       │
-└────────┬────────────────────────────────┬──────────┘
+└────────┬────────────────────────────────┬─────────-┘
          │                                │
          │ [3] Webhook POST               │ [9] API POST
          │                                │
@@ -135,25 +135,25 @@ cd ~/cisco-rag-demo
 ┌────────────────────────────────────────────────────┐
 │            TUNNEL (localhost.run/ngrok)            │
 │  (Secure pathway through your firewall)            │
-└────────┬───────────────────────────────────────────┘
+└────────┬──────────────────────────────────────────-┘
          │
          │ Forwards to localhost:5678
          │
          ↓
-┌─────────────────────────────────────────────────────┐
-│                   YOUR MAC                          │
-│                                                     │
-│  ┌───────────────────────────────────────────┐    │
-│  │              n8n (port 5678)              │    │
-│  │  Receives webhook, processes, responds    │    │
-│  └───────┬───────────────────────────────────┘    │
-│          │                                         │
-│          ├──→ [ChromaDB] Vector search            │
-│          ├──→ [Ollama] AI processing              │
-│          └──→ [Webex API] Send response           │
-│                                                     │
+┌────────────────────────────────────────────────────┐
+│               YOUR LOCAL MACHINE                   │
+│                                                    │
+│  ┌──────────────────────────────────────────────┐  │
+│  │              n8n (port 5678)                 │  │
+│  │  Receives webhook, processes, responds       │  │
+│  └──────┬───────────────────────────────────────┘  │
+│         │                                          │
+│         ├──→ [ChromaDB] Vector search              │
+│         ├──→ [Ollama] AI processing                │
+│         └──→ [Webex API] Send response             │
+│                                                    │
 │  ALL PROCESSING HAPPENS HERE (Private)             │
-└─────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -176,7 +176,7 @@ cd ~/cisco-rag-demo
 - Secure pathway through firewall
 - Makes local service (n8n) accessible from internet
 - Like port forwarding but easier
-- Required because your Mac is behind firewall
+- Required because your machine is behind firewall
 
 **Network analogy:**
 - **Webhook** = SNMP trap (push notification)
@@ -194,7 +194,7 @@ cd ~/cisco-rag-demo
 - ⚠️ More moving parts to coordinate
 
 **But don't worry!**
-- Still fully private (processing on your Mac)
+- Still fully private (processing on your machine)
 - Free tier is sufficient
 - We'll walk through everything step-by-step
 - Includes complete troubleshooting guide
@@ -231,14 +231,14 @@ Let's get started! ⚡
 - ✅ Always-on (no human login needed)
 - ✅ Free tier available
 - ✅ Can be in multiple spaces
-- ❌ Can't initiate conversations (must be added)
-- ❌ Different permissions than users
+- ✗ Can't initiate conversations (must be added)
+- ✗ Different permissions than users
 
 **Regular user account:**
 - ✅ Full Webex features
 - ✅ Can create spaces
-- ❌ Requires human to login
-- ❌ Can't be controlled by code
+- ✗ Requires human to login
+- ✗ Can't be controlled by code
 
 **For our purposes:** Bot account is perfect!
 
@@ -309,1144 +309,826 @@ Rules:
 Tips:
 - 512x512 pixels recommended
 - PNG or JPG format
-- Represents your bot in chats
-- Can skip for now
+- Use your company logo or generic AI icon
 ```
 
 **Description:** What the bot does
 ```
-Example: "AI-powered assistant for querying Cisco network 
-         assessment documents. Provides instant answers 
-         based on your specific documentation."
-         
-Tip: Users see this when adding bot to spaces
-```
+Example: "AI assistant that answers questions about our network documentation using local RAG system. All processing happens privately on local infrastructure."
 
-**Recommended entries:**
+Tip: Clear description helps users know how to use it
 ```
-Bot Name: RAG Assistant
-Bot Username: rag-assistant
-Description: AI assistant for Cisco network assessments
-```
-
-**Click "Add Bot"**
 
 ---
 
-**Step 5: CRITICAL - Save Bot Access Token**
+**Step 5: Save Your Bot Token**
 
-⚠️ **THIS IS EXTREMELY IMPORTANT**
+**CRITICAL:** After clicking "Add Bot", you'll see the bot access token.
 
-**The token screen appears ONCE only.**
+**⚠️ THIS IS THE ONLY TIME YOU'LL SEE THIS TOKEN ⚠️**
 
-You'll see:
+**Your bot token looks like:**
 ```
-Bot's Access Token:
-[Very long string of random characters starting with something like:]
-YmQwNzJkM2EtZjk5Ny00ZDVmLWE4NTMtOGNjOWYxNjBiNzBjMmRlNWVh...
-[continues for many more characters]
+YmJkYzJjZjAtMjZhNy00YTUwLWIwMzUtZGJmZmFhZjY1MDZjMmU3OTZmYzctNTI1_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f
 ```
 
-**What you MUST do RIGHT NOW:**
-
-1. **Copy the ENTIRE token** (it's very long - make sure you get it all)
-2. **Save it immediately** - you cannot retrieve it later!
-3. **If you lose it**, you must regenerate (which invalidates the old one)
-
-**Save to secure file:**
+**Action - Save it immediately:**
 
 ```bash
-# Open Terminal
-# Create secure token file
-echo "PASTE_YOUR_ENTIRE_TOKEN_HERE" > ~/cisco-rag-demo/webex-bot-token.txt
+# Create secure credentials file
+mkdir -p ~/cisco-rag-demo/credentials
+chmod 700 ~/cisco-rag-demo/credentials
 
-# Secure permissions (only you can read)
-chmod 600 ~/cisco-rag-demo/webex-bot-token.txt
-
-# Verify it's saved correctly
-cat ~/cisco-rag-demo/webex-bot-token.txt
-```
-
-**Verify the token:**
-- Should be very long (100+ characters)
-- Should NOT have any newlines or spaces
-- Should start with alphanumeric characters
-
-💡 **Pro tip:** Also save it to a password manager for backup!
-
----
-
-**Step 6: Record Bot Information**
-
-**On the bot details page, note:**
-
-```bash
-# Save all bot information
-cat > ~/cisco-rag-demo/webex-bot-info.txt << EOF
-Bot Name: RAG Assistant
-Bot Username: rag-assistant
-Bot Email: rag-assistant@webex.bot
-Bot ID: $(echo "Copy from Webex page")
-Created: $(date)
+# Save bot token
+cat > ~/cisco-rag-demo/credentials/webex_bot.txt << 'EOF'
+BOT_TOKEN=<PASTE_YOUR_TOKEN_HERE>
+BOT_EMAIL=<your-bot-username>@webex.bot
 EOF
 
-# View later
-cat ~/cisco-rag-demo/webex-bot-info.txt
+chmod 600 ~/cisco-rag-demo/credentials/webex_bot.txt
 ```
 
-**Bot email format will be:** `your-username@webex.bot`
-
-**Example:**
-```
-Bot Name: RAG Assistant
-Bot Email: rag-assistant@webex.bot
-Bot ID: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xMjM0NTY3OC05YWJjLWRlZjA=
-```
+**Replace placeholders:**
+- `<PASTE_YOUR_TOKEN_HERE>` - Your actual token
+- `<your-bot-username>` - The username you chose
 
 ---
 
-### Verify Bot Creation
+**Step 6: Verify Bot Creation**
 
-**Test bot token works:**
+**Check your bot works:**
 
 ```bash
-# Set token as variable
-BOT_TOKEN=$(cat ~/cisco-rag-demo/webex-bot-token.txt)
+# Source your credentials
+source ~/cisco-rag-demo/credentials/webex_bot.txt
 
-# Test API call
-curl https://webexapis.com/v1/people/me \
-  -H "Authorization: Bearer $BOT_TOKEN"
+# Test API access
+curl -X GET https://webexapis.com/v1/people/me \
+  -H "Authorization: Bearer $BOT_TOKEN" \
+  -H "Content-Type: application/json"
 ```
 
-**Expected response:**
+**Expected output:**
 ```json
 {
-  "id": "Y2lzY29zcGFyazovL...",
-  "emails": ["rag-assistant@webex.bot"],
+  "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS8...",
+  "emails": ["your-bot@webex.bot"],
   "displayName": "RAG Assistant",
   "nickName": "RAG Assistant",
-  "type": "bot",
-  "created": "2024-12-18T10:30:00.000Z"
+  "created": "2024-12-18T...",
+  "status": "active",
+  "type": "bot"
 }
 ```
 
-**If you see this JSON response:** ✅ Bot token works!  
-**If you see error:** ⚠️ Token may be incorrect, check file
-
----
-
-### Understanding Bot Limitations
-
-**Bots can:**
-- ✅ Receive messages (direct and @mentions)
-- ✅ Send messages to spaces they're in
-- ✅ Read message content
-- ✅ See who sent messages
-- ✅ Work in 1-on-1 and group spaces
-
-**Bots cannot:**
-- ❌ Initiate conversations (must be added first)
-- ❌ See messages in spaces they're not in
-- ❌ Create spaces
-- ❌ Remove themselves from spaces
-
-**For our use case:** These limitations are perfect - we want controlled access.
+**What to verify:**
+- ✅ `"type": "bot"` - Confirms it's a bot account
+- ✅ `"status": "active"` - Bot is active
+- ✅ Your bot name appears correctly
 
 ---
 
 ### Success Checkpoint
 
-Before moving to tunnel setup, verify:
+✓ Your Webex bot is ready when:
+- Bot created on developer portal
+- Bot token saved securely
+- API test returns bot information
+- Bot email address known
 
-- [ ] Bot created in Webex developer portal
-- [ ] Bot token saved to `~/cisco-rag-demo/webex-bot-token.txt`
-- [ ] Token file has secure permissions (600)
-- [ ] Bot info saved to `webex-bot-info.txt`
-- [ ] Test API call returns bot details
-- [ ] You understand what bots can/cannot do
-
-✅ **Bot account ready! Moving to tunnel setup.**
+**Save this info - you'll need it throughout this guide!**
 
 ---
 
 ## Part 3C: Setup Tunnel
 
-**Time:** 15 minutes  
-**What you'll do:** Create secure pathway through your firewall  
-**Why:** Webex needs to send webhook notifications to your Mac
+**Time:** 10 minutes  
+**What you'll do:** Create secure tunnel to expose n8n to internet  
+**Why:** Webex cloud needs to reach your local n8n instance
 
 ---
 
-### Why We Need a Tunnel
+### Understanding Why We Need a Tunnel
 
 **The problem:**
 ```
-[Webex Cloud] wants to send POST → [Your Mac:5678]
-                                        ↑
-                                  Behind firewall!
-                                  Not accessible
+Webex Cloud (internet) ──✗──> Your machine (behind firewall/router)
 ```
 
-**Without tunnel:**
-- Your Mac is behind home/office firewall
-- n8n listening on `localhost:5678`
-- "localhost" only accessible from your Mac
-- Webex can't reach it
+**Your n8n runs on `localhost:5678`** but:
+- Not accessible from internet
+- Behind your firewall/NAT
+- Doesn't have public IP
 
-**With tunnel:**
+**The solution: Tunnel**
 ```
-[Webex Cloud] → [Tunnel Service] → [Your Mac:5678]
-                     ↑                    ↑
-              Public URL          Private localhost
+Webex Cloud ──✓──> Tunnel Service ──✓──> localhost:5678 (n8n)
 ```
 
-**Network analogy:**
-- Like NAT/PAT port forwarding
-- Or like a VPN tunnel
-- Creates pathway through firewall
-- No firewall configuration needed!
+**Tunnel provides:**
+- Public HTTPS URL
+- Automatic SSL certificate
+- Forwards traffic to local port
+- Works through firewalls
 
 ---
 
-### Tunnel Options - Which to Choose?
+### Tunnel Options
 
-**We'll show two methods:**
+**We'll cover two popular options:**
 
-| Feature | localhost.run | ngrok |
-|---------|--------------|-------|
-| **Installation** | None (uses SSH) | Required |
-| **Speed to setup** | 2 minutes | 5-10 minutes |
-| **Reliability** | Good | Excellent |
-| **Features** | Basic | Advanced (web UI) |
-| **URL stability** | Changes on restart | Changes (free) / Static (paid) |
-| **Best for** | Quick start, demos | Regular use, debugging |
+**1. localhost.run (Easiest)**
+- ✅ No signup required
+- ✅ One command to start
+- ✅ Completely free
+- ✗ URL changes each restart
+- ✗ Limited to SSH connection
 
-**Recommendation:** Start with localhost.run (faster), switch to ngrok if needed.
+**2. ngrok (More features)**
+- ✅ Free tier available
+- ✅ Stable URL (with account)
+- ✅ Web interface for monitoring
+- ✗ Requires signup
+- ✗ Free tier has connection limits
 
----
-
-### Method A: localhost.run (Recommended)
-
-**Advantages:**
-- ✅ No installation required
-- ✅ Uses built-in macOS SSH
-- ✅ Works in 2 minutes
-- ✅ Perfect for testing and demos
-
-**Disadvantage:**
-- ⚠️ URL changes every restart (normal for free tier)
+**Recommendation:** Start with localhost.run (simpler), upgrade to ngrok if needed.
 
 ---
 
-**Step 1: Open New Terminal Window**
+### Option 1: localhost.run (Recommended for Beginners)
 
-⚠️ **IMPORTANT:** This terminal must stay open during demos!
+**No installation needed - uses SSH!**
 
-**Open Terminal:**
-- Applications → Utilities → Terminal
-- Or use existing Terminal, new tab
-
----
-
-**Step 2: Start the Tunnel**
+**Step 1: Start Tunnel**
 
 ```bash
-ssh -R 80:localhost:5678 nokey@localhost.run
+# Open new terminal window
+ssh -R 80:localhost:5678 localhost.run
 ```
 
-**Command breakdown:**
-- `ssh` - Secure Shell (built into macOS)
-- `-R` - Remote port forwarding
-- `80:localhost:5678` - Forward port 80 → localhost:5678
-- `nokey@localhost.run` - Connect to localhost.run service
-- `nokey` - No authentication key needed (free tier)
-
-**Press Enter**
-
----
-
-**Step 3: Wait for Connection**
-
-**You'll see output like:**
-```
-** Allow remote port forwarding **
-Connecting to localhost.run...
-Connect to http://random-words-12.localhost.run or https://random-words-12.localhost.run
-```
-
-**Important lines:**
-```
-Connect to https://random-words-12.localhost.run
-                   ↑
-            This is YOUR unique URL
-            (will be different each time)
-```
-
-**Copy the HTTPS URL** (not HTTP)
-
----
-
-**Step 4: Save Your Tunnel URL**
-
-**In ANOTHER terminal window** (keep tunnel running!):
-
-```bash
-# Save the URL
-echo "https://your-actual-url.localhost.run" > ~/cisco-rag-demo/tunnel-url.txt
-
-# Example:
-echo "https://random-words-12.localhost.run" > ~/cisco-rag-demo/tunnel-url.txt
-
-# Verify
-cat ~/cisco-rag-demo/tunnel-url.txt
-```
-
----
-
-**Step 5: Test Tunnel Works**
-
-**In the second terminal:**
-
-```bash
-# Test tunnel forwards to n8n
-curl $(cat ~/cisco-rag-demo/tunnel-url.txt)
-```
+**What happens:**
+1. Connects to localhost.run servers
+2. Creates tunnel to your port 5678
+3. Gives you public URL
 
 **Expected output:**
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>n8n.io - Workflow Automation</title>
-...
+```
+Connect to http://abc123xyz.localhost.run
+or https://abc123xyz.localhost.run
 ```
 
-**If you see HTML:** ✅ Tunnel working!  
-**If connection refused:** ⚠️ Check n8n is running
+**⚠️ Save this URL! You'll need it for webhook registration.**
 
 ---
 
-**Important Notes About localhost.run:**
+**Step 2: Verify Tunnel Works**
 
-⚠️ **URL Changes Every Restart**
-
-This is **NORMAL and EXPECTED** for free tier:
-
+**Open new browser tab:**
 ```
-First run:  https://happy-cat-42.localhost.run
-Stop tunnel
-Restart:    https://brave-dog-73.localhost.run  ← Different!
+https://abc123xyz.localhost.run
 ```
 
-**What this means:**
-- Every time you restart tunnel, new URL
-- Must update webhook with new URL (we'll show how)
-- This is a free tier limitation
-- Paid tunnels offer static URLs
+**You should see:** Your n8n login page
 
-**Accept this as normal behavior** - it's not a bug!
-
----
-
-**Tunnel Terminal Management:**
-
-**While tunnel is running:**
-- Terminal shows connection status
-- May show connection messages
-- Do NOT close this terminal
-- Can minimize it
-
-**To stop tunnel:**
-- Press `Ctrl+C` in tunnel terminal
-- Connection closes
-- URL becomes invalid
-
-**To restart:**
-- Run same `ssh -R` command
-- Get new URL
-- Update webhook (see Part 3G)
+**If not:**
+- Check n8n is running: `podman ps | grep n8n`
+- Verify port 5678: `curl http://localhost:5678`
+- Try restarting tunnel
 
 ---
 
-### Method B: ngrok (Alternative)
+**Step 3: Keep Tunnel Running**
 
-**When to use ngrok:**
-- localhost.run not working for you
-- Want web debugging interface
-- Need better reliability
-- Planning frequent demos
+**⚠️ Important:** Keep this terminal window open!
 
-**Skip this if localhost.run worked for you!**
+**Tunnel runs as long as SSH connection stays alive**
 
----
-
-**Option B1: Install via Homebrew** (if available)
-
+**To reconnect after close:**
 ```bash
-# Check if Homebrew installed
-which brew
+ssh -R 80:localhost:5678 localhost.run
+# Note: You'll get a NEW URL each time
+```
 
-# If brew exists, install ngrok
+---
+
+### Option 2: ngrok (Advanced Option)
+
+**Step 1: Install ngrok**
+
+**Visit:** https://ngrok.com/download
+
+**For macOS:**
+```bash
 brew install ngrok/ngrok/ngrok
 ```
 
-**If this works:** Skip to ngrok configuration below.
-
----
-
-**Option B2: Manual Installation** (macOS without Homebrew)
-
-**Step 1: Download ngrok**
-
-Go to: https://ngrok.com/download
-
-**Select:** macOS (ARM64 for M-series, AMD64 for Intel)
-
-**Or download via command line:**
+**For Linux:**
 ```bash
-# For M-series Mac (M1, M2, M3, M4):
-cd ~/Downloads
-curl -O https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-darwin-arm64.zip
-
-# For Intel Mac:
-curl -O https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-darwin-amd64.zip
-
-# Unzip
-unzip ngrok-*.zip
-
-# Move to PATH location
-sudo mv ngrok /usr/local/bin/
-
-# Verify
-ngrok version
+curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
+  sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && \
+  echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | \
+  sudo tee /etc/apt/sources.list.d/ngrok.list && \
+  sudo apt update && sudo apt install ngrok
 ```
 
 ---
 
-**Step 2: Sign Up for ngrok Account**
+**Step 2: Create Free Account**
 
-Go to: https://dashboard.ngrok.com/signup
+1. Go to https://ngrok.com
+2. Sign up (free tier)
+3. Get your authtoken from dashboard
 
-**Create free account:**
-- Email address
-- Password
-- Verify email
-
-**Free tier includes:**
-- Dynamic URLs (change on restart)
-- 40 connections/minute
-- 1 online ngrok process
-- Sufficient for testing!
-
----
-
-**Step 3: Get Auth Token**
-
-**After logging in:**
-- Dashboard → "Your Authtoken"
-- Copy the token
-
-**Configure ngrok:**
+**Add authtoken:**
 ```bash
-ngrok config add-authtoken YOUR_TOKEN_HERE
+ngrok config add-authtoken <your-token-here>
 ```
 
-**This saves to:** `~/.ngrok2/ngrok.yml`
-
 ---
 
-**Step 4: Start ngrok Tunnel**
+**Step 3: Start Tunnel**
 
 ```bash
 ngrok http 5678
 ```
 
-**You'll see:**
+**Expected output:**
 ```
-ngrok                                                                   
-
-Session Status                online
-Account                       your-email@example.com
-Version                       3.x.x
-Region                        United States (us)
-Latency                       25ms
-Web Interface                 http://127.0.0.1:4040
-Forwarding                    https://abc123.ngrok-free.app -> http://localhost:5678
-
-Connections                   ttl     opn     rt1     rt5     p50     p90
-                              0       0       0.00    0.00    0.00    0.00
-```
-
-**Important lines:**
-```
-Forwarding: https://abc123.ngrok-free.app → http://localhost:5678
-            ↑
-        Your public URL
+ngrok                                                                                        
+                                                                                             
+Session Status                online                                                         
+Account                       Your Name (Plan: Free)                                         
+Version                       3.5.0                                                          
+Region                        United States (us)                                             
+Latency                       23ms                                                           
+Web Interface                 http://127.0.0.1:4040                                          
+Forwarding                    https://abc123def456.ngrok-free.app -> http://localhost:5678  
+                                                                                             
+Connections                   ttl     opn     rt1     rt5     p50     p90                    
+                              0       0       0.00    0.00    0.00    0.00                   
 ```
 
-**Save this URL:**
-```bash
-echo "https://abc123.ngrok-free.app" > ~/cisco-rag-demo/tunnel-url.txt
-```
+**Your public URL:** `https://abc123def456.ngrok-free.app`
 
-**Test it works:**
-```bash
-curl $(cat ~/cisco-rag-demo/tunnel-url.txt)
-```
+**⚠️ Save this URL!**
 
 ---
 
-**ngrok Web Interface:**
+**Step 4: Access ngrok Web Interface**
 
-**Access:** http://localhost:4040
+**Open browser:** `http://127.0.0.1:4040`
 
 **Shows:**
-- All HTTP requests in real-time
+- Real-time requests
 - Request/response details
-- Useful for debugging
 - Replay requests
+- Statistics
 
-**Very helpful for troubleshooting!**
+**Very helpful for debugging!**
 
 ---
 
-### Tunnel Comparison Summary
+**Step 5: Static URLs (Optional - Paid)**
 
-**Choose localhost.run if:**
-- ✅ Want fastest setup
-- ✅ Just testing/demos
-- ✅ Don't mind URL changes
-- ✅ Minimal installation desired
+**Free tier:** URL changes each restart
+**Paid tiers:** Get custom domain that never changes
 
-**Choose ngrok if:**
-- ✅ localhost.run not working
-- ✅ Want debugging interface
-- ✅ Need better reliability
-- ✅ Planning regular use
+**Example:**
+```bash
+ngrok http 5678 --domain=my-rag-bot.ngrok.app
+```
 
-**Either works!** Both are free, both change URLs on free tier.
+**Benefit:** Never update webhook URL again
+
+---
+
+### Which Tunnel Should You Use?
+
+**Use localhost.run if:**
+- ✅ Just testing/demoing
+- ✅ Want simplest setup
+- ✅ Don't mind URL changing
+- ✅ Don't need monitoring
+
+**Use ngrok if:**
+- ✅ Need monitoring/debugging
+- ✅ Want web interface
+- ✅ Planning production use
+- ✅ Want custom domain (paid)
+
+**Both work perfectly for this guide!**
+
+---
+
+### Tunnel Management Script
+
+**Create helper script:**
+
+```bash
+cat > ~/cisco-rag-demo/start-tunnel.sh << 'EOF'
+#!/bin/bash
+# Tunnel startup script
+
+echo "Starting tunnel to n8n (port 5678)..."
+echo ""
+echo "Choose tunnel service:"
+echo "1) localhost.run (simpler, free)"
+echo "2) ngrok (more features)"
+echo ""
+read -p "Enter choice (1 or 2): " choice
+
+if [ "$choice" = "1" ]; then
+    echo ""
+    echo "Starting localhost.run tunnel..."
+    echo "Keep this window open!"
+    echo ""
+    ssh -R 80:localhost:5678 localhost.run
+elif [ "$choice" = "2" ]; then
+    echo ""
+    echo "Starting ngrok tunnel..."
+    echo "Keep this window open!"
+    echo "Web interface: http://127.0.0.1:4040"
+    echo ""
+    ngrok http 5678
+else
+    echo "Invalid choice"
+    exit 1
+fi
+EOF
+
+chmod +x ~/cisco-rag-demo/start-tunnel.sh
+```
+
+**Usage:**
+```bash
+~/cisco-rag-demo/start-tunnel.sh
+```
 
 ---
 
 ### Success Checkpoint
 
-Before moving to n8n workflow, verify:
+✓ Tunnel is working when:
+- Tunnel service running (terminal shows connection)
+- Public HTTPS URL received
+- Can access n8n through tunnel URL
+- n8n login page visible from phone
 
-- [ ] Tunnel running (localhost.run OR ngrok)
-- [ ] Tunnel URL saved to `~/cisco-rag-demo/tunnel-url.txt`
-- [ ] Can access tunnel URL from browser
-- [ ] Tunnel terminal stays open
-- [ ] You understand URL will change on restart
-
-✅ **Tunnel ready! Moving to n8n configuration.**
+**⚠️ Remember: Tunnel must stay running for bot to work!**
 
 ---
 
 ## Part 3D: n8n Webex Workflow
 
-**Time:** 20 minutes  
-**What you'll do:** Import and configure the Webex bot workflow  
-**Why:** Connects Webex webhooks to RAG system
+**Time:** 15 minutes  
+**What you'll do:** Create n8n workflow that handles Webex messages  
+**Complexity:** Most complex workflow yet (12 nodes)
 
 ---
 
-### Download and Import Workflow
+### Understanding the Workflow
 
-**The workflow file:**
-Location in project: `/mnt/project/Webex_RAG_Bot.json`
-
-**Import process (same as Part 2):**
-
-1. **Open n8n:** http://localhost:5678
-2. **Click "⋯" menu** (three dots, top-right)
-3. **Select "Import from File"**
-4. **Navigate to** `/mnt/project/`
-5. **Select** `Webex_RAG_Bot.json`
-6. **Click "Open"**
-
-**Workflow loads on canvas.**
-
-**Workflow name:** "Webex RAG Bot"
-
----
-
-### Understanding the Workflow Architecture
-
-**Visual representation:**
+**What this workflow does:**
 
 ```
-┌──────────────────────────────────────────────────────┐
-│         12-NODE WEBEX BOT WORKFLOW                  │
-└──────────────────────────────────────────────────────┘
+[1] Webhook          → Receives notification from Webex
+[2] Get Message      → Fetches full message content
+[3] Extract Question → Parses user's question
+[4] Generate Embed   → Converts to vector
+[5] Get Collection   → Finds ChromaDB collection
+[6] Search Vectors   → Finds relevant chunks
+[7] Build Context    → Combines chunks
+[8] Generate Answer  → AI creates response
+[9] Send to Webex    → Posts answer back
+```
 
-[1] Webex Webhook
-    │ Receives POST from Webex when message sent
-    │ Contains message ID and room ID
-    ↓
-[2] Extract Webhook Data
-    │ Pulls out messageId, roomId from webhook
-    │ Prepares for next step
-    ↓
-[3] Get Message Details
-    │ HTTP GET to Webex API
-    │ Fetches full message content and metadata
-    │ Requires bot token (authentication)
-    ↓
-[4] Validate & Extract Question
-    │ CRITICAL: Filters bot's own messages
-    │ Prevents infinite loops
-    │ Cleans @mentions from text
-    │ Extracts question
-    ↓
-[5] Get Collection UUID
-    │ HTTP GET to ChromaDB
-    │ Looks up "cisco_docs" collection
-    │ Same as Part 2 workflows
-    ↓
-[6] Prepare Query
-    │ Formats question for embedding
-    │ Validates collection exists
-    ↓
-[7] Generate Question Embedding
-    │ HTTP POST to Ollama
-    │ Converts question to vector
-    │ Same as Part 2 workflows
-    ↓
-[8] Prepare Search
-    │ Formats search request
-    │ Sets n_results=3
-    ↓
-[9] Search ChromaDB
-    │ HTTP POST to ChromaDB
-    │ Vector similarity search
-    │ Returns top 3 relevant chunks
-    │ Same as Part 2 workflows
-    ↓
-[10] Build Prompt
-    │ Combines chunks + question
-    │ Adds system instructions
-    │ Shorter prompt (500 word limit for Webex)
-    ↓
-[11] Generate Answer
-    │ HTTP POST to Ollama
-    │ AI writes answer
-    │ Same as Part 2 workflows
-    ↓
-[12] Send to Webex
-    │ HTTP POST to Webex API
-    │ Posts answer to original space
-    │ Requires bot token
-    ↓
-[13] Respond to Webhook
-    │ Returns 200 OK to Webex
-    │ Acknowledges webhook receipt
+**Visual workflow:**
+
+```
+┌─────────────────────────────────────────────────────┐
+│           WEBEX BOT WORKFLOW                        │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  Webex → Webhook → Get Msg → Extract → Embed        │
+│                                           ↓         │
+│                                    Get Collection   │
+│                                           ↓         │
+│                                    Search Vectors   │
+│                                           ↓         │
+│                                    Build Context    │
+│                                           ↓         │
+│                                    Generate Answer  │
+│                                           ↓         │
+│                                    Send to Webex    │
+│                                                     │
+└─────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### Why 12 Nodes vs 9 in Chat?
+### Create Workflow JSON
 
-**Additional complexity:**
+**This is a complete, working workflow:**
 
-**Extra nodes for Webex:**
-- **Extract Webhook Data** - Parse Webex notification
-- **Get Message Details** - Fetch full message via API
-- **Validate & Extract** - Filter bot messages (prevent loops)
-- **Send to Webex** - Post response via API
-- **Respond to Webhook** - Acknowledge to Webex
-
-**Nodes 5-11 are identical to Part 2 chat workflow:**
-- Same RAG process
-- Same ChromaDB search
-- Same AI generation
-- Reuses all that knowledge!
-
-**Think of it as:**
-```
-Webex adapter (Nodes 1-4) → RAG core (Nodes 5-11) → Webex adapter (Nodes 12-13)
-```
-
----
-
-### Node-by-Node Deep Dive
-
-Let's understand what each node does:
-
----
-
-**Node 1: Webex Webhook**
-
-**Type:** `n8n-nodes-base.webhook`  
-**Purpose:** HTTP POST endpoint for Webex notifications
-
-**Configuration:**
-```
-HTTP Method: POST
-Path: webex-bot
-Response Mode: responseNode (CRITICAL!)
-```
-
-**What it receives when someone messages bot:**
-```json
-{
-  "id": "webhook-event-id",
-  "name": "RAG Bot Messages",
-  "resource": "messages",
-  "event": "created",
-  "data": {
-    "id": "message-id-123",
-    "roomId": "space-id-456",
-    "personId": "sender-id-789",
-    "personEmail": "user@example.com",
-    "created": "2024-12-18T10:30:00.000Z"
-  }
-}
-```
-
-**Why "responseNode" mode?**
-- Our workflow takes 5-10 seconds (AI processing)
-- Webex expects response within 5 seconds
-- Must acknowledge immediately, process async
-- Then send actual answer via separate API call
-
-**Network analogy:** Like TCP ACK - acknowledge receipt, then process payload.
-
----
-
-**Node 2: Extract Webhook Data**
-
-**Type:** `n8n-nodes-base.code`  
-**Purpose:** Parse webhook payload
-
-**What it does:**
-```javascript
-// Get data from webhook
-const webhookData = $input.first().json.body.data;
-
-// Extract what we need
-return [{
-  json: {
-    messageId: webhookData.id,
-    roomId: webhookData.roomId,
-    personId: webhookData.personId,
-    personEmail: webhookData.personEmail
-  }
-}];
-```
-
-**Why needed?**
-- Webhook data is nested
-- Need to extract key fields
-- Prepare for next step
-
----
-
-**Node 3: Get Message Details**
-
-**Type:** `n8n-nodes-base.httpRequest`  
-**Purpose:** Fetch full message content from Webex
-
-**Why needed?**
-- Webhook only has metadata (message ID, room ID)
-- Doesn't include actual message text!
-- Must fetch full details via API
-
-**Request:**
-```http
-GET https://webexapis.com/v1/messages/{messageId}
-Authorization: Bearer YOUR_BOT_TOKEN_HERE
-```
-
-**Response contains:**
-```json
-{
-  "id": "message-id-123",
-  "roomId": "space-id-456",
-  "text": "What is the network uptime?",
-  "personId": "sender-id-789",
-  "personEmail": "user@example.com",
-  "created": "2024-12-18T10:30:00.000Z"
-}
-```
-
-⚠️ **CRITICAL CONFIGURATION:** You must update bot token here!
-
-**How to update:**
-1. Click "Get Message Details" node
-2. Find "Header Parameters" section
-3. Find "Authorization" header
-4. Current value: `Bearer YOUR_BOT_TOKEN_HERE`
-5. Replace with: `Bearer YOUR_ACTUAL_TOKEN`
-
-**Get your token:**
 ```bash
-cat ~/cisco-rag-demo/webex-bot-token.txt
-```
-
-**Updated header:**
-```
-Authorization: Bearer YmQwNzJkM2EtZjk5Ny00ZDVmLWE4NTMt...
-                      ↑
-                Your actual token
-```
-
----
-
-**Node 4: Validate & Extract Question**
-
-**Type:** `n8n-nodes-base.code`  
-**Purpose:** Critical filtering and cleaning
-
-**What it does:**
-
-**1. Filter bot's own messages:**
-```javascript
-const BOT_EMAIL = 'YOUR_BOT_EMAIL@webex.bot';
-
-if (messageData.personEmail === BOT_EMAIL) {
-  throw new Error('Ignoring message from bot itself');
-}
-```
-
-**Why critical?**
-```
-Without filtering:
-1. Bot sends answer
-2. Webex sends webhook about bot's message
-3. Bot processes its own message
-4. Bot sends another answer
-5. Loop continues forever! 🔄
-```
-
-**With filtering:**
-```
-1. Bot sends answer
-2. Webex sends webhook
-3. Bot checks: "Is this from me?"
-4. Yes → Throw error, stop processing ✅
-5. No loop!
-```
-
-**2. Remove @mentions:**
-```javascript
-// When @mentioned in groups, text has HTML
-question = question.replace(/<spark-mention[^>]*>.*?<\/spark-mention>/gi, '');
-question = question.replace(/@\w+/g, '');
-question = question.trim();
-```
-
-**Before cleaning:**
-```
-"<spark-mention data-object-id='...'>RAG Assistant</spark-mention> What is the uptime?"
-```
-
-**After cleaning:**
-```
-"What is the uptime?"
-```
-
-⚠️ **MUST UPDATE BOT EMAIL:**
-
-1. Click "Validate & Extract Question" node
-2. Find line: `const BOT_EMAIL = 'YOUR_BOT_EMAIL@webex.bot';`
-3. Replace with your actual bot email
-
-**Get your bot email:**
-```bash
-cat ~/cisco-rag-demo/webex-bot-info.txt | grep "Bot Email"
-```
-
-**Expected "failures":**
-
-You'll see executions with error: "Ignoring message from bot itself"
-
-**This is NORMAL and INTENTIONAL!**
-- Not a bug
-- Prevents infinite loops
-- Expected behavior
-- Don't try to "fix" this
-
----
-
-**Nodes 5-11: RAG Processing**
-
-These are **identical to Part 2 chat workflow:**
-
-**Node 5:** Get Collection UUID (ChromaDB lookup)  
-**Node 6:** Prepare Query (format for embedding)  
-**Node 7:** Generate Question Embedding (Ollama)  
-**Node 8:** Prepare Search (format search request)  
-**Node 9:** Search ChromaDB (vector similarity)  
-**Node 10:** Build Prompt (chunks + question)  
-**Node 11:** Generate Answer (Ollama LLM)
-
-**Refer to Part 2 for detailed explanations of these nodes.**
-
-**Key difference in Node 10 (Build Prompt):**
-```javascript
-// Webex-specific: Keep responses concise
-const systemPrompt = `You are a helpful AI assistant for Cisco network assessments.
-Provide accurate, concise answers based on the context.
-Keep responses under 500 words for Webex readability.`;
-```
-
-**Why 500 words?**
-- Webex mobile app displays
-- Easier to read on phone
-- Forces concise answers
-- Better user experience
-
----
-
-**Node 12: Send to Webex**
-
-**Type:** `n8n-nodes-base.httpRequest`  
-**Purpose:** Post answer back to Webex
-
-**Request:**
-```http
-POST https://webexapis.com/v1/messages
-Authorization: Bearer YOUR_BOT_TOKEN_HERE
-Content-Type: application/json
-
+cat > ~/cisco-rag-demo/workflows/webex_rag_bot.json << 'EOF'
 {
-  "roomId": "space-id-456",
-  "text": "According to the network assessment, uptime is 99.94%..."
+  "name": "Webex RAG Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webex-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "webex-bot"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.data.personEmail }}",
+              "operation": "notContains",
+              "value2": "@webex.bot"
+            }
+          ]
+        }
+      },
+      "name": "Filter Bot Messages",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://webexapis.com/v1/messages/{{ $json.body.data.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "name": "Get Message Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [680, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Webex Bot Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "question",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "name": "roomId",
+              "value": "={{ $json.roomId }}"
+            },
+            {
+              "name": "personEmail",
+              "value": "={{ $json.personEmail }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Extract Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://host.containers.internal:11434/api/embeddings",
+        "method": "POST",
+        "jsonParameters": true,
+        "options": {
+          "timeout": 30000
+        },
+        "bodyParametersJson": "={\n  \"model\": \"nomic-embed-text\",\n  \"prompt\": \"{{ $json.question }}\"\n}"
+      },
+      "name": "Generate Embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://host.containers.internal:8000/api/v1/collections",
+        "options": {}
+      },
+      "name": "Get Collection",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "url": "=http://host.containers.internal:8000/api/v1/collections/{{ $item(0).json[0].id }}/query",
+        "method": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"query_embeddings\": [{{ $('Generate Embedding').item.json.embedding }}],\n  \"n_results\": 3\n}"
+      },
+      "name": "Search ChromaDB",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Build context from retrieved documents\nconst results = items[0].json;\nconst documents = results.documents[0];\nconst metadatas = results.metadatas[0];\n\n// Format context\nconst context = documents.map((doc, i) => {\n  const meta = metadatas[i];\n  return `Source: ${meta.source}\\nChunk ${meta.chunk_index}/${meta.total_chunks}\\n\\n${doc}`;\n}).join('\\n\\n---\\n\\n');\n\n// Get question\nconst question = $('Extract Data').item.json.question;\n\n// Build prompt\nconst prompt = `Based on the following context from documents, answer the question. Keep the answer concise but informative. If the answer is not in the context, say \"I don't have enough information to answer that.\"\n\nContext:\n${context}\n\nQuestion: ${question}\n\nAnswer:`;\n\nreturn [{ json: { prompt: prompt } }];"
+      },
+      "name": "Build Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://host.containers.internal:11434/api/generate",
+        "method": "POST",
+        "jsonParameters": true,
+        "options": {
+          "timeout": 60000
+        },
+        "bodyParametersJson": "={\n  \"model\": \"llama3.2:3b\",\n  \"prompt\": \"{{ $json.prompt }}\",\n  \"stream\": false\n}"
+      },
+      "name": "Generate Answer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [2000, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://webexapis.com/v1/messages",
+        "method": "POST",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"roomId\": \"{{ $('Extract Data').item.json.roomId }}\",\n  \"markdown\": \"{{ $json.response }}\"\n}"
+      },
+      "name": "Send to Webex",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [2220, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Webex Bot Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true }"
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2440, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true, \"message\": \"Ignored bot message\" }"
+      },
+      "name": "Respond - Filtered",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [460, 500]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Filter Bot Messages", "type": "main", "index": 0}]]
+    },
+    "Filter Bot Messages": {
+      "main": [
+        [{"node": "Get Message Details", "type": "main", "index": 0}],
+        [{"node": "Respond - Filtered", "type": "main", "index": 0}]
+      ]
+    },
+    "Get Message Details": {
+      "main": [[{"node": "Extract Data", "type": "main", "index": 0}]]
+    },
+    "Extract Data": {
+      "main": [[{"node": "Generate Embedding", "type": "main", "index": 0}]]
+    },
+    "Generate Embedding": {
+      "main": [[{"node": "Get Collection", "type": "main", "index": 0}]]
+    },
+    "Get Collection": {
+      "main": [[{"node": "Search ChromaDB", "type": "main", "index": 0}]]
+    },
+    "Search ChromaDB": {
+      "main": [[{"node": "Build Prompt", "type": "main", "index": 0}]]
+    },
+    "Build Prompt": {
+      "main": [[{"node": "Generate Answer", "type": "main", "index": 0}]]
+    },
+    "Generate Answer": {
+      "main": [[{"node": "Send to Webex", "type": "main", "index": 0}]]
+    },
+    "Send to Webex": {
+      "main": [[{"node": "Respond to Webhook", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": []
 }
-```
-
-⚠️ **CRITICAL CONFIGURATION:** You must update bot token here too!
-
-**How to update:**
-1. Click "Send to Webex" node
-2. Find "Header Parameters" section
-3. Find "Authorization" header
-4. Replace with your actual bot token (same as Node 3)
-
-**Why two places?**
-- Node 3: Read permission (fetch messages)
-- Node 12: Write permission (send messages)
-- Both need authentication
-- Must use same token
-
----
-
-**Node 13: Respond to Webhook**
-
-**Type:** `n8n-nodes-base.respondToWebhook`  
-**Purpose:** Acknowledge webhook to Webex
-
-**Response:**
-```http
-HTTP/1.1 200 OK
-Content-Type: text/plain
-
-OK
-```
-
-**Why needed?**
-- Webex expects acknowledgment
-- Confirms webhook was received
-- Prevents retries
-- Good practice
-
-**Executes after Node 12** (answer sent) but returns to Webex immediately.
-
----
-
-### Critical Configuration Summary
-
-**Three things you MUST configure:**
-
-**1. Bot token in "Get Message Details" (Node 3)**
-```
-Authorization: Bearer YOUR_ACTUAL_TOKEN
-```
-
-**2. Bot token in "Send to Webex" (Node 12)**
-```
-Authorization: Bearer YOUR_ACTUAL_TOKEN
-```
-
-**3. Bot email in "Validate & Extract Question" (Node 4)**
-```javascript
-const BOT_EMAIL = 'your-actual-bot@webex.bot';
-```
-
-**Get values from:**
-```bash
-# Bot token
-cat ~/cisco-rag-demo/webex-bot-token.txt
-
-# Bot email
-cat ~/cisco-rag-demo/webex-bot-info.txt | grep "Bot Email"
+EOF
 ```
 
 ---
 
-### Activate the Workflow
+### Import Workflow into n8n
 
-**Important:** Unlike document loader, this workflow must be **active** (running continuously).
+**Step 1: Open n8n**
 
-**Activation steps:**
+```
+http://localhost:5678
+```
 
-1. **Save workflow first**
-   - Click "Save" button
-   - Gives it a chance to validate
+**Step 2: Import Workflow**
 
-2. **Toggle to Active**
-   - Look for "Active" toggle switch
-   - Currently shows ⭕ (inactive/off)
-   - Click it → Changes to ✅ (active/on)
+1. Click **"Add workflow"** (top right)
+2. Click **"⋮"** menu → **"Import from file"**
+3. Select: `~/cisco-rag-demo/workflows/webex_rag_bot.json`
+4. Click **"Import"**
 
-3. **Confirm activation**
-   - Switch should be green/blue
-   - Workflow now running in background
-   - Will process webhooks as they arrive
-
-**What "Active" means:**
-- Workflow runs continuously
-- Webhook endpoint available
-- Processes messages in real-time
-- Stays active even if you close browser
+**You should see:** 12 nodes connected in sequence
 
 ---
 
-### Get Webhook URL
+### Configure Credentials
 
-**With workflow active, note webhook URL:**
+**The workflow needs your Webex bot token to:**
+- Fetch message details from Webex
+- Send responses back to Webex
 
-**Method 1: Click workflow name**
-- Top of canvas shows workflow details
-- Webhook URL listed
+**Step 1: Add Credentials**
 
-**Method 2: Click "Webex Webhook" node**
-- Shows node details
-- "Production URL" displayed
+1. Click **"Credentials"** in left sidebar
+2. Click **"+ Add Credential"**
+3. Search for **"Header Auth"**
+4. Click **"Header Auth"**
 
-**Format:**
-```
-https://your-tunnel-url/webhook/webex-bot
-```
+**Step 2: Configure Header Auth**
+
+**Name:** `Webex Bot Token`
+
+**Header Name:** `Authorization`
+
+**Header Value:** `Bearer <YOUR_BOT_TOKEN>`
 
 **Example:**
 ```
-https://random-words-12.localhost.run/webhook/webex-bot
+Bearer YmJkYzJjZjAtMjZhNy00YTUwLWIwMzUtZGJmZmFhZjY1MDZjMmU3OTZmYzctNTI1_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f
 ```
 
-**Save for next step:**
-```bash
-# Full webhook URL
-TUNNEL_URL=$(cat ~/cisco-rag-demo/tunnel-url.txt)
-echo "${TUNNEL_URL}/webhook/webex-bot" > ~/cisco-rag-demo/webhook-url.txt
+**Click "Save"**
 
-# Verify
-cat ~/cisco-rag-demo/webhook-url.txt
+---
+
+**Step 3: Assign Credentials to Nodes**
+
+**Two nodes need credentials:**
+1. **"Get Message Details"** node
+2. **"Send to Webex"** node
+
+**For each node:**
+1. Click the node
+2. Scroll to **"Authentication"** section
+3. **Credential Type:** Generic Credential Type
+4. **Generic Auth Type:** Header Auth
+5. **Header Auth Credential:** Select "Webex Bot Token"
+6. Click away to save
+
+---
+
+### Activate Workflow
+
+**Step 1: Save Workflow**
+
+**Click "Save"** button (top right)
+
+**Step 2: Activate**
+
+**Toggle "Active" switch** (top right)
+
+Status should change from inactive to **Active**
+
+**Step 3: Get Webhook URL**
+
+1. Click **"Webhook"** node
+2. Note the webhook URLs:
+   - **Production URL:** This is what Webex will call
+   - **Test URL:** For manual testing
+
+**Example Production URL:**
 ```
+http://localhost:5678/webhook/webex-webhook
+```
+
+**But remember:** This needs to be accessed through your tunnel!
+
+**Your actual webhook URL for Webex:**
+```
+https://abc123xyz.localhost.run/webhook/webex-webhook
+```
+
+**⚠️ Save this complete URL - you'll need it next!**
 
 ---
 
 ### Success Checkpoint
 
-Before moving to webhook registration, verify:
-
-- [ ] Workflow imported successfully
-- [ ] All 12 nodes visible on canvas
-- [ ] Bot token updated in Node 3 (Get Message Details)
-- [ ] Bot token updated in Node 12 (Send to Webex)
-- [ ] Bot email updated in Node 4 (Validate & Extract)
-- [ ] Workflow activated (toggle shows ✅)
-- [ ] Workflow saved
-- [ ] Webhook URL noted
-
-✅ **Workflow configured and active! Ready to register webhook.**
+✓ Workflow is ready when:
+- All 12 nodes present and connected
+- Credentials configured correctly
+- Workflow activated (green toggle)
+- Webhook URL known
+- No red error indicators on nodes
 
 ---
 
 ## Part 3E: Register Webhook
 
-**Time:** 10 minutes  
-**What you'll do:** Tell Webex where to send notifications  
-**Why:** Connects Webex to your n8n workflow
+**Time:** 5 minutes  
+**What you'll do:** Tell Webex to notify your n8n when messages arrive  
+**Why:** This connects Webex cloud to your local system
 
 ---
 
 ### Understanding Webhook Registration
 
-**What a webhook does:**
+**What we're doing:**
 ```
-[Webex] "Someone sent a message to your bot!"
-   ↓
-   POST notification →
-   ↓
-[Your webhook URL] Receives notification, processes
+Webex Cloud: "When bot receives message, POST notification to this URL"
+             ↓
+Your URL: https://your-tunnel.localhost.run/webhook/webex-webhook
 ```
 
-**Like giving Webex your phone number:**
-- Webex: "Where should I notify you?"
-- You: "Send notifications to https://my-url/webhook/webex-bot"
-- Webex: "Got it! I'll POST there when messages arrive."
+**What happens after registration:**
+1. Someone messages your bot
+2. Webex immediately POSTs to your URL
+3. Your n8n receives notification
+4. Workflow processes and responds
 
 ---
 
-### Registration Process
+### Register Webhook via API
 
-**Prepare your environment variables:**
-
-```bash
-# Get values from saved files
-BOT_TOKEN=$(cat ~/cisco-rag-demo/webex-bot-token.txt)
-TUNNEL_URL=$(cat ~/cisco-rag-demo/tunnel-url.txt)
-WEBHOOK_URL="${TUNNEL_URL}/webhook/webex-bot"
-
-# Verify all set
-echo "Bot Token: ${BOT_TOKEN:0:20}..."
-echo "Tunnel URL: $TUNNEL_URL"
-echo "Webhook URL: $WEBHOOK_URL"
-```
-
-**Expected output:**
-```
-Bot Token: YmQwNzJkM2EtZjk5Ny0...
-Tunnel URL: https://random-words-12.localhost.run
-Webhook URL: https://random-words-12.localhost.run/webhook/webex-bot
-```
-
----
-
-### Register Webhook with Webex
-
-**Run registration command:**
+**Step 1: Prepare Registration Command**
 
 ```bash
+# Source your bot token
+source ~/cisco-rag-demo/credentials/webex_bot.txt
+
+# Set your tunnel URL (REPLACE WITH YOUR ACTUAL URL!)
+TUNNEL_URL="https://abc123xyz.localhost.run"
+
+# Create webhook
 curl -X POST https://webexapis.com/v1/webhooks \
   -H "Authorization: Bearer $BOT_TOKEN" \
   -H "Content-Type: application/json" \
   -d "{
     \"name\": \"RAG Bot Messages\",
-    \"targetUrl\": \"${WEBHOOK_URL}\",
+    \"targetUrl\": \"${TUNNEL_URL}/webhook/webex-webhook\",
     \"resource\": \"messages\",
     \"event\": \"created\"
   }"
 ```
 
-**Command breakdown:**
-- `POST /v1/webhooks` - Create new webhook
-- `Authorization: Bearer $BOT_TOKEN` - Authenticate as bot
-- `name` - Friendly name (for your reference)
-- `targetUrl` - Where to send notifications (your webhook)
-- `resource` - What to watch (messages)
-- `event` - When to notify (when created)
+**⚠️ Important:** Replace `abc123xyz.localhost.run` with YOUR actual tunnel URL!
 
 ---
 
-**Expected response:**
+**Step 2: Execute Registration**
 
+**Run the curl command above.**
+
+**Expected response:**
 ```json
 {
-  "id": "Y2lzY29zcGFyazovL3VzL1dFQkhPT0svMTIzNDU2Nzg5YWJjZGVm",
+  "id": "Y2lzY29zcGFyazovL3VzL1dFQkhPT0sv...",
   "name": "RAG Bot Messages",
-  "targetUrl": "https://random-words-12.localhost.run/webhook/webex-bot",
+  "targetUrl": "https://abc123xyz.localhost.run/webhook/webex-webhook",
   "resource": "messages",
   "event": "created",
   "filter": null,
@@ -1456,1285 +1138,1118 @@ curl -X POST https://webexapis.com/v1/webhooks \
 }
 ```
 
-**Key fields:**
-- `id` - Webhook ID (save this!)
-- `targetUrl` - Should match your webhook URL
-- `status` - Should be "active"
-- `created` - Timestamp of registration
+**What to verify:**
+- ✅ `"status": "active"` - Webhook is active
+- ✅ `"targetUrl"` matches your tunnel URL
+- ✅ `"resource": "messages"` - Listens for messages
+- ✅ `"event": "created"` - Triggers on new messages
+
+**Save the webhook ID** from response - you might need it later.
 
 ---
 
-### Save Webhook ID
+### List Existing Webhooks
 
-**CRITICAL: Save the webhook ID**
+**Check what webhooks are registered:**
 
 ```bash
-# Extract ID from response (if you saved it)
-# Or from next verification step
-
-# Save to file
-echo "Y2lzY29zcGFyazovL3VzL1dFQkhPT0svMTIzNDU2Nzg5YWJjZGVm" > ~/cisco-rag-demo/webhook-id.txt
-
-# Verify
-cat ~/cisco-rag-demo/webhook-id.txt
+curl -X GET https://webexapis.com/v1/webhooks \
+  -H "Authorization: Bearer $BOT_TOKEN"
 ```
 
-**Why save webhook ID?**
-- Need it to delete webhook later
-- Need it when tunnel URL changes
-- Makes management much easier
+**Shows all webhooks for your bot**
+
+**Use this to:**
+- Verify registration succeeded
+- Find webhook IDs
+- Check for duplicates
 
 ---
 
-### Verify Webhook Registration
+### Delete Webhook (If Needed)
 
-**List all webhooks:**
+**If you need to remove a webhook:**
 
 ```bash
-curl https://webexapis.com/v1/webhooks \
-  -H "Authorization: Bearer $BOT_TOKEN" | jq '.'
+# Get webhook ID from list command above
+WEBHOOK_ID="<paste-webhook-id-here>"
+
+curl -X DELETE https://webexapis.com/v1/webhooks/$WEBHOOK_ID \
+  -H "Authorization: Bearer $BOT_TOKEN"
 ```
 
-**Check that:**
-- ✓ Your webhook appears in list
-- ✓ Status is "active"
-- ✓ targetUrl matches your webhook URL
-- ✓ resource is "messages"
-- ✓ event is "created"
-
-**If multiple webhooks exist:**
-- You might see old ones from previous attempts
-- Can delete old ones (see Daily Operations)
-- Only need one active
+**When to delete:**
+- Changing tunnel URLs
+- Webhook pointing to wrong endpoint
+- Duplicates causing issues
 
 ---
 
-### Test Webhook Connectivity
+### Webhook Management Script
 
-**Manual test (optional but recommended):**
+**Create helper script:**
 
 ```bash
-# Send test POST to your webhook
-curl -X POST $(cat ~/cisco-rag-demo/webhook-url.txt) \
-  -H "Content-Type: application/json" \
-  -d '{"test": "data"}'
+cat > ~/cisco-rag-demo/manage-webhook.sh << 'EOF'
+#!/bin/bash
+# Webhook management script
+
+# Load credentials
+source ~/cisco-rag-demo/credentials/webex_bot.txt
+
+echo "Webex Webhook Manager"
+echo "====================="
+echo ""
+echo "1) List webhooks"
+echo "2) Register new webhook"
+echo "3) Delete webhook"
+echo "4) Test webhook"
+echo ""
+read -p "Choose option (1-4): " choice
+
+case $choice in
+  1)
+    echo ""
+    echo "Current webhooks:"
+    curl -s -X GET https://webexapis.com/v1/webhooks \
+      -H "Authorization: Bearer $BOT_TOKEN" | python3 -m json.tool
+    ;;
+  2)
+    echo ""
+    read -p "Enter your tunnel URL (e.g., https://abc.localhost.run): " tunnel_url
+    echo ""
+    echo "Registering webhook..."
+    curl -X POST https://webexapis.com/v1/webhooks \
+      -H "Authorization: Bearer $BOT_TOKEN" \
+      -H "Content-Type: application/json" \
+      -d "{
+        \"name\": \"RAG Bot Messages\",
+        \"targetUrl\": \"${tunnel_url}/webhook/webex-webhook\",
+        \"resource\": \"messages\",
+        \"event\": \"created\"
+      }" | python3 -m json.tool
+    ;;
+  3)
+    echo ""
+    read -p "Enter webhook ID to delete: " webhook_id
+    curl -X DELETE "https://webexapis.com/v1/webhooks/$webhook_id" \
+      -H "Authorization: Bearer $BOT_TOKEN"
+    echo ""
+    echo "Webhook deleted"
+    ;;
+  4)
+    echo ""
+    echo "Testing webhook connection..."
+    read -p "Enter your tunnel URL: " tunnel_url
+    curl -X POST "${tunnel_url}/webhook/webex-webhook" \
+      -H "Content-Type: application/json" \
+      -d '{"test": true}'
+    ;;
+  *)
+    echo "Invalid option"
+    ;;
+esac
+EOF
+
+chmod +x ~/cisco-rag-demo/manage-webhook.sh
 ```
 
-**Expected:**
-- Tunnel terminal shows POST request
-- n8n shows new execution (might fail - that's OK for test)
-- Confirms connectivity works
-
-**If no activity:**
-- Check tunnel is running
-- Check n8n workflow is active
-- Check URL is correct
-
----
-
-### Understanding Webhook Lifecycle
-
-**Normal webhook flow:**
-
+**Usage:**
+```bash
+~/cisco-rag-demo/manage-webhook.sh
 ```
-1. User sends message in Webex
-2. Webex checks: Does bot have webhooks?
-3. Yes → POST to targetUrl(s)
-4. Your webhook receives notification
-5. Processes and responds
-```
-
-**When tunnel URL changes (will happen):**
-
-```
-1. Tunnel restarts → New URL
-2. Webhook still points to OLD URL
-3. Webex POSTs to old URL → Fails
-4. Bot stops responding
-5. Must update webhook with new URL
-```
-
-**This is NORMAL with free tier!**
-
-We'll cover update procedure in Part 3G (Daily Operations).
 
 ---
 
 ### Success Checkpoint
 
-Before testing bot, verify:
-
-- [ ] Webhook registered with Webex
-- [ ] Webhook ID saved to file
-- [ ] targetUrl matches current tunnel URL
-- [ ] Webhook status is "active"
-- [ ] Can verify webhook in list
-- [ ] Test POST reaches n8n
-- [ ] Understand URL will change (normal)
-
-✅ **Webhook registered! Ready to test bot.**
+✓ Webhook is registered when:
+- API returned success response
+- Webhook ID received
+- Status shows "active"
+- targetUrl matches your tunnel
+- Webhook appears in list command
 
 ---
 
 ## Part 3F: Test Your Bot
 
-**Time:** 15 minutes  
-**What you'll do:** Send first messages and verify bot responds  
-**Why:** Confirm complete system works end-to-end
+**Time:** 5 minutes  
+**What you'll do:** Send first message and receive response  
+**Excitement level:** 🎉 HIGH!
 
 ---
 
-### Find Your Bot in Webex Teams
+### Test Flow Checklist
 
-**Desktop/Web Client:**
+**Before testing, verify everything is running:**
 
-1. **Open Webex Teams**
-   - Application or https://web.webex.com
+```bash
+# 1. Services running
+podman ps | grep -E "chromadb|n8n"  # Both should show
 
-2. **Start new message**
-   - Click "+" button
-   - Or "New Message"
+# 2. Ollama running
+curl http://localhost:11434  # Should return "Ollama is running"
 
-3. **Search for bot**
-   - Enter bot email: `your-bot@webex.bot`
-   - Example: `rag-assistant@webex.bot`
+# 3. Models loaded
+ollama list  # Should show llama3.2:3b and nomic-embed-text
 
-4. **Click bot to open chat**
-   - Opens 1-on-1 space
-   - Bot shows as "Bot" badge
+# 4. Tunnel active
+# Check terminal where tunnel is running - should show connection
+
+# 5. n8n workflow active
+# Check n8n web interface - workflow should show "Active"
+
+# 6. Webhook registered
+source ~/cisco-rag-demo/credentials/webex_bot.txt
+curl -X GET https://webexapis.com/v1/webhooks \
+  -H "Authorization: Bearer $BOT_TOKEN"
+# Should show webhook with status: active
+```
+
+**All green?** ✅ Proceed to testing!
 
 ---
 
-**Mobile App (iOS/Android):**
+### Test 1: Direct Message to Bot
 
-1. **Open Webex Teams app**
-   - Tap Webex icon
+**Step 1: Open Webex Teams**
 
-2. **New message**
-   - Tap "+" icon (bottom)
+- Desktop app, web app, or mobile app all work
+- Make sure you're logged in
 
-3. **Search for bot**
-   - Enter bot email
-   - Example: `rag-assistant@webex.bot`
+**Step 2: Find Your Bot**
 
-4. **Tap bot to start chat**
-   - Opens direct message space
-
----
-
-### Send First Test Message
-
-**Type:** `test`
-
-**Press Send**
-
----
-
-### What to Expect
-
-**Immediate (< 1 second):**
-```
-✓ Message sends (checkmark appears)
-```
-
-**Brief pause (1-2 seconds):**
-```
-(Processing webhook, fetching message)
-```
-
-**Bot starts typing (2-3 seconds):**
-```
-... (typing indicator)
-```
-
-**Answer appears (total 5-10 seconds):**
-```
-Bot: Hello! I'm your RAG Assistant. I can help answer 
-     questions about your Cisco network assessment documents. 
-     Try asking me about network uptime, equipment, budgets, 
-     or contact information.
-```
-
----
-
-### Understanding Response Timing
-
-**First message of session (10-15 seconds):**
-- AI models loading into RAM
-- Completely normal
-- Subsequent messages will be faster
-
-**Subsequent messages (5-8 seconds):**
-- Models already in RAM
-- Typical performance
-- Expected timing
-
-**If slower than 20 seconds consistently:**
-- See troubleshooting section
-- Likely needs model pre-loading
-
----
-
-### What's Happening Behind the Scenes
-
-**Complete trace of your "test" message:**
-
-```
-[Second 0] You type "test" in Webex app
-            ↓
-[Second 1] Message sent to Webex cloud
-            ↓
-[Second 2] Webex sends webhook POST to tunnel
-            ↓
-            Tunnel forwards to n8n localhost:5678
-            ↓
-[Second 3] n8n "Webex Webhook" node receives
-            ↓
-            n8n extracts message ID and room ID
-            ↓
-[Second 4] n8n fetches full message from Webex API
-            ↓
-            n8n validates (is it from bot? no → continue)
-            ↓
-[Second 5] n8n looks up ChromaDB collection
-            ↓
-            n8n generates question embedding (Ollama)
-            ↓
-[Second 6] n8n searches ChromaDB
-            ↓
-            n8n retrieves top 3 chunks
-            ↓
-[Second 7] n8n builds prompt with context
-            ↓
-[Seconds 7-10] Ollama generates answer (AI writing)
-            ↓
-[Second 10] n8n posts answer to Webex API
-            ↓
-[Second 10] Answer appears in your Webex chat!
-```
-
-**Total: 10 seconds**  
-**All processing: On your Mac**  
-**Privacy: Complete**
-
----
-
-### Ask Real Questions
-
-**Try these questions about your loaded documents:**
-
-**Question 1: Network performance**
-```
-You: What is the network uptime?
-
-Expected: Bot responds with uptime percentage from 
-          your document (e.g., "99.94% year-to-date")
-```
-
----
-
-**Question 2: Equipment information**
-```
-You: What equipment needs replacement?
-
-Expected: Bot lists equipment from document 
-          (e.g., "15 Cisco 3850 switches reach EOS...")
-```
-
----
-
-**Question 3: Budget inquiry**
-```
-You: What is the proposed FY2025 budget?
-
-Expected: Bot provides budget breakdown from document
-          (e.g., "Total $325,000: Equipment $250,000...")
-```
-
----
-
-**Question 4: Contact information**
-```
-You: Who should I contact about network issues?
-
-Expected: Bot provides contacts from document
-          (e.g., "Network Lead: Mike Chen, mike.chen@...")
-```
-
----
-
-**Question 5: Analytical question**
-```
-You: Does the network meet SLA requirements?
-
-Expected: Bot analyzes and responds
-          (e.g., "Yes, 99.94% exceeds the 99.9% SLA target")
-```
-
----
-
-### Verify Accuracy
-
-**For each answer, check:**
-- ✓ Cites information from your actual documents
-- ✓ Provides specific numbers/names (not generic)
-- ✓ Answer makes sense
-- ✓ Addresses the question asked
-
-**If answers are wrong/generic:**
-- Documents may not be loaded
-- See troubleshooting section
-
----
-
-### Test in Group Space (Optional)
-
-**Create test space:**
-
-1. **Create new Webex space**
-   - Add yourself
-   - Add a colleague (optional)
-   - Add your bot (search by email)
-
-2. **Use @mention to ask questions**
+1. Click **"New Message"** or **"+"**
+2. In the **"To:"** field, type your bot's email
    ```
-   @RAG Assistant What is the network uptime?
+   your-bot-username@webex.bot
    ```
+3. Select your bot from the list
 
-3. **Bot responds in space**
-   - Visible to all members
-   - Can be used for team collaboration
+**Step 3: Send First Message**
 
-**Group space behavior:**
-- Bot only responds when @mentioned
-- Won't respond to every message (good!)
-- Multiple people can ask questions
-- Great for team demos
+**Type a simple question:**
+```
+What is the network uptime?
+```
+
+**Press Enter/Send**
 
 ---
 
-### Monitoring Execution
+**Step 4: Watch the Magic! ✨**
 
-**Watch in n8n:**
+**What happens (usually takes 5-10 seconds):**
 
-1. **Open n8n** (http://localhost:5678)
-2. **Click "Executions" tab** (left sidebar)
-3. **See real-time executions**
+1. **Message sent** - Shows in Webex
+2. **Processing** - Bot shows "typing" indicator
+3. **Response appears** - Bot replies with answer from your documents
 
-**For each message you send:**
+**Expected response example:**
 ```
-Execution appears:
-✅ Green = Success
-⚠️ Yellow/Orange = Warning (might be intentional)
-❌ Red = Error
-
-Click execution to see details:
-- Which nodes executed
-- Data at each step
-- Any errors
-```
-
-**You'll see some "errors" that are actually intentional:**
-```
-Error: "Ignoring message from bot itself"
-Status: ❌ Failed
-Explanation: This is NORMAL! Prevents infinite loops.
-             Bot's own messages trigger this.
-             Don't try to fix it!
+According to the Boston Network Assessment Q3 2024 report, 
+the network uptime for Q3 2024 was 99.94% with a mean time 
+to repair (MTTR) of 2.4 hours.
 ```
 
 ---
 
-**Watch in tunnel terminal:**
+### Test 2: Query from Mobile
 
-**Your tunnel terminal should show:**
+**Step 1: Open Webex Mobile App**
+
+- iOS or Android
+- Make sure you're logged in
+
+**Step 2: Find Your Bot**
+
+- Search for bot by name or email
+- Open conversation
+
+**Step 3: Ask Question**
+
+**Try different question:**
 ```
-POST /webhook/webex-bot HTTP/1.1
-200 OK
-
-POST /webhook/webex-bot HTTP/1.1
-200 OK
+What switches are installed?
 ```
 
-**Each POST = One webhook received**
+**You should receive:** Accurate answer citing your documents
 
-**If no POSTs appear when you send message:**
-- Webhook not registered correctly
-- Or tunnel URL changed
-- See troubleshooting
+**This proves:** Mobile access works! 📱
 
 ---
 
-### Mobile Testing
+### Test 3: Test in Group Space
 
-**Test from phone/tablet:**
+**Step 1: Create Test Space**
 
-1. **Open Webex app on mobile**
-2. **Find bot chat**
-3. **Send question**
-4. **Receive answer**
+1. In Webex, click **"Create a space"**
+2. Name it: "RAG Bot Test"
+3. Add your bot: Search for bot email, add to space
 
-**This proves:**
-- ✓ Works from anywhere
-- ✓ Mobile-friendly responses
-- ✓ Real-world use case
-- ✓ Team members can use it
+**Step 2: Send @mention**
 
-**Share bot with team:**
-- Give them bot email
-- They can add bot to Webex
-- They can ask questions
-- Everyone benefits!
+**In the space, type:**
+```
+@RAG-Assistant What equipment needs upgrading?
+```
+
+**Bot should respond** with answer from documents
+
+**This proves:** Group space functionality works! 👥
+
+---
+
+### Test 4: Monitor in n8n
+
+**While testing, watch n8n:**
+
+**Open n8n:** `http://localhost:5678`
+
+**Go to:** "Executions" in left sidebar
+
+**You'll see:**
+- Each message as new execution
+- Green checkmarks for success
+- Click execution to see data flow through nodes
+- View actual API responses
+
+**This is invaluable for debugging!**
+
+---
+
+### Test 5: Monitor Tunnel Traffic
+
+**If using ngrok:**
+
+**Open:** `http://127.0.0.1:4040`
+
+**You'll see:**
+- Every HTTP request from Webex
+- Request headers and body
+- Response codes
+- Timing information
+
+**Perfect for troubleshooting!**
+
+---
+
+### Common First-Test Issues
+
+**Issue: Bot doesn't respond at all**
+
+**Check:**
+1. Is tunnel still running? (Check terminal)
+2. Is n8n workflow active? (Check toggle in n8n)
+3. Is webhook registered? (Run list command)
+4. Any errors in n8n executions?
+
+---
+
+**Issue: Bot responds slowly (>20 seconds)**
+
+**Causes:**
+1. First query loads model (normal)
+2. Low RAM (check Activity Monitor)
+3. Model swapping (close other apps)
+
+**Pre-load models:**
+```bash
+ollama run llama3.2:3b "test"
+# Press Ctrl+D to exit but keep model loaded
+```
+
+---
+
+**Issue: Bot says "I don't have enough information"**
+
+**Causes:**
+1. No documents loaded in ChromaDB
+2. Question doesn't match document content
+3. ChromaDB collection not found
+
+**Check:**
+```bash
+# Verify documents exist
+UUID=$(curl -s http://localhost:8000/api/v1/collections | \
+       python3 -c "import sys, json; print([c['id'] for c in json.load(sys.stdin) if c['name']=='cisco_docs'][0])")
+curl -s "http://localhost:8000/api/v1/collections/$UUID/count"
+# Should return number > 0
+```
+
+---
+
+**Issue: Error in n8n execution**
+
+**Check execution details:**
+1. Open n8n
+2. Go to "Executions"
+3. Click failed execution
+4. Look at node with red X
+5. Read error message
+
+**Common errors:**
+- "Connection refused" → Ollama not running
+- "Collection not found" → ChromaDB issue
+- "401 Unauthorized" → Bot token wrong
+- "Timeout" → Model too slow, increase timeout
 
 ---
 
 ### Success Checkpoint
 
-Before moving to daily operations, verify:
+✓ Your bot works when:
+- Responds to direct messages
+- Works from mobile app
+- Responds in group spaces (with @mention)
+- Answers are accurate
+- Response time under 10 seconds
+- Can see executions in n8n
+- No errors in execution logs
 
-- [ ] Can find bot in Webex (desktop and mobile)
-- [ ] Test message receives response
-- [ ] Real questions get accurate answers
-- [ ] Response time reasonable (<15 sec first, <10 sec after)
-- [ ] Answers cite actual document content
-- [ ] Can see executions in n8n
-- [ ] Can see POSTs in tunnel terminal
-- [ ] Group space @mentions work (if tested)
-- [ ] Mobile access works
-
-✅ **Bot working! Ready to learn daily operations.**
+**🎉 If all checks pass: YOUR BOT IS LIVE! 🎉**
 
 ---
 
 ## Part 3G: Daily Operations
 
-**Time:** 10 minutes  
-**What you'll learn:** Day-to-day bot management  
-**Why:** Keep bot running smoothly
+**Time:** 5 minutes (learning procedures)  
+**Purpose:** How to maintain and operate your bot
 
 ---
 
-### Daily Startup Sequence
+### Daily Startup Procedure
 
-**Every time you want to use the bot, follow this sequence:**
-
----
-
-**Terminal 1: Infrastructure**
+**When you start your machine or after restart:**
 
 ```bash
-# 1. Start containers
+# 1. Start Podman machine
+podman machine start
+
+# 2. Start containers
 podman start chromadb n8n
 
-# 2. Start Ollama
-ollama serve &
+# 3. Start Ollama
+ollama serve > /dev/null 2>&1 &
 
-# 3. Wait for services to initialize
+# 4. Wait for services
 sleep 20
 
-# 4. CRITICAL: Pre-load models (saves time on first query)
-echo "Warming up models..."
-ollama run llama3.2:3b "warmup" < /dev/null
-ollama run nomic-embed-text "warmup" < /dev/null
+# 5. Pre-load models (optional but recommended)
+ollama run llama3.2:3b "Ready"
+# Press Ctrl+D
 
-echo "✅ Infrastructure ready!"
-```
+# 6. Start tunnel
+~/cisco-rag-demo/start-tunnel.sh
+# Keep terminal open!
 
-**Why pre-load models?**
-```
-Without pre-loading:
-- First query: 10-15 seconds (models loading)
-- User thinks bot is broken
-
-With pre-loading:
-- First query: 5-8 seconds (models in RAM)
-- Much better user experience!
-```
-
-**Time investment:** 1 minute pre-loading saves 5+ seconds per query
-
----
-
-**Terminal 2: Start Tunnel**
-
-**Open new terminal tab/window:**
-
-```bash
-# Start localhost.run tunnel
-ssh -R 80:localhost:5678 nokey@localhost.run
-```
-
-**Watch for connection message:**
-```
-Connect to https://new-random-words-99.localhost.run
-              ↑
-         Note this URL - it's new!
-```
-
-**Save new URL:**
-
-```bash
-# In ANOTHER terminal (keep tunnel running)
-echo "https://new-random-words-99.localhost.run" > ~/cisco-rag-demo/tunnel-url.txt
-
-# Verify
-cat ~/cisco-rag-demo/tunnel-url.txt
+# 7. Update webhook (if tunnel URL changed)
+~/cisco-rag-demo/manage-webhook.sh
+# Choose option 3 (delete old), then 2 (register new)
 ```
 
 ---
 
-**Terminal 3: Update Webhook**
+### Create Startup Script
 
-**Because tunnel URL changed, webhook must be updated:**
-
-```bash
-# Load environment
-BOT_TOKEN=$(cat ~/cisco-rag-demo/webex-bot-token.txt)
-TUNNEL_URL=$(cat ~/cisco-rag-demo/tunnel-url.txt)
-WEBHOOK_URL="${TUNNEL_URL}/webhook/webex-bot"
-
-# Get old webhook ID (if exists)
-WEBHOOK_ID=$(cat ~/cisco-rag-demo/webhook-id.txt 2>/dev/null)
-
-# Delete old webhook if exists
-if [ ! -z "$WEBHOOK_ID" ]; then
-  echo "Deleting old webhook..."
-  curl -X DELETE https://webexapis.com/v1/webhooks/$WEBHOOK_ID \
-    -H "Authorization: Bearer $BOT_TOKEN"
-  echo ""
-fi
-
-# Register new webhook
-echo "Registering new webhook..."
-NEW_WEBHOOK=$(curl -s -X POST https://webexapis.com/v1/webhooks \
-  -H "Authorization: Bearer $BOT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"name\": \"RAG Bot Messages\",
-    \"targetUrl\": \"${WEBHOOK_URL}\",
-    \"resource\": \"messages\",
-    \"event\": \"created\"
-  }")
-
-# Save new webhook ID
-echo "$NEW_WEBHOOK" | jq -r '.id' > ~/cisco-rag-demo/webhook-id.txt
-
-# Verify
-echo "✅ Webhook updated!"
-echo "New webhook ID: $(cat ~/cisco-rag-demo/webhook-id.txt)"
-```
-
----
-
-**Create Update Script (Optional)**
-
-**Make webhook updating easier:**
+**Automate most steps:**
 
 ```bash
-cat > ~/cisco-rag-demo/update-webhook.sh << 'SCRIPT'
+cat > ~/cisco-rag-demo/startup.sh << 'EOF'
 #!/bin/bash
-# Quick webhook update script
+# Complete system startup
 
-BOT_TOKEN=$(cat ~/cisco-rag-demo/webex-bot-token.txt)
-TUNNEL_URL=$(cat ~/cisco-rag-demo/tunnel-url.txt)
-WEBHOOK_URL="${TUNNEL_URL}/webhook/webex-bot"
-WEBHOOK_ID=$(cat ~/cisco-rag-demo/webhook-id.txt 2>/dev/null)
+echo "Starting RAG Bot System..."
+echo ""
 
-echo "Current tunnel: $TUNNEL_URL"
+# Start Podman
+echo "1. Starting Podman machine..."
+podman machine start
+sleep 5
 
-# Delete old
-if [ ! -z "$WEBHOOK_ID" ]; then
-  echo "Deleting old webhook..."
-  curl -s -X DELETE https://webexapis.com/v1/webhooks/$WEBHOOK_ID \
-    -H "Authorization: Bearer $BOT_TOKEN" > /dev/null
+# Start containers
+echo "2. Starting containers..."
+podman start chromadb n8n
+sleep 10
+
+# Start Ollama
+echo "3. Starting Ollama..."
+if ! pgrep -x "ollama" > /dev/null; then
+    ollama serve > /dev/null 2>&1 &
+    sleep 5
 fi
 
-# Register new
-echo "Registering new webhook..."
-NEW_WEBHOOK=$(curl -s -X POST https://webexapis.com/v1/webhooks \
+# Pre-load models
+echo "4. Pre-loading AI models..."
+echo "Ready" | ollama run llama3.2:3b > /dev/null 2>&1
+
+# Verify
+echo ""
+echo "5. Verifying services..."
+echo "   Podman: $(podman machine list | grep -q 'running' && echo '✅' || echo '❌')"
+echo "   ChromaDB: $(curl -s http://localhost:8000/api/v1/heartbeat &>/dev/null && echo '✅' || echo '❌')"
+echo "   n8n: $(curl -s http://localhost:5678 &>/dev/null && echo '✅' || echo '❌')"
+echo "   Ollama: $(curl -s http://localhost:11434 &>/dev/null && echo '✅' || echo '❌')"
+
+echo ""
+echo "✅ System ready!"
+echo ""
+echo "Next steps:"
+echo "1. Start tunnel in separate terminal:"
+echo "   ~/cisco-rag-demo/start-tunnel.sh"
+echo ""
+echo "2. If tunnel URL changed, update webhook:"
+echo "   ~/cisco-rag-demo/manage-webhook.sh"
+EOF
+
+chmod +x ~/cisco-rag-demo/startup.sh
+```
+
+**Usage:**
+```bash
+~/cisco-rag-demo/startup.sh
+```
+
+---
+
+### Daily Shutdown Procedure
+
+**Clean shutdown when done for the day:**
+
+```bash
+# 1. Stop tunnel (Ctrl+C in tunnel terminal)
+
+# 2. Stop containers
+podman stop chromadb n8n
+
+# 3. Stop Podman machine (optional)
+podman machine stop
+
+# 4. Stop Ollama (optional)
+killall ollama
+```
+
+---
+
+### Create Shutdown Script
+
+```bash
+cat > ~/cisco-rag-demo/shutdown.sh << 'EOF'
+#!/bin/bash
+# Clean system shutdown
+
+echo "Shutting down RAG Bot System..."
+echo ""
+
+# Stop containers
+echo "1. Stopping containers..."
+podman stop chromadb n8n
+
+# Stop Podman machine
+echo "2. Stopping Podman machine..."
+podman machine stop
+
+# Stop Ollama
+echo "3. Stopping Ollama..."
+if pgrep -x "ollama" > /dev/null; then
+    killall ollama
+fi
+
+echo ""
+echo "✅ System shut down cleanly"
+echo ""
+echo "Note: You can close the tunnel terminal window"
+EOF
+
+chmod +x ~/cisco-rag-demo/shutdown.sh
+```
+
+**Usage:**
+```bash
+~/cisco-rag-demo/shutdown.sh
+```
+
+---
+
+### Monitoring and Maintenance
+
+**Check system health:**
+
+```bash
+cat > ~/cisco-rag-demo/health-check.sh << 'EOF'
+#!/bin/bash
+# System health check
+
+echo "RAG Bot Health Check"
+echo "===================="
+echo ""
+
+# Podman
+if podman machine list | grep -q "running"; then
+    echo "✅ Podman: Running"
+else
+    echo "❌ Podman: Not running"
+fi
+
+# Containers
+if podman ps | grep -q "chromadb"; then
+    echo "✅ ChromaDB: Running"
+else
+    echo "❌ ChromaDB: Not running"
+fi
+
+if podman ps | grep -q "n8n"; then
+    echo "✅ n8n: Running"
+else
+    echo "❌ n8n: Not running"
+fi
+
+# Ollama
+if curl -s http://localhost:11434 &>/dev/null; then
+    echo "✅ Ollama: Running"
+    echo "   Models: $(ollama list | grep -v NAME | wc -l | tr -d ' ')"
+else
+    echo "❌ Ollama: Not running"
+fi
+
+# ChromaDB documents
+if curl -s http://localhost:8000/api/v1/collections &>/dev/null; then
+    UUID=$(curl -s http://localhost:8000/api/v1/collections | \
+           python3 -c "import sys, json; print([c['id'] for c in json.load(sys.stdin) if c['name']=='cisco_docs'][0])" 2>/dev/null)
+    if [ -n "$UUID" ]; then
+        COUNT=$(curl -s "http://localhost:8000/api/v1/collections/$UUID/count")
+        echo "✅ Documents: $COUNT chunks loaded"
+    fi
+fi
+
+# n8n workflows
+echo "   n8n workflows: Check http://localhost:5678"
+
+# Tunnel (manual check)
+echo ""
+echo "Manual checks:"
+echo "- Is tunnel running? (Check separate terminal)"
+echo "- Is webhook registered? Run: ~/cisco-rag-demo/manage-webhook.sh"
+
+echo ""
+echo "===================="
+EOF
+
+chmod +x ~/cisco-rag-demo/health-check.sh
+```
+
+**Usage:**
+```bash
+~/cisco-rag-demo/health-check.sh
+```
+
+---
+
+### Updating Documents
+
+**Add new documents to your system:**
+
+```bash
+# Upload single document
+python3 ~/cisco-rag-demo/scripts/load_document.py new_doc.txt
+
+# Upload multiple documents
+for doc in ~/documents/*.txt; do
+    python3 ~/cisco-rag-demo/scripts/load_document.py "$doc"
+done
+```
+
+---
+
+### Backup Strategy
+
+**Backup your ChromaDB data:**
+
+```bash
+cat > ~/cisco-rag-demo/backup.sh << 'EOF'
+#!/bin/bash
+# Backup ChromaDB data
+
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR=~/cisco-rag-demo/backups
+mkdir -p $BACKUP_DIR
+
+echo "Creating backup..."
+tar -czf $BACKUP_DIR/chromadb-backup-$DATE.tar.gz \
+    ~/cisco-rag-demo/chroma-data/
+
+echo "✅ Backup created: chromadb-backup-$DATE.tar.gz"
+echo "   Location: $BACKUP_DIR"
+
+# Optional: Delete backups older than 7 days
+find $BACKUP_DIR -name "chromadb-backup-*.tar.gz" -mtime +7 -delete
+EOF
+
+chmod +x ~/cisco-rag-demo/backup.sh
+```
+
+**Run weekly:**
+```bash
+~/cisco-rag-demo/backup.sh
+```
+
+---
+
+### Webhook Maintenance
+
+**After tunnel restarts (URL changes):**
+
+```bash
+# List current webhooks
+source ~/cisco-rag-demo/credentials/webex_bot.txt
+curl -s -X GET https://webexapis.com/v1/webhooks \
+  -H "Authorization: Bearer $BOT_TOKEN"
+
+# Delete old webhook
+WEBHOOK_ID="<old-webhook-id>"
+curl -X DELETE "https://webexapis.com/v1/webhooks/$WEBHOOK_ID" \
+  -H "Authorization: Bearer $BOT_TOKEN"
+
+# Register new webhook with new tunnel URL
+NEW_URL="https://new-tunnel-url.localhost.run"
+curl -X POST https://webexapis.com/v1/webhooks \
   -H "Authorization: Bearer $BOT_TOKEN" \
   -H "Content-Type: application/json" \
   -d "{
     \"name\": \"RAG Bot Messages\",
-    \"targetUrl\": \"${WEBHOOK_URL}\",
+    \"targetUrl\": \"${NEW_URL}/webhook/webex-webhook\",
     \"resource\": \"messages\",
     \"event\": \"created\"
-  }")
-
-# Save ID
-echo "$NEW_WEBHOOK" | jq -r '.id' > ~/cisco-rag-demo/webhook-id.txt
-
-echo "✅ Webhook updated!"
-echo "ID: $(cat ~/cisco-rag-demo/webhook-id.txt)"
-SCRIPT
-
-chmod +x ~/cisco-rag-demo/update-webhook.sh
+  }"
 ```
 
-**Next time, just run:**
+**Or use the script:**
 ```bash
-~/cisco-rag-demo/update-webhook.sh
+~/cisco-rag-demo/manage-webhook.sh
 ```
-
----
-
-**Verify Everything Works:**
-
-```bash
-# 1. Check containers
-podman ps
-
-# 2. Check n8n workflow active
-open http://localhost:5678  # Check toggle is ✅
-
-# 3. Test bot
-# Send "test" message in Webex
-# Should respond within 5-10 seconds
-```
-
----
-
-### When Tunnel URL Changes
-
-**This happens EVERY restart with free tier.**
-
-**Signs tunnel URL changed:**
-- Bot suddenly stops responding
-- Was working, now doesn't work
-- No errors in n8n (executions just don't appear)
-
-**Quick fix procedure:**
-
-```bash
-# 1. Note new tunnel URL (from tunnel terminal)
-echo "https://new-url.localhost.run" > ~/cisco-rag-demo/tunnel-url.txt
-
-# 2. Update webhook
-~/cisco-rag-demo/update-webhook.sh
-
-# 3. Test
-# Send message in Webex
-# Should work again!
-```
-
-**Time required:** 30 seconds
-
-**Frequency:** Every time you restart tunnel
-
-**This is normal behavior for free tier!**
-
----
-
-### Pre-Demo Checklist
-
-**15 minutes before any demo:**
-
-```bash
-# 1. Restart everything fresh
-podman restart chromadb n8n
-killall ollama
-ollama serve &
-sleep 20
-
-# 2. Pre-load models (CRITICAL!)
-ollama run llama3.2:3b "warmup" < /dev/null
-ollama run nomic-embed-text "warmup" < /dev/null
-
-# 3. Verify tunnel running
-# Check terminal shows connection
-
-# 4. Test query performance
-time ./query_rag.py "What is the network uptime?"
-# Should complete in 5-8 seconds
-
-# 5. Test bot in Webex
-# Send test message
-# Verify 5-10 second response
-
-# 6. Prepare sample questions
-# Have 5-10 questions ready
-# Know expected answers
-```
-
-**Everything working?** ✅ Ready to demo!
-
----
-
-### Monitoring During Operation
-
-**Watch for issues:**
-
-**Tunnel terminal:**
-- Should show POST requests when messages sent
-- No POSTs = webhook problem
-
-**n8n Executions tab:**
-- Should show new executions
-- Green = success
-- Red errors (check which node failed)
-
-**Webex:**
-- Bot should respond within 10 seconds
-- If no response, check above
 
 ---
 
 ### Performance Optimization
 
-**Make queries faster:**
+**Keep your system running smoothly:**
 
-**1. Keep models loaded:**
+**1. Pre-load models at startup**
 ```bash
-# Every 30 minutes (if idle)
-ollama run llama3.2:3b "ping" < /dev/null
+ollama run llama3.2:3b "Ready"
+# Press Ctrl+D
 ```
 
-**2. Increase Podman resources** (if you have RAM):
+**2. Monitor RAM usage**
 ```bash
-podman machine stop
-podman machine set --memory 16384  # 16GB instead of 12GB
-podman machine start
+# macOS:
+# Open Activity Monitor → Memory tab
+
+# Linux:
+free -h
 ```
 
-**3. Reduce chunk count** (in n8n workflow):
-```javascript
-// In "Prepare Search" node
-// Change from 3 to 2 chunks
-{
-  query_embeddings: [embedding],
-  n_results: 2  // Faster search, still good quality
-}
-```
+**3. Close unnecessary applications**
+- Browser with many tabs
+- Other AI tools
+- Memory-intensive apps
 
----
-
-### Shutdown Procedure (Optional)
-
-**When done using bot for the day:**
-
-```bash
-# Stop tunnel (Ctrl+C in tunnel terminal)
-
-# Stop services
-podman stop chromadb n8n
-killall ollama
-
-# Everything stopped
-```
-
-**Note:** On Mac, can leave running overnight - doesn't consume much when idle.
-
----
-
-### Managing Multiple Webhooks
-
-**Check existing webhooks:**
-```bash
-BOT_TOKEN=$(cat ~/cisco-rag-demo/webex-bot-token.txt)
-curl https://webexapis.com/v1/webhooks \
-  -H "Authorization: Bearer $BOT_TOKEN" | jq '.'
-```
-
-**Delete specific webhook:**
-```bash
-curl -X DELETE https://webexapis.com/v1/webhooks/{webhook-id} \
-  -H "Authorization: Bearer $BOT_TOKEN"
-```
-
-**Delete all webhooks (fresh start):**
-```bash
-# Get all webhook IDs
-curl -s https://webexapis.com/v1/webhooks \
-  -H "Authorization: Bearer $BOT_TOKEN" | \
-  jq -r '.items[].id' | \
-while read id; do
-  echo "Deleting $id"
-  curl -s -X DELETE https://webexapis.com/v1/webhooks/$id \
-    -H "Authorization: Bearer $BOT_TOKEN"
-done
-
-echo "All webhooks deleted"
-```
-
----
-
-### Success Checkpoint
-
-Verify you understand:
-
-- [ ] Daily startup sequence (3 terminals)
-- [ ] Why pre-loading models matters
-- [ ] How to update webhook when URL changes
-- [ ] Pre-demo checklist
-- [ ] Monitoring techniques
-- [ ] Shutdown procedure
-
-✅ **Ready for troubleshooting guide!**
+**4. Restart periodically**
+- Full system restart weekly
+- Clears memory leaks
+- Refreshes all services
 
 ---
 
 ## Part 3H: Troubleshooting Webex Integration
 
-**Time:** 10 minutes (reading)  
-**Purpose:** Solve common issues quickly
+**Comprehensive troubleshooting guide for Webex-specific issues**
 
 ---
 
-### Diagnostic Flowchart
+### Issue: Bot Not Responding
 
-**Bot doesn't respond to messages:**
-
-```
-[1] Send message in Webex
-      ↓
-[2] Check: Does tunnel terminal show POST request?
-      ├─ NO → Problem A: Webhook not reaching tunnel
-      │         See: Webhook Problem Solutions
-      │
-      └─ YES → Problem B: n8n not processing
-                See: n8n Problem Solutions
-```
-
----
-
-### Problem A: Webhook Not Reaching Tunnel
-
-**Symptoms:**
-- Send message in Webex
-- No POST appears in tunnel terminal
-- No execution in n8n
-- Bot silent
+**Symptom:** Send message to bot, no response received
 
 **Diagnostic steps:**
 
-**Step 1: Verify tunnel running**
+**1. Check all services running**
 ```bash
-# Check tunnel terminal shows "Connected"
-# Should say: "Connect to https://..."
-
-# If not running:
-ssh -R 80:localhost:5678 nokey@localhost.run
+~/cisco-rag-demo/health-check.sh
 ```
+
+**2. Check tunnel is active**
+```bash
+# In tunnel terminal, should see:
+# "Connect to https://abc.localhost.run"
+```
+
+**3. Check webhook registered**
+```bash
+source ~/cisco-rag-demo/credentials/webex_bot.txt
+curl -s -X GET https://webexapis.com/v1/webhooks \
+  -H "Authorization: Bearer $BOT_TOKEN"
+# Should show webhook with status: active
+```
+
+**4. Check n8n workflow active**
+- Open n8n: `http://localhost:5678`
+- Check workflow toggle is green
+- Check no red error nodes
+
+**5. Check n8n executions**
+- Go to "Executions" in n8n
+- Are new executions appearing?
+- Click to see error details
 
 ---
-
-**Step 2: Verify tunnel URL accessible**
-```bash
-# Test from outside
-curl $(cat ~/cisco-rag-demo/tunnel-url.txt)
-
-# Should return HTML from n8n
-```
-
-**If fails:**
-- Tunnel not running → restart tunnel
-- n8n not running → `podman start n8n`
-
----
-
-**Step 3: Verify webhook points to current URL**
-```bash
-BOT_TOKEN=$(cat ~/cisco-rag-demo/webex-bot-token.txt)
-
-# Get webhook details
-curl https://webexapis.com/v1/webhooks \
-  -H "Authorization: Bearer $BOT_TOKEN" | jq '.'
-
-# Check targetUrl matches current tunnel URL
-```
-
-**If URLs don't match:**
-```bash
-# Update webhook
-~/cisco-rag-demo/update-webhook.sh
-```
-
----
-
-**Step 4: Test webhook manually**
-```bash
-# Get webhook ID
-WEBHOOK_ID=$(cat ~/cisco-rag-demo/webhook-id.txt)
-
-# Check status
-curl https://webexapis.com/v1/webhooks/$WEBHOOK_ID \
-  -H "Authorization: Bearer $BOT_TOKEN" | jq '.'
-
-# Verify status is "active"
-```
-
-**If not active or not found:**
-- Re-register webhook
-- Run update script
-
----
-
-### Problem B: n8n Not Processing
-
-**Symptoms:**
-- POST appears in tunnel terminal
-- But no response in Webex
-- n8n shows executions
-
-**Diagnostic steps:**
-
-**Step 1: Check n8n workflow active**
-```bash
-# Open n8n
-open http://localhost:5678
-
-# Check "Webex RAG Bot" workflow
-# Toggle should be ✅ green (active)
-```
-
-**If not active:**
-- Click toggle to activate
-- Click Save
-- Test again
-
----
-
-**Step 2: Check execution details**
-
-1. **Open n8n**
-2. **Click "Executions" tab**
-3. **Find latest execution**
-4. **Click to see details**
-
-**Look for which node failed:**
-
-```
-Common failures:
-
-Node 3 (Get Message Details):
-❌ "401 Unauthorized"
-Fix: Update bot token in this node
-
-Node 4 (Validate & Extract):
-❌ "Ignoring message from bot itself"
-Status: This is NORMAL! Prevents loops.
-
-Node 5 (Get Collection UUID):
-❌ "Connection refused"
-Fix: Start ChromaDB - podman start chromadb
-
-Node 7 (Generate Question Embedding):
-❌ "Connection refused"
-Fix: Start Ollama - ollama serve &
-
-Node 12 (Send to Webex):
-❌ "401 Unauthorized"
-Fix: Update bot token in this node
-```
-
----
-
-**Step 3: Verify bot tokens configured**
-
-**Check both places:**
-
-1. **Click "Get Message Details" node**
-   - Check Authorization header
-   - Should be: `Bearer YOUR_TOKEN`
-   - Not: `Bearer YOUR_BOT_TOKEN_HERE`
-
-2. **Click "Send to Webex" node**
-   - Check Authorization header
-   - Should be same token
-
-**If wrong:**
-```bash
-# Get correct token
-cat ~/cisco-rag-demo/webex-bot-token.txt
-
-# Update in both nodes
-# Save workflow
-# Test again
-```
-
----
-
-**Step 4: Verify bot email configured**
-
-**Click "Validate & Extract Question" node:**
-
-Find line:
-```javascript
-const BOT_EMAIL = 'YOUR_BOT_EMAIL@webex.bot';
-```
-
-**Should be your actual bot email:**
-```bash
-# Get correct email
-cat ~/cisco-rag-demo/webex-bot-info.txt | grep "Bot Email"
-
-# Update in node
-# Save workflow
-# Test again
-```
-
----
-
-### Problem C: Slow Responses (>20 seconds)
-
-**Symptoms:**
-- Bot eventually responds
-- But takes 15-30 seconds
-- Inconsistent performance
 
 **Solutions:**
 
-**Solution 1: Pre-load models (most common fix)**
-```bash
-# Run before using bot
-ollama run llama3.2:3b "warmup" < /dev/null
-ollama run nomic-embed-text "warmup" < /dev/null
+**If no executions appearing in n8n:**
+→ Webhook not reaching n8n
+→ Check tunnel is running
+→ Verify webhook targetUrl matches tunnel URL
 
-# Test again - should be faster
-```
-
-**Why this works:**
-```
-Without pre-loading:
-- First query loads models into RAM (10-15 sec)
-- Subsequent queries fast (5-8 sec)
-
-With pre-loading:
-- Models already in RAM
-- All queries fast (5-8 sec)
-```
+**If executions failing:**
+→ Click execution, find red node
+→ Read error message
+→ Apply specific fix below
 
 ---
 
-**Solution 2: Check system resources**
-```bash
-# Open Activity Monitor
-# Check "Memory Pressure"
+### Issue: Tunnel URL Changed
 
-# If yellow/red:
-# - Close other applications
-# - Restart Mac (frees memory)
-```
+**Symptom:** Webhook points to old URL, bot stops working
 
----
-
-**Solution 3: Verify services running**
-```bash
-# Check all services
-podman ps  # Should show chromadb, n8n
-curl http://localhost:11434  # Should return "Ollama is running"
-curl http://localhost:8000/api/v1/heartbeat  # Should return timing
-
-# Restart if needed
-podman restart chromadb n8n
-killall ollama
-ollama serve &
-```
-
----
-
-### Problem D: Bot Responds to Itself (Loop)
-
-**Symptoms:**
-- Send one message
-- Bot responds multiple times
-- n8n shows many executions
-- Bot talking to itself
-
-**This shouldn't happen if configured correctly!**
-
-**Check configuration:**
-
-**Click "Validate & Extract Question" node:**
-
-**Verify code includes:**
-```javascript
-const BOT_EMAIL = 'your-actual-bot@webex.bot';  // ← Must be YOUR bot email
-
-if (messageData.personEmail === BOT_EMAIL) {
-  throw new Error('Ignoring message from bot itself');
-}
-```
-
-**If missing or wrong email:**
-- Update to correct email
-- Save workflow
-- Test again
-
-**You SHOULD see some "failed" executions:**
-- Error: "Ignoring message from bot itself"
-- This is NORMAL and prevents loops
-- Don't try to "fix" these errors!
-
----
-
-### Problem E: Bot Doesn't Understand @mentions
-
-**Symptoms:**
-- @mention bot in group space
-- Bot responds with question including bot name
-- Example: "RAG Assistant What is the uptime?"
-
-**This is normal behavior - @mention is part of text**
-
-**The workflow should clean this, but verify:**
-
-**Click "Validate & Extract Question" node**
-
-**Verify cleaning code exists:**
-```javascript
-// Remove @mentions
-if (messageData.mentionedPeople && messageData.mentionedPeople.length > 0) {
-  question = question.replace(/<spark-mention[^>]*>.*?<\/spark-mention>/gi, '');
-  question = question.replace(/@\w+/g, '');
-  question = question.replace(/<[^>]*>/g, '');
-}
-question = question.trim();
-```
-
-**If missing:**
-- Add this code
-- Save workflow
-- Test again
-
----
-
-### Problem F: Tunnel URL Changed, Bot Stopped
-
-**Symptoms:**
-- Bot was working
-- You restarted tunnel
-- Now bot doesn't respond
-- No errors visible
-
-**This is NORMAL with free tier!**
-
-**Solution:**
-```bash
-# 1. Note new tunnel URL
-cat ~/cisco-rag-demo/tunnel-url.txt
-# If wrong, update it:
-echo "https://new-url.localhost.run" > ~/cisco-rag-demo/tunnel-url.txt
-
-# 2. Update webhook
-~/cisco-rag-demo/update-webhook.sh
-
-# 3. Test
-# Send message in Webex
-# Should work again
-```
-
-**Prevention:**
-- Consider paid tunnel (static URL)
-- ngrok Pro: $10/month
-- Or deploy to cloud (no tunnel needed)
-
----
-
-### Problem G: "Invalid JSON in Response Body"
-
-**Symptoms:**
-- n8n execution log shows this error
-- Workflow completes but shows warning
-
-**Cause:**
-- Webhook response mode incorrect
+**Happens when:**
+- Tunnel disconnected/reconnected
+- Computer restarted
+- Using free tunnel service
 
 **Solution:**
 
-**Click "Webex Webhook" node (Node 1)**
-
-**Verify settings:**
-```
-Response Mode: responseNode  ← MUST be this
-Not: lastNode
+**1. Get new tunnel URL**
+```bash
+# From tunnel terminal output
+# Example: https://new-abc123.localhost.run
 ```
 
-**If wrong:**
-- Change to "responseNode"
-- Save workflow
-- Test again
+**2. Delete old webhook**
+```bash
+source ~/cisco-rag-demo/credentials/webex_bot.txt
+
+# List webhooks
+curl -s -X GET https://webexapis.com/v1/webhooks \
+  -H "Authorization: Bearer $BOT_TOKEN"
+
+# Delete old one
+WEBHOOK_ID="<paste-old-webhook-id>"
+curl -X DELETE "https://webexapis.com/v1/webhooks/$WEBHOOK_ID" \
+  -H "Authorization: Bearer $BOT_TOKEN"
+```
+
+**3. Register new webhook**
+```bash
+NEW_URL="https://new-abc123.localhost.run"
+curl -X POST https://webexapis.com/v1/webhooks \
+  -H "Authorization: Bearer $BOT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"name\": \"RAG Bot Messages\",
+    \"targetUrl\": \"${NEW_URL}/webhook/webex-webhook\",
+    \"resource\": \"messages\",
+    \"event\": \"created\"
+  }"
+```
+
+**4. Test immediately**
+- Send message to bot
+- Should work with new URL
 
 ---
 
-### Problem H: Documents Not Found
+### Issue: Bot Token Invalid
 
-**Symptoms:**
-- Bot responds: "No documents found in ChromaDB"
-- Or: Generic answers not from your documents
+**Symptom:** "401 Unauthorized" errors in n8n
+
+**Causes:**
+- Token expired (rare, bot tokens last indefinitely)
+- Token copied incorrectly
+- Wrong token in credentials
+
+**Solution:**
+
+**1. Verify token format**
+```bash
+cat ~/cisco-rag-demo/credentials/webex_bot.txt
+```
+
+Should look like:
+```
+BOT_TOKEN=YmJkYzJjZjAtMjZhNy00YTUwLWIwMzUtZGJmZmFhZjY1MDZjMmU3OTZmYzctNTI1_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f
+```
+
+**2. Test token works**
+```bash
+source ~/cisco-rag-demo/credentials/webex_bot.txt
+curl -X GET https://webexapis.com/v1/people/me \
+  -H "Authorization: Bearer $BOT_TOKEN"
+```
+
+**Should return bot info, not 401 error**
+
+**3. Update n8n credentials**
+- Open n8n
+- Go to "Credentials"
+- Find "Webex Bot Token"
+- Update with correct token
+- Save
+
+---
+
+### Issue: Tunnel Connection Drops
+
+**Symptom:** Bot works then stops, tunnel terminal shows disconnection
+
+**Free tunnel services disconnect after:**
+- Period of inactivity
+- Network interruption
+- Service maintenance
 
 **Solutions:**
 
-**Solution 1: Verify documents loaded**
+**1. Keep-alive script**
 ```bash
-cd ~/cisco-rag-demo
+cat > ~/cisco-rag-demo/tunnel-keepalive.sh << 'EOF'
+#!/bin/bash
+# Ping tunnel to keep connection alive
 
+while true; do
+    sleep 300  # Every 5 minutes
+    curl -s http://localhost:5678 > /dev/null
+done
+EOF
+
+chmod +x ~/cisco-rag-demo/tunnel-keepalive.sh
+
+# Run in background
+~/cisco-rag-demo/tunnel-keepalive.sh &
+```
+
+**2. Auto-reconnect wrapper**
+```bash
+cat > ~/cisco-rag-demo/tunnel-persistent.sh << 'EOF'
+#!/bin/bash
+# Auto-reconnect tunnel if it drops
+
+while true; do
+    echo "Starting tunnel..."
+    ssh -R 80:localhost:5678 localhost.run
+    echo "Tunnel disconnected. Reconnecting in 10 seconds..."
+    sleep 10
+done
+EOF
+
+chmod +x ~/cisco-rag-demo/tunnel-persistent.sh
+
+# Use this instead of direct tunnel command
+~/cisco-rag-demo/tunnel-persistent.sh
+```
+
+**3. Upgrade to paid tunnel**
+- ngrok Pro: Static URL, no disconnects
+- Considered if using in production
+
+---
+
+### Issue: Slow Response Time
+
+**Symptom:** Bot takes >15 seconds to respond
+
+**Diagnostic:**
+
+**1. Check where time is spent**
+- Open n8n execution
+- Look at node execution times
+- Identify slowest node
+
+**Common bottlenecks:**
+
+**"Generate Embedding" or "Generate Answer" slow:**
+```bash
+# Pre-load models
+ollama run llama3.2:3b "Ready"
+# Keep model in RAM
+```
+
+**"Search ChromaDB" slow:**
+```bash
 # Check document count
 UUID=$(curl -s http://localhost:8000/api/v1/collections | \
-  python3 -c "import sys, json; print([c['id'] for c in json.load(sys.stdin) if c['name']=='cisco_docs'][0])")
-
+       python3 -c "import sys, json; print([c['id'] for c in json.load(sys.stdin) if c['name']=='cisco_docs'][0])")
 curl -s "http://localhost:8000/api/v1/collections/$UUID/count"
-# Should return number > 0
+
+# If > 1000 chunks, consider splitting collections
 ```
 
-**If count is 0:**
+**"Get Message Details" slow:**
+- Network latency to Webex API
+- Not much can be done (external API)
+- Usually only 1-2 seconds
+
+---
+
+### Issue: Bot Loops (Responds to Itself)
+
+**Symptom:** Bot sees its own messages and responds to them infinitely
+
+**Cause:** "Filter Bot Messages" node not working
+
+**Solution:**
+
+**1. Check filter node**
+- Open n8n workflow
+- Click "Filter Bot Messages" node
+- Verify condition: `personEmail` does NOT contain `@webex.bot`
+
+**2. If filter exists but not working:**
+- Bot token has wrong credentials
+- Update credentials
+- Reactivate workflow
+
+**3. Test filter**
+- Send message to bot
+- Check n8n execution
+- Verify "Respond - Filtered" path used for bot's own messages
+
+---
+
+### Issue: Bot Responds in Wrong Space
+
+**Symptom:** Bot posts answer in different space than where question was asked
+
+**Cause:** roomId not extracted correctly
+
+**Solution:**
+
+**1. Check "Extract Data" node**
+- Should have: `roomId = {{ $json.roomId }}`
+
+**2. Verify in execution**
+- Open failed execution
+- Check "Extract Data" output
+- roomId should match space ID
+
+**3. Check "Send to Webex" node**
+- Should use: `{{ $('Extract Data').item.json.roomId }}`
+
+---
+
+### Debugging Tools
+
+**Enable detailed logging:**
+
+**1. n8n execution logs**
+- Each node shows input/output data
+- Click node to see full JSON
+- Use "Execute workflow" to test
+
+**2. Webex API tester**
+- Visit: https://developer.webex.com/docs/api/getting-started
+- Test individual API calls
+- Verify bot has correct permissions
+
+**3. Tunnel monitoring**
+- ngrok: http://127.0.0.1:4040
+- See all incoming requests
+- Replay failed requests
+
+**4. Container logs**
 ```bash
-# Load documents
-python3 load_document.py documents/your-document.md
+# n8n logs
+podman logs n8n --tail 100
+
+# ChromaDB logs
+podman logs chromadb --tail 100
+
+# Ollama logs (if running in background)
+# Check system logs or restart with visible output
 ```
 
 ---
 
-**Solution 2: Verify collection name correct**
+### Health Check Script
 
-**In n8n workflow, click "Get Collection UUID" node**
-
-**Verify looking for correct collection:**
-```javascript
-// Should search for "cisco_docs"
-for (const coll of collections) {
-  if (coll.name === 'cisco_docs') {  ← Check this name
-    ...
-  }
-}
-```
-
----
-
-### Quick Diagnostic Commands
-
-**Run these for quick health check:**
+**Complete diagnostic script:**
 
 ```bash
+cat > ~/cisco-rag-demo/webex-health-check.sh << 'EOF'
 #!/bin/bash
-echo "=== System Health Check ==="
+# Comprehensive Webex bot health check
 
-echo "1. Containers:"
-podman ps --format "{{.Names}}: {{.Status}}"
+source ~/cisco-rag-demo/credentials/webex_bot.txt
 
-echo -e "\n2. Ollama:"
-curl -s http://localhost:11434/api/tags | jq -r '.models[].name'
+echo "Webex Bot Health Check"
+echo "======================"
+echo ""
 
-echo -e "\n3. ChromaDB:"
-curl -s http://localhost:8000/api/v1/heartbeat
+# 1. Bot token valid
+echo "1. Testing bot token..."
+if curl -s -X GET https://webexapis.com/v1/people/me \
+    -H "Authorization: Bearer $BOT_TOKEN" | grep -q "id"; then
+    echo "   ✅ Bot token valid"
+else
+    echo "   ❌ Bot token invalid or expired"
+fi
 
-echo -e "\n4. Tunnel:"
-cat ~/cisco-rag-demo/tunnel-url.txt
+# 2. Webhook registered
+echo "2. Checking webhook..."
+WEBHOOKS=$(curl -s -X GET https://webexapis.com/v1/webhooks \
+    -H "Authorization: Bearer $BOT_TOKEN")
+if echo "$WEBHOOKS" | grep -q "status"; then
+    COUNT=$(echo "$WEBHOOKS" | grep -o "id" | wc -l)
+    echo "   ✅ Webhooks registered: $COUNT"
+    echo "$WEBHOOKS" | python3 -m json.tool
+else
+    echo "   ❌ No webhooks registered"
+fi
 
-echo -e "\n5. Webhook:"
-cat ~/cisco-rag-demo/webhook-id.txt
+# 3. Tunnel (manual check)
+echo ""
+echo "3. Tunnel check (manual):"
+echo "   - Check tunnel terminal for connection status"
+echo "   - Try accessing: [tunnel-url]/webhook/webex-webhook"
 
-echo -e "\n6. Bot Email:"
-cat ~/cisco-rag-demo/webex-bot-info.txt | grep "Bot Email"
+# 4. n8n workflow
+echo ""
+echo "4. n8n workflow:"
+echo "   - Check http://localhost:5678"
+echo "   - Verify workflow is Active (green toggle)"
+echo "   - Check recent executions for errors"
 
-echo -e "\n✅ Health check complete"
+# 5. Local services
+echo ""
+echo "5. Local services:"
+~/cisco-rag-demo/health-check.sh
+
+echo ""
+echo "======================"
+echo "Send test message to bot to verify end-to-end"
+EOF
+
+chmod +x ~/cisco-rag-demo/webex-health-check.sh
 ```
 
-**Save as:** `~/cisco-rag-demo/health-check.sh`
+**Run anytime:**
+```bash
+~/cisco-rag-demo/webex-health-check.sh
+```
 
 ---
 
-### When to Seek Additional Help
+### Getting Help
 
 **Before asking for help, collect:**
 
@@ -2872,7 +2387,7 @@ cd ~/cisco-rag-demo
 - @mention support
 
 ✅ **Full privacy**
-- All processing on your Mac
+- All processing on your local machine
 - No data sent to external AI
 - HIPAA/SOC2 friendly
 - Complete control
@@ -2945,15 +2460,6 @@ python3 load_document.py documents/policy1.md
 4. Everyone benefits!
 ```
 
-**3. Prepare Demo Questions**
-```
-Create 10-15 compelling questions
-Know expected answers
-Practice demo flow
-Time responses
-Prepare backup plans
-```
-
 ---
 
 ### Advanced Topics
@@ -2983,64 +2489,6 @@ Prepare backup plans
 - Monitoring and alerts
 - Backup strategies
 
----
-
-### For Cisco Live 2026
-
-**You're now ready to:**
-- ✅ Demonstrate local RAG system
-- ✅ Show mobile access
-- ✅ Explain privacy benefits
-- ✅ Compare to cloud solutions
-- ✅ Answer technical questions
-- ✅ Live demo reliability
-
-**Preparation tips:**
-1. Practice demo 10+ times
-2. Prepare compelling documents
-3. Create visually interesting questions
-4. Have backup Mac ready
-5. Pre-load models before presentation
-6. Know troubleshooting procedures
-
----
-
-### Additional Resources
-
-**Documentation:**
-- WHATS_NEXT.md - Advanced features
-- Comprehensive Troubleshooting Guide
-- Performance Optimization Guide
-- Security Best Practices
-
-**Community:**
-- Share your experience
-- Help others learn
-- Contribute improvements
-- Report issues
-
----
-
-## Document Information
-
-**Version:** 1.0.0  
-**Last Updated:** December 18, 2024  
-**Part of:** Local RAG System Implementation Guides  
-**Previous Guides:**
-- [GUIDE_1_ENVIRONMENT_SETUP.md](GUIDE_1_ENVIRONMENT_SETUP.md)
-- [GUIDE_2_RAG_SYSTEM.md](GUIDE_2_RAG_SYSTEM.md)
-
-**This guide covered:**
-- Webex bot creation and configuration
-- Tunnel setup (localhost.run and ngrok)
-- n8n Webex workflow (12 nodes)
-- Webhook registration and management
-- Complete testing procedures
-- Daily operations
-- Comprehensive troubleshooting
-- Mobile and team collaboration
-
-**Your complete system is now ready for enterprise use!** 🚀
 
 ---
 
