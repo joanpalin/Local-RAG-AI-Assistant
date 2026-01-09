@@ -1298,7 +1298,7 @@ Verify everything before proceeding:
 - [ ] ChromaDB collection exists (`cisco_docs` visible)
 - [ ] Python environment ready (requests library installed)
 
-**✓ If all boxes are checked, your environment is production-ready!**
+**✓ If all boxes are checked, your environment is pilot-ready!**
 
 ---
 
