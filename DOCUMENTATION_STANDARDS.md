@@ -41,12 +41,12 @@ This document defines the writing standards, formatting conventions, and style g
 
 ### Example Comparisons
 
-#### âŒ BAD: Too Technical
+#### ✗ BAD: Too Technical
 ```
 Deploy the Ollama container with the nomic-embed-text model to generate vector embeddings.
 ```
 
-#### âœ… GOOD: Beginner-Friendly
+#### ✓ GOOD: Beginner-Friendly
 ```
 We'll start a virtual computer (called a container) that runs Ollama. Think of Ollama 
 as a translator that converts your documents into a special format (numbers) that 
@@ -55,12 +55,12 @@ device creates a routing table - it's organizing information in a way that makes
 lookups fast.
 ```
 
-#### âŒ BAD: Assumes Knowledge
+#### ✗ BAD: Assumes Knowledge
 ```
 Use the REST API endpoint to query the RAG system.
 ```
 
-#### âœ… GOOD: Explains Concept
+#### ✓ GOOD: Explains Concept
 ```
 You'll use a REST API (a way for programs to talk to each other over the network, 
 like how two routers exchange routing information) to send questions to your RAG 
@@ -96,10 +96,10 @@ command --with --flags argument
 **What this output means:**
 [Interpretation of the output]
 
-**Ã¢Å“â€¦ Success looks like:**
+**✓ Success looks like:**
 [What confirms it worked]
 
-**âŒ Common errors:**
+**✗ Common errors:**
 1. **Error:** `specific error message`
    - **Why:** [Plain English cause]
    - **Fix:** [Step-by-step solution]
@@ -128,10 +128,10 @@ curl http://localhost:11434/api/tags
 **What this output means:**
 Ollama is running and has the llama3.2:3b model installed (the AI "brain" that will answer questions).
 
-**âœ… Success looks like:**
+**✓ Success looks like:**
 You see a list of models in curly braces. As long as you see `"models":[` you're good.
 
-**âŒ Common errors:**
+**✗ Common errors:**
 1. **Error:** `curl: (7) Failed to connect to localhost port 11434`
    - **Why:** Ollama isn't running yet
    - **Fix:** Start Ollama first (see Step 2: Installing Ollama)
@@ -162,7 +162,7 @@ Always provide context:
 
 ### Example: Script Explanation
 
-#### âŒ BAD: Just Code Dumped
+#### ✗ BAD: Just Code Dumped
 ```python
 import chromadb
 client = chromadb.HttpClient(host="localhost", port=8000)
@@ -170,7 +170,7 @@ collections = client.list_collections()
 print(collections)
 ```
 
-#### âœ… GOOD: Properly Explained
+#### ✓ GOOD: Properly Explained
 
 **What this script does:**
 This checks what document collections ChromaDB has stored. Think of it like running a "show interfaces" command - you're asking the system "what do you have?"
@@ -206,46 +206,46 @@ You have one collection called "rag_demo" - this is where your documents will be
 
 Use these consistently throughout documentation:
 
-### âœ… Success Checkpoints
+### ✓ Success Checkpoints
 Use when the user should verify something worked.
 ```markdown
-âœ… **Checkpoint:** You should see "Container started" in the output
+✓ **Checkpoint:** You should see "Container started" in the output
 ```
 
-### âš ï¸ Important Warnings
+### ⚠️ Important Warnings
 Use for critical information that could cause problems if missed.
 ```markdown
-âš ï¸ **Warning:** Do not close this terminal window while the container is running
+⚠️ **Warning:** Do not close this terminal window while the container is running
 ```
 
-### ðŸ’¡ Helpful Tips
+### 💡 Helpful Tips
 Use for optimization, shortcuts, or "good to know" information.
 ```markdown
-ðŸ’¡ **Tip:** You can press Ctrl+C to stop the container gracefully
+💡 **Tip:** You can press Ctrl+C to stop the container gracefully
 ```
 
-### ðŸ” Verification Steps
+### 🔍 Verification Steps
 Use when the user needs to check something.
 ```markdown
-ðŸ” **Verify:** Run `podman ps` to confirm the container is running
+🔍 **Verify:** Run `podman ps` to confirm the container is running
 ```
 
-### âŒ What NOT to Do
+### ✗ What NOT to Do
 Use to prevent common mistakes.
 ```markdown
-âŒ **Don't:** Don't use `sudo` with Podman commands - it's not needed and can cause permission issues
+✗ **Don't:** Don't use `sudo` with Podman commands - it's not needed and can cause permission issues
 ```
 
-### ðŸ“‹ Prerequisites
+### 📋 Prerequisites
 Use at the start of sections that require prior steps.
 ```markdown
-ðŸ“‹ **Prerequisites:** You must have completed Step 2 (Installing Ollama) before continuing
+📋 **Prerequisites:** You must have completed Step 2 (Installing Ollama) before continuing
 ```
 
-### ðŸŽ¯ Quick Reference
+### 🎯 Quick Reference
 Use for summaries or key takeaways.
 ```markdown
-ðŸŽ¯ **Key Point:** ChromaDB stores your documents as vectors (numbers), not as text files
+🎯 **Key Point:** ChromaDB stores your documents as vectors (numbers), not as text files
 ```
 
 ---
@@ -278,794 +278,519 @@ this component [how it works].
 ### What You'll Accomplish
 
 By the end of this step, you will have:
-- âœ… [Specific outcome 1]
-- âœ… [Specific outcome 2]
-- âœ… [Specific outcome 3]
+- ✓ [Specific outcome 1]
+- ✓ [Specific outcome 2]
+- ✓ [Specific outcome 3]
 
 ---
 
-### Instructions
+### Implementation Steps
 
-#### Part A: [Substep Name]
+#### Step 1: [First Action]
 
-1. **[Action in plain English]**
-   
-   ```bash
-   # Command with explanation
-   command here
-   ```
-   
-   **What this does:** [Explanation]
-   
-   **Expected output:**
-   ```
-   [Output text]
-   ```
+**Action:** [What to do]
 
-2. **[Next action]**
-   
-   [Continue pattern]
+```bash
+# Command to run
+command here
+```
 
-#### Part B: [Next Substep]
+**Expected result:**
+```
+Output you should see
+```
 
-[Continue pattern]
+**✓ Verification:**
+[How to confirm this step worked]
 
 ---
 
-### Verification
+#### Step 2: [Second Action]
 
-âœ… **How to confirm this step worked:**
-
-1. **Check [specific thing]:**
-   ```bash
-   verification command
-   ```
-   You should see: `[expected result]`
-
-2. **Confirm [another thing]:**
-   ```bash
-   another verification
-   ```
-   Success looks like: `[expected output]`
-
-ðŸŽ¯ **Success criteria:** [Summary of what "done" means]
+[Continue pattern for each sub-step]
 
 ---
 
-### Troubleshooting This Step
+### Success Checkpoint
 
-> **Note:** These solutions are specific to Step X. For general issues, see the main Troubleshooting Guide.
+You've successfully completed this step when:
+- ✓ [Specific success criterion 1]
+- ✓ [Specific success criterion 2]
+- ✓ [Specific success criterion 3]
 
-#### Issue 1: [Specific Error Message]
+**✗ If something failed:** See [Troubleshooting Section]
+
+---
+
+### What You Just Built
+
+[Recap what they accomplished and why it matters]
+
+**Next step:** [Link to next section]
+```
+
+---
+
+## 6. Analogies and Examples
+
+### Good Analogies to IT Concepts
+
+**Recommended analogies for common RAG concepts:**
+
+| RAG Concept | IT Analogy |
+|-------------|------------|
+| **Containers** | Virtual machines but lighter weight; like VLANs for applications |
+| **Vector embeddings** | Converting addresses to GPS coordinates; different format, same info |
+| **ChromaDB** | Routing table for documents; organized for fast lookups |
+| **Ollama** | SNMP agent for AI; runs locally and processes requests |
+| **RAG system** | Three-tier architecture; presentation, logic, data layers |
+| **Webhooks** | SNMP traps; push notifications instead of polling |
+| **API endpoints** | Management interfaces; how services communicate |
+| **Chunking** | Packet fragmentation; breaking large data into processable pieces |
+| **Semantic search** | QoS matching; finding best fit, not just exact match |
+
+### How to Create Good Analogies
+
+**Structure:**
+1. State the RAG concept
+2. Name a familiar IT concept
+3. Explain the parallel
+4. Show practical example
+
+**Example:**
+```markdown
+**Vector embeddings** work like MAC address tables in switches. Just as a switch 
+converts device names to MAC addresses for fast forwarding decisions, our system 
+converts document text to number vectors for fast similarity matching. When you 
+search, it's finding the "closest MAC addresses" to your question.
+```
+
+---
+
+## 7. Error Documentation Format
+
+Every error should be documented using this template:
+
+```markdown
+### Error: [Exact Error Message]
 
 **Symptoms:**
 - [What the user sees]
-- [Related problems]
+- [What behavior occurs]
 
 **Cause:**
-[Plain English explanation of why this happens]
+[Plain English explanation of root cause]
 
 **Solution:**
-1. [Step to fix]
-2. [Next step]
-3. [Verification step]
 
-**Verification:**
-âœ… You'll know it's fixed when: [specific outcome]
-
----
-
-#### Issue 2: [Another Common Problem]
-
-[Same structure as Issue 1]
-
----
-
-### Next Steps
-
-You've now completed [what was accomplished]. 
-
-**Where to go next:**
-- âž¡ï¸ Continue to [Step X+1] to [what comes next]
-- ðŸ”™ If something didn't work, review [related section]
-- ðŸ’¡ Optional: [Enhancement or alternative path]
-
----
+**Quick fix:**
+```bash
+# Commands to resolve
+fix-command here
 ```
 
----
+**Detailed steps:**
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
 
-## 6. Beginner-Friendly Technical Explanations
+**Prevention:**
+[How to avoid this error in future]
 
-### Core Concept Definitions
-
-When introducing technical terms, always provide the beginner explanation first, then the technical definition.
-
-#### Container â†’ Virtual Computer Running Inside Your Mac
-
-**Beginner explanation:**
-A container is like a virtual computer running inside your Mac. Imagine you have a completely separate computer with its own operating system and programs, but it's actually just software running on your Mac. It keeps everything self-contained so it won't interfere with your other programs. Think of it like a VLAN - it creates isolation while sharing the same physical hardware.
-
-**Technical definition:** 
-Containers are lightweight, standalone executable packages that include everything needed to run a piece of software: code, runtime, libraries, and settings. They provide OS-level virtualization without the overhead of full virtual machines.
-
-**Why we use it:**
-Containers let us run ChromaDB, n8n, and other tools without installing them directly on your Mac, which means they won't conflict with your other software and can be easily removed later.
-
----
-
-#### Vector Database â†’ Specialized Search Engine for Finding Similar Documents
-
-**Beginner explanation:**
-A vector database stores your documents in a special numerical format that computers can compare mathematically. Think of it like this: instead of storing "The router has 10 interfaces," it stores something like [0.234, 0.891, 0.432...] - a list of numbers that represents the *meaning* of that sentence. 
-
-When you ask a question, your question also gets converted to numbers, and the database finds documents whose numbers are "close" to your question's numbers. It's similar to how routers use metrics to find the best path - higher numbers = better match.
-
-**Analogy:**
-If traditional databases are like looking up exact phone numbers in a phonebook, vector databases are like asking "who in this phonebook lives near the hospital?" - you're searching by similarity and meaning, not exact matches.
-
-**Technical definition:**
-Vector databases store high-dimensional numerical representations (embeddings) of data and enable efficient similarity search using distance metrics like cosine similarity or Euclidean distance.
-
-**Why we use it:**
-ChromaDB (our vector database) lets the AI find relevant parts of your documents even when you ask questions using different words than what's in the document.
-
----
-
-#### Embedding â†’ Converting Text into Numbers the AI Can Understand
-
-**Beginner explanation:**
-An embedding is what you get when you convert text (like a sentence or document) into a list of numbers. These numbers capture the *meaning* of the text in a way computers can work with mathematically.
-
-Think of it like GPS coordinates: "123 Main Street" gets converted to latitude/longitude numbers (40.7128, -74.0060). Both represent the same place, but the numbers let computers calculate distances and find nearby locations. Embeddings do the same thing for text meaning instead of physical location.
-
-**Example:**
-- Original text: "The router crashed at 3am"
-- Embedding: [0.234, 0.891, 0.432, ..., 0.123] (actually 768 numbers!)
-- Similar text: "The network device failed overnight"
-- Its embedding: [0.241, 0.885, 0.428, ..., 0.119] (very close numbers!)
-
-**Technical definition:**
-Embeddings are dense vector representations of text generated by machine learning models, where semantically similar text produces similar vectors in high-dimensional space.
-
-**Why we use it:**
-Embeddings let the AI understand that "router crashed" and "device failed" mean similar things, even though they use different words.
-
----
-
-#### RAG (Retrieval-Augmented Generation) â†’ Smart AI That Reads Your Documents Before Answering
-
-**Beginner explanation:**
-RAG is a two-step process that makes AI answers more accurate and relevant to YOUR documents:
-
-**Step 1 - Retrieval:** When you ask a question, the system searches your documents and finds the most relevant sections (like searching a knowledge base).
-
-**Step 2 - Generation:** The AI reads those relevant sections and uses them to write an answer, rather than just making up an answer from its training.
-
-**Analogy:**
-Traditional AI is like asking someone a question when they only have their memory to rely on - they might forget details or make mistakes.
-
-RAG is like asking someone a question when they have all your documentation open in front of them - they can reference specific pages and quote exact information.
-
-**Without RAG:**
-User: "What's the budget for our network upgrade?"
-AI: "I don't have specific information about your network upgrade budget."
-
-**With RAG:**
-User: "What's the budget for our network upgrade?"
-AI: "According to the Q3 Network Assessment document, the approved budget is $250,000, with $175,000 allocated for hardware and $75,000 for professional services."
-
-**Technical definition:**
-RAG combines information retrieval with text generation by first querying a vector database for relevant context, then providing that context to a language model to generate informed responses grounded in specific documents.
-
-**Why we use it:**
-RAG lets the AI answer questions using YOUR company's documents, network assessments, and technical reports - not just generic information from its training.
-
----
-
-#### Webhook â†’ A Way for Programs to Notify Each Other Instantly
-
-**Beginner explanation:**
-A webhook is like a doorbell for programs. Instead of constantly checking "is there new information?" (polling), the program just waits. When something happens, the other program "rings the doorbell" (sends a webhook) to say "hey, you have a new message!"
-
-**Analogy from Networking:**
-Think of polling as continuously pinging a server every second to check status (wasteful). A webhook is like SNMP traps - the device only sends a message when something important happens.
-
-**Real example in this project:**
-When you send a message to the Webex bot, Cisco's servers immediately send a webhook to your n8n workflow saying "someone sent a message." Your workflow wakes up, reads the message, and responds. You're not constantly checking Webex every second asking "any new messages?"
-
-**Traditional way (polling):**
-```
-Every 5 seconds: "Any new messages?" "Nope" "Any new messages?" "Nope" 
-"Any new messages?" "Yes! Here's one." [Processes message]
+**Related errors:**
+- [Similar error A]
+- [Similar error B]
 ```
 
-**Webhook way:**
-```
-[Sitting idle] ... [Message arrives] ... [Cisco sends webhook] ... 
-"New message!" [Processes message immediately]
-```
-
-**Technical definition:**
-Webhooks are HTTP callbacks that enable real-time event-driven communication between services by pushing data to a specified URL when specific events occur, rather than requiring continuous polling.
-
-**Why we use it:**
-n8n uses webhooks to receive messages from Webex instantly, making the bot responsive and efficient without wasting resources constantly checking for new messages.
-
----
-
-## 7. Acronym and Technical Term Handling
-
-### First Use - Always Define and Explain
-
-When introducing an acronym or technical term for the first time:
+### Example Error Documentation
 
 ```markdown
-We'll use RAG (Retrieval-Augmented Generation), which is a method that makes AI 
-answers more accurate by having the AI read your documents before responding. 
-Think of it as giving the AI a reference book before asking it questions.
+### Error: `Connection refused on port 8000`
+
+**Symptoms:**
+- Python script fails with connection error
+- Cannot access ChromaDB
+- Browser shows "This site can't be reached"
+
+**Cause:**
+ChromaDB container is not running or hasn't started yet.
+
+**Solution:**
+
+**Quick fix:**
+```bash
+# Check if container is running
+podman ps | grep chromadb
+
+# If not running, start it
+podman start chromadb
+
+# Wait 10 seconds for startup
+sleep 10
+
+# Verify it's accessible
+curl http://localhost:8000/api/v1/heartbeat
 ```
 
-**Format:**
-1. Use the acronym with full name in parentheses
-2. Provide plain English explanation
-3. Add analogy or context
-4. Use the acronym freely afterward
+**Detailed steps:**
+1. Open terminal
+2. Run `podman ps` to check running containers
+3. If chromadb is not listed, run `podman start chromadb`
+4. Wait 10 seconds for the service to start
+5. Test connection with curl command above
+6. If still failing, check logs: `podman logs chromadb`
 
-### Subsequent Uses - Use Freely
+**Prevention:**
+Add ChromaDB to your startup script so it starts automatically when you boot your system.
 
-After the first definition, use the acronym without re-explaining:
-
-```markdown
-The RAG system will search your documents for relevant passages. When RAG finds 
-matching content, it provides that to the AI along with your question.
+**Related errors:**
+- Port 8000 already in use
+- ChromaDB container not found
 ```
 
-### Create a Glossary Section
+---
 
-Every major document should include a glossary at the end:
+## 8. Glossary Requirements
+
+Every guide must include a glossary defining all technical terms.
+
+### Glossary Entry Format
 
 ```markdown
 ## Glossary
 
-**API (Application Programming Interface):** A way for programs to communicate with each other. Like a menu at a restaurant - it lists what you can request and how to request it.
+### [Term]
+**Simple definition:** [One sentence in plain English]
+**IT analogy:** [How it relates to familiar IT concepts]
+**In this system:** [Specific role in our RAG system]
+**Example:** [Concrete example of the term in use]
 
-**ChromaDB:** The vector database we use to store documents as numerical embeddings. It's the "search engine" part of the RAG system.
-
-**Container:** A virtual environment that runs programs in isolation. Like running a separate computer inside your Mac.
-
-**Embedding:** Converting text into numbers that capture meaning. Allows computers to understand that "router failed" and "device crashed" mean similar things.
-
-**LLM (Large Language Model):** The AI "brain" that generates text responses. In this project, we use llama3.2:3b.
-
-**n8n:** A visual workflow automation tool. Instead of writing code, you connect boxes that represent different actions.
-
-**Ollama:** The software that runs AI models locally on your Mac. It's like having ChatGPT running privately on your computer.
-
-**Podman:** Container management software (alternative to Docker). It creates and runs isolated virtual environments.
-
-**RAG (Retrieval-Augmented Generation):** A method where AI searches your documents for relevant information before generating an answer.
-
-**Vector:** A list of numbers that represents meaning. Documents and questions are converted to vectors so they can be compared mathematically.
-
-**Webhook:** A way for one program to notify another instantly when something happens, like a doorbell for software.
+---
 ```
 
-### Terms That Need Special Attention
+### Example Glossary Entries
 
-Some terms are particularly confusing and need extra care:
+```markdown
+## Glossary
 
-**Vector** - Often confused with array or list. Emphasize it captures *meaning*, not just stores data.
-
-**Embedding** - Often confused with "embedding a video." Emphasize it's a mathematical conversion.
-
-**Model** - In AI context, not a 3D model or conceptual model. Emphasize it's the "brain" or "program" that generates responses.
-
-**Endpoint** - Often confused with network endpoint. Emphasize it's a URL where programs can send requests.
-
-**Local** - Be clear whether you mean "on this Mac" vs "in this network" vs "not cloud-based."
+### API (Application Programming Interface)
+**Simple definition:** A way for programs to communicate with each other over a network.
+**IT analogy:** Like SNMP for applications - a standardized way for different systems to exchange information.
+**In this system:** Our RAG components (Ollama, ChromaDB, n8n) use APIs to pass questions and documents between each other.
+**Example:** When you ask a question, n8n uses the ChromaDB API to search for relevant documents.
 
 ---
 
-## 8. Error Message Documentation
+### Vector Embedding
+**Simple definition:** Converting text into a list of numbers that represents its meaning.
+**IT analogy:** Like converting hostnames to IP addresses - different format, but represents the same thing. Just as routers work with IPs not hostnames, our AI works with vectors not text.
+**In this system:** Every document and question is converted to vectors so ChromaDB can find similar meanings quickly.
+**Example:** "What's the network uptime?" becomes [0.23, -0.15, 0.87, ...] (768 numbers total).
 
-Every documented error must follow this structure:
+---
 
-### Error Template
+### Container
+**Simple definition:** A lightweight virtual environment that runs a program with all its dependencies.
+**IT analogy:** Like a VLAN for applications - isolated environment sharing the same physical infrastructure.
+**In this system:** ChromaDB and n8n run in containers so they don't interfere with other programs on your machine.
+**Example:** The ChromaDB container has its own Python version and libraries, separate from your system's Python.
+
+---
+
+### RAG (Retrieval-Augmented Generation)
+**Simple definition:** AI that looks up information in documents before answering questions.
+**IT analogy:** Like how a router checks its routing table before forwarding packets - the AI checks your documents before generating answers.
+**In this system:** When you ask a question, the system retrieves relevant document sections then generates an answer using that context.
+**Example:** You ask "What's the budget?" → System finds budget document → AI reads it and answers "The Q3 budget is $250,000."
+```
+
+---
+
+## 9. Screenshots and Visuals
+
+### When to Include Screenshots
+
+**Required screenshots:**
+- First-time interface views (n8n dashboard, Webex bot)
+- Configuration screens with non-obvious settings
+- Success states that aren't obvious from text output
+- Error messages that might be confusing
+
+**NOT needed:**
+- Terminal output that's shown in code blocks
+- Standard file browsers or system dialogs
+- Things that change frequently (URLs, dates)
+
+### Screenshot Requirements
+
+**Every screenshot must have:**
+1. **Caption** explaining what's shown
+2. **Callouts** highlighting important areas (use arrows/boxes)
+3. **Context** explaining when user will see this
+4. **File name** descriptive: `n8n-workflow-success.png`, not `screenshot1.png`
+
+### Example Screenshot Documentation
 
 ```markdown
-### Error: [Exact Error Message in Code Format]
+### Verify the Workflow is Active
 
-```
-[Complete error message as it appears]
-```
+After saving your workflow, you should see the activation toggle:
 
-**What you're seeing:**
-[Plain English description of what this error means]
+![n8n workflow activation toggle](images/n8n-workflow-active.png)
 
-**Why this happens:**
-[Root cause explanation]
+**What you're looking at:**
+- The workflow name in the top-left
+- The "Active" toggle (should be green/on)
+- Last execution time (if workflow has run)
 
-**Common causes:**
-1. [Specific scenario 1]
-2. [Specific scenario 2]
-3. [Specific scenario 3]
+**✓ Success indicator:** Toggle is green and shows "Active"
+**✗ Not activated:** Toggle is gray and shows "Inactive"
 
-**How to fix it:**
-
-#### Step 1: [First thing to check]
-```bash
-# Command to check
-command here
+**If toggle won't turn on:** Check for red error nodes in the workflow - fix those first.
 ```
 
-Expected result: `[what success looks like]`
+---
 
-If you see: `[problem output]`
-Then: [what to do]
+## 10. Time Estimates
 
-#### Step 2: [Next thing to check]
-[Continue pattern]
+### Guidelines for Time Estimates
 
-#### Step 3: [Solution]
-```bash
-# Command to fix
-fix command here
-```
+**Always include realistic time estimates** for each section.
 
-**Verification:**
-âœ… Run this to confirm it's fixed:
-```bash
-verification command
-```
+**Format:**
+- **Reading time:** 5-10 minutes
+- **Hands-on time:** 15-20 minutes
+- **Total time:** 20-30 minutes
 
-You should see: `[success output]`
+**What to include in estimates:**
+- Reading the instructions
+- Running commands and waiting for output
+- Verification steps
+- Reasonable troubleshooting time
+- NOT included: downloading large files (note separately)
 
-**Prevention:**
-ðŸ’¡ To avoid this in the future: [preventive measure]
-```
-
-### Real Example
+### Time Estimate Categories
 
 ```markdown
-### Error: `curl: (7) Failed to connect to localhost port 11434`
+**⚡ Quick (< 5 minutes)**
+- Running a single command
+- Checking status
+- Quick verification
 
+**🕐 Short (5-15 minutes)**
+- Installing a single component
+- Basic configuration
+- Simple testing
+
+**🕑 Medium (15-45 minutes)**
+- Multi-step installation
+- Configuration with testing
+- Complete feature setup
+
+**🕐 Long (45+ minutes)**
+- Complete system setup
+- Multiple interdependent components
+- Extensive testing and verification
+
+**Note downloads separately:**
+"Plus 10-30 minutes for initial model download (depends on internet speed)"
 ```
-curl: (7) Failed to connect to localhost port 11434: Connection refused
-```
 
-**What you're seeing:**
-Your computer tried to communicate with Ollama on port 11434, but nothing is listening at that address. It's like calling a phone number and getting "number not in service."
+---
 
-**Why this happens:**
-Ollama isn't running. Either it was never started, or it crashed/stopped.
+## 11. Prerequisites Documentation
 
-**Common causes:**
-1. Ollama was never started after installation
-2. Ollama was running but you closed the terminal window
-3. Ollama crashed (rare)
+### How to Document Prerequisites
 
-**How to fix it:**
+**For every major section, clearly state:**
 
-#### Step 1: Check if Ollama is actually running
+```markdown
+📋 **Prerequisites**
 
+**Before starting this section, you must have:**
+- ✓ [Completed step X]
+- ✓ [Specific software installed]
+- ✓ [System in specific state]
+- ✓ [Access to specific resource]
+
+**Verify you're ready:**
 ```bash
-# Check for Ollama process
-ps aux | grep ollama
+# Quick verification command
+verification-command
 ```
 
-Expected result: You should see a line with `/usr/local/bin/ollama serve`
+**Expected output:**
+```
+What success looks like
+```
 
-If you see: `grep ollama` (only your grep command), then Ollama isn't running.
+**If verification fails:** [Link to setup instructions]
+```
 
-#### Step 2: Start Ollama
+### Example Prerequisites Section
 
-Open a new terminal window and run:
+```markdown
+📋 **Prerequisites**
+
+**Before starting this section, you must have:**
+- ✓ Completed Part 1: Environment Setup
+- ✓ Podman running with containers started
+- ✓ Ollama installed with models downloaded
+- ✓ At least one document loaded in ChromaDB
+
+**Verify you're ready:**
 ```bash
-# Start Ollama server
-ollama serve
-```
-
-You should see:
-```
-Ollama server is running on http://localhost:11434
-```
-
-**Important:** Keep this terminal window open! Closing it stops Ollama.
-
-#### Step 3: Verify it's working
-
-In your original terminal (not the one running `ollama serve`), run:
-```bash
-# Test Ollama connection
+# Check all services are running
+podman ps
 curl http://localhost:11434/api/tags
+curl http://localhost:8000/api/v1/heartbeat
 ```
 
-**Verification:**
-âœ… You should see JSON output listing your models:
-```json
-{"models":[{"name":"llama3.2:3b",...}]}
-```
+**Expected output:**
+- Podman shows chromadb and n8n containers
+- Ollama returns list of models
+- ChromaDB returns heartbeat with timestamp
 
-**Prevention:**
-ðŸ’¡ To avoid this in the future:
-- Keep the `ollama serve` terminal window open while working
-- Or, set up Ollama as a background service (see Advanced Setup guide)
-- Add a quick check to your startup process: `curl http://localhost:11434/api/tags`
-```
-
----
-
-## 9. Time Estimates
-
-Provide realistic time estimates that account for beginners taking longer.
-
-### Format
-
-```markdown
-**Time required:** 
-- Reading: 5 minutes
-- Execution: 10-15 minutes  
-- Verification: 5 minutes
-- **Total: 20-25 minutes**
-```
-
-### Estimation Guidelines
-
-**Reading time:**
-- Simple concept: 2-3 minutes per section
-- Complex concept: 5-10 minutes per section
-- Code-heavy section: 3-5 minutes per code block
-
-**Execution time:**
-- Simple command: 1-2 minutes (includes typing, running, checking output)
-- Installing software: 5-15 minutes (depends on download speed)
-- Creating/modifying files: 3-5 minutes per file
-- Testing/verification: 2-5 minutes per test
-
-**Troubleshooting buffer:**
-- Add 50% to total time estimate
-- Example: 20 minute task = estimate 30 minutes
-
-### Time Estimate Examples
-
-```markdown
-## Step 3: Installing ChromaDB Container
-
-**Time required:**
-- Reading & understanding: 8 minutes
-- Downloading container image: 3-5 minutes (depends on internet speed)
-- Starting container: 2 minutes
-- Verification: 3 minutes
-- **Total: 16-18 minutes**
-- **With troubleshooting buffer: 25-30 minutes**
-```
-
-### Multi-Part Sections
-
-For sections with optional parts:
-
-```markdown
-**Time required:**
-- Core setup (required): 15-20 minutes
-- Optional: Webex integration: +30 minutes
-- Optional: REST API testing: +10 minutes
-- **Minimum total: 15-20 minutes**
-- **Complete setup: 55-60 minutes**
+**If any verification fails:**
+- Podman containers not showing → Return to [Part 1, Step 4](part1.md#step-4)
+- Ollama not responding → Return to [Part 1, Step 3](part1.md#step-3)
+- ChromaDB not responding → Return to [Part 1, Step 5](part1.md#step-5)
 ```
 
 ---
 
-## 10. Cross-Referencing Standards
-
-### When to Link vs Explain
-
-**Link to another document when:**
-- The concept requires >3 paragraphs to explain
-- It's covered comprehensively elsewhere
-- The reader might want to skip it now and return later
-
-**Explain in-line when:**
-- The concept can be explained in 1-2 sentences
-- It's essential to understanding current step
-- It's a quick definition or reminder
+## 12. Cross-Referencing and Links
 
 ### Link Format
 
-Use descriptive link text, never "click here":
+**Always use descriptive link text:**
 
-#### âŒ BAD
+✓ **Good:**
 ```markdown
-To install Ollama, click [here](install-ollama.md).
+See the [ChromaDB installation guide](chromadb-setup.md) for detailed steps.
 ```
 
-#### âœ… GOOD
+✗ **Bad:**
 ```markdown
-See the [Ollama Installation Guide](install-ollama.md) for detailed setup instructions.
+Click [here](chromadb-setup.md) for more information.
 ```
 
 ### Internal Document References
 
+**Format:**
 ```markdown
-For more details on [specific topic], see:
-- **[Document Name](path/to/document.md#section-anchor)** - [One sentence about what they'll find]
-
-Example: For more details on troubleshooting ChromaDB connection issues, see:
-- **[ChromaDB Troubleshooting Guide](troubleshooting.md#chromadb-connection-errors)** - Solutions for common connection and permission problems
+[Descriptive Text](document-name.md#section-anchor)
 ```
 
-### Section References Within Same Document
-
+**Examples:**
 ```markdown
-If you haven't completed this yet, see [Step 2: Installing Ollama](#step-2-installing-ollama) above.
+- Detailed in [Part 2: RAG System Setup](GUIDE_2_RAG_SYSTEM.md#installation)
+- See [Troubleshooting: Container Issues](TROUBLESHOOTING.md#container-not-starting)
+- Review [Prerequisites](PREREQUISITES_AND_LEARNING.md#system-requirements)
 ```
 
-### Avoiding Circular Dependencies
+### External Resource Links
 
-**Problem:** Doc A says "see Doc B first" â†’ Doc B says "see Doc A first"
-
-**Solution:** Create a clear hierarchy:
+**Always provide context for external links:**
 
 ```markdown
-## Documentation Flow
-
-This repository has a recommended reading order:
-
-1. **[START_HERE.md](START_HERE.md)** - Overview and prerequisites
-   â”œâ”€> 2. **[INSTALLATION.md](INSTALLATION.md)** - Installing all components
-   â”‚   â”œâ”€> 3. **[RAG_SETUP.md](RAG_SETUP.md)** - Configuring RAG system
-   â”‚   â””â”€> 3. **[N8N_SETUP.md](N8N_SETUP.md)** - Setting up workflows
-   â””â”€> 4. **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Reference as needed
-
-**Optional advanced topics:**
-- **[WEBEX_INTEGRATION.md](WEBEX_INTEGRATION.md)** - Requires completing steps 1-3
-- **[API_REFERENCE.md](API_REFERENCE.md)** - For programmatic access
-```
-
-### Reference Format Standards
-
-```markdown
-### Prerequisites
-
-ðŸ“‹ Before starting this section, ensure you have completed:
-- âœ… [Step 1: Environment Setup](setup.md) - Required
-- âœ… [Step 2: Installing Ollama](ollama.md) - Required
-- â­• [Optional: Custom Model Setup](custom-models.md) - Optional, for advanced users
-
-### Related Resources
-
-ðŸ’¡ You might also find these helpful:
-- **[Troubleshooting Guide](troubleshooting.md#step3-errors)** - If you encounter errors
-- **[FAQ](faq.md#ollama-questions)** - Common questions about Ollama
-- **[Advanced Configuration](advanced.md#ollama-optimization)** - Performance tuning
-
-### Next Steps
-
-âž¡ï¸ **Recommended next step:** [Step 4: Loading Documents](loading-documents.md)
-
-ðŸ”€ **Alternative paths:**
-- Want to test first? â†’ [Testing Your Setup](testing.md)
-- Need to customize? â†’ [Configuration Guide](configuration.md)
+For more details on ChromaDB v1 API, see the [official ChromaDB documentation](https://docs.trychroma.com/api/v1).
 ```
 
 ---
 
-## 11. Code Block Standards
+## 13. Version and Update Information
 
-### Syntax Highlighting
+### Document Header Template
 
-Always specify the language for proper syntax highlighting:
-
-```markdown
-```bash
-# Shell commands
-curl http://localhost:8000
-```
-
-```python
-# Python code
-import chromadb
-client = chromadb.HttpClient()
-```
-
-```json
-// JSON output
-{"status": "success"}
-```
-
-```javascript
-// JavaScript / n8n code
-const result = items[0].json;
-return result;
-```
-```
-
-### Indicating User Input vs Output
+Every document should start with:
 
 ```markdown
-```bash
-# Command (you type this)
-$ ollama list
+# Document Title
 
-# Output (what you'll see)
-NAME              SIZE      MODIFIED
-llama3.2:3b      2.0 GB    2 days ago
-```
-```
-
-### Long Output - Show Key Parts Only
-
-```markdown
-```bash
-$ podman ps
-
-# Output (truncated for clarity):
-CONTAINER ID  IMAGE                    STATUS
-a1b2c3d4e5f6  chromadb/chromadb:0.4.24 Up 2 minutes
-...
-```
-```
-
-### Placeholder Values
-
-Use angle brackets for values users must replace:
-
-```markdown
-```bash
-# Replace <your-bot-token> with your actual token
-export WEBEX_TOKEN="<your-bot-token>"
-```
-
-**Example with actual values:**
-```bash
-export WEBEX_TOKEN="YjI3ZTM0YTgtNzY5MS00OWY2LWI5ODYtZjQ0N2Y4YTdmMjQ0"
-```
-```
+**Version:** X.Y.Z
+**Last Updated:** Month Day, Year
+**Status:** [Draft | Active | Archived]
+**Applies to:** [Software version or system state]
 
 ---
-
-## 12. Screenshot and Diagram Standards
-
-### When to Use Screenshots
-
-**DO use screenshots for:**
-- Complex UI navigation (n8n workflow builder)
-- Showing where to click in an interface
-- Confirming expected visual output
-- Demonstrating error messages in context
-
-**DON'T use screenshots for:**
-- Terminal commands (use code blocks instead)
-- Text-only content (use markdown)
-- Things that change frequently
-- Simple concepts that can be described
-
-### Screenshot Format
-
-```markdown
-### Configuring the Webhook Node
-
-In n8n, you'll see the workflow builder interface:
-
-![n8n Webhook Configuration](images/n8n-webhook-setup.png)
-*Figure 1: n8n webhook node configuration showing the HTTP Method dropdown*
-
-**What you're looking at:**
-- Left panel: List of available nodes
-- Center: Your workflow canvas
-- Right panel: Node settings
-
-**What to do:**
-1. Click the **"+" button** in the center canvas
-2. Search for "Webhook"
-3. Click **"Webhook"** to add it to your workflow
 ```
 
-### Diagram Requirements
+### Changelog Section
 
-Keep diagrams simple and focused:
-
-```markdown
-## System Architecture
-
-```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚   You       â”‚
-â”‚  (User)     â”‚
-â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜
-       â”‚ Question
-       â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚     RAG System                  â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚
-â”‚  â”‚ ChromaDB â”‚â—„â”€â–ºâ”‚  Ollama    â”‚ â”‚
-â”‚  â”‚(Storage) â”‚   â”‚(AI Brain)  â”‚ â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                  â”‚ Answer
-                  â–¼
-             â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-             â”‚ Responseâ”‚
-             â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-```
-*Figure 2: Information flow in the RAG system*
-```
-
----
-
-## 13. Version and Update Standards
-
-### Documenting Version-Specific Information
-
-When software versions matter:
-
-```markdown
-## Compatibility
-
-This guide was written and tested with:
-- **macOS:** 13.0 (Ventura) or later
-- **Podman:** 4.9.0
-- **ChromaDB:** 0.4.24
-- **Ollama:** Latest (December 2024)
-- **n8n:** 1.19.0
-
-âš ï¸ **Note:** ChromaDB 0.5.0 introduced breaking API changes. This guide uses 0.4.24 specifically. Do not upgrade without consulting the migration guide.
-```
-
-### Update History
-
-At the end of major documents:
+Include at end of document:
 
 ```markdown
 ## Document History
 
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0.0 | 2024-11-20 | Initial version | System |
-| 1.0.1 | 2024-11-25 | Added Webex troubleshooting section | System |
-| 1.1.0 | 2024-12-01 | Updated for ChromaDB 0.4.24 compatibility | System |
+### Version 2.0.0 (January 2026)
+- Updated for Ollama 0.3.x
+- Added troubleshooting for ChromaDB v1 API
+- Expanded error documentation
 
-**Last updated:** December 18, 2024
+### Version 1.0.0 (December 2024)
+- Initial documentation
+- Covers basic setup and configuration
 ```
 
 ---
 
-## 14. FAQ Section Standards
+## 14. FAQ Format
 
-Every major guide should include a FAQ section:
+### FAQ Structure
+
+Group FAQs by category and use consistent format:
 
 ```markdown
-## Frequently Asked Questions (FAQ)
+## Frequently Asked Questions
+
+### General Questions
+
+**Q: [Question in user's voice]**
+
+A: [Direct answer first, then details]
+
+[Optional: code example or additional context]
+
+---
+
+**Q: [Next question]**
+
+A: [Answer]
+
+---
+
+### [Next Category]
+```
+
+### Example FAQ Section
+
+```markdown
+## Frequently Asked Questions
 
 ### General Questions
 
 **Q: Do I need to know Python to use this system?**
 
-A: No! This system is designed for IT engineers with no programming experience. All the Python code is provided and explained. You'll copy and paste commands - no coding required.
-
----
-
-**Q: Will this work on Windows?**
-
-A: This guide is written for macOS. The concepts are the same on Windows, but the commands will be different (for example, Windows doesn't have the same terminal commands). A Windows version of this guide is planned for the future.
+A: No! You can use the system through the n8n visual interface (no coding required) or through the Webex bot (just send messages). The Python scripts are optional for advanced users who want automation.
 
 ---
 
 **Q: How much does this cost?**
 
-A: Everything in this guide uses free, open-source software. There are no licensing fees or subscriptions. You do need a Mac with enough resources (8GB+ RAM recommended).
+A: Everything in this guide uses free, open-source software. There are no licensing fees or subscriptions. You do need a computer with enough resources (8GB+ RAM recommended).
 
 ### Technical Questions
 
 **Q: Why do we use Podman instead of Docker?**
 
-A: Podman is similar to Docker but doesn't require root privileges and has better security. On Mac, both work fine, but Podman is easier to set up for this project.
+A: Podman is similar to Docker but doesn't require root privileges and has better security. On most systems, both work fine, but Podman is easier to set up for this project.
 
 ---
 
 **Q: What's the difference between Ollama and ChatGPT?**
 
-A: Ollama runs AI models locally on your Mac - nothing leaves your computer. ChatGPT runs in the cloud. For sensitive company documents, local processing is often required for privacy/compliance reasons.
+A: Ollama runs AI models locally on your machine - nothing leaves your computer. ChatGPT runs in the cloud. For sensitive company documents, local processing is often required for privacy/compliance reasons.
 
 ### Troubleshooting Questions
 
@@ -1109,12 +834,12 @@ curl http://localhost:11434/api/generate -d '{
 }'
 ```
 
-**âœ… Success looks like:**
+**✓ Success looks like:**
 ```json
 {"response":"Hello"}
 ```
 
-**âŒ If it fails:** See [Ollama Troubleshooting](troubleshooting.md#ollama-not-responding)
+**✗ If it fails:** See [Ollama Troubleshooting](troubleshooting.md#ollama-not-responding)
 
 ---
 
@@ -1127,15 +852,15 @@ curl http://localhost:11434/api/generate -d '{
 python test_chromadb.py
 ```
 
-**âœ… Success looks like:**
+**✓ Success looks like:**
 ```
-âœ… Collection created
-âœ… Document added
-âœ… Query returned 1 result
+✓ Collection created
+✓ Document added
+✓ Query returned 1 result
 All tests passed!
 ```
 
-**âŒ If it fails:** See [ChromaDB Troubleshooting](troubleshooting.md#chromadb-connection-issues)
+**✗ If it fails:** See [ChromaDB Troubleshooting](troubleshooting.md#chromadb-connection-issues)
 
 ---
 
@@ -1148,17 +873,17 @@ All tests passed!
 python query_rag.py "What is the network budget?"
 ```
 
-**âœ… Success looks like:**
+**✓ Success looks like:**
 ```
 Found 3 relevant passages
 Answer: According to the Q3 assessment, the network upgrade budget is $250,000...
 ```
 
-**âŒ If it fails:** See [RAG System Troubleshooting](troubleshooting.md#rag-not-finding-documents)
+**✗ If it fails:** See [RAG System Troubleshooting](troubleshooting.md#rag-not-finding-documents)
 
 ---
 
-## âœ… Complete Test Checklist
+## ✓ Complete Test Checklist
 
 Run through this checklist to confirm your system is fully operational:
 
@@ -1169,8 +894,8 @@ Run through this checklist to confirm your system is fully operational:
 - [ ] n8n workflows execute without errors
 - [ ] (Optional) Webex bot responds to messages
 
-**All checked?** âœ… Your system is ready to use!
-**Some failed?** ðŸ”§ See the [Troubleshooting Guide](troubleshooting.md)
+**All checked?** ✓ Your system is ready to use!
+**Some failed?** 🔧 See the [Troubleshooting Guide](troubleshooting.md)
 ```
 
 ---
@@ -1187,7 +912,7 @@ Before submitting documentation, verify:
 - [ ] Common errors anticipated and documented
 
 ### Structure
-- [ ] Clear section hierarchy (## â†’ ### â†’ ####)
+- [ ] Clear section hierarchy (## → ### → ####)
 - [ ] Time estimates provided
 - [ ] Prerequisites listed
 - [ ] Verification steps included
@@ -1195,7 +920,7 @@ Before submitting documentation, verify:
 
 ### Formatting
 - [ ] Code blocks have language specified
-- [ ] Visual indicators used appropriately (âœ… âš ï¸ ðŸ’¡)
+- [ ] Visual indicators used appropriately (✓ ⚠️ 💡)
 - [ ] Screenshots labeled and explained
 - [ ] Links use descriptive text
 - [ ] Placeholders use angle brackets `<like-this>`
@@ -1220,7 +945,7 @@ Before submitting documentation, verify:
 
 ### Example 1: Explaining a Command
 
-#### âŒ BAD
+#### ✗ BAD
 ```markdown
 Run `podman run -d -p 8000:8000 chromadb/chromadb:0.4.24`
 ```
@@ -1231,11 +956,11 @@ Run `podman run -d -p 8000:8000 chromadb/chromadb:0.4.24`
 - No verification
 - No troubleshooting
 
-#### âœ… GOOD
+#### ✓ GOOD
 ```markdown
 ### Start the ChromaDB Container
 
-**What this does:** Launches ChromaDB in a virtual environment on your Mac
+**What this does:** Launches ChromaDB in a virtual environment on your machine
 
 ```bash
 # Start ChromaDB container
@@ -1256,13 +981,13 @@ a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
 ```
 This long string is the container ID - think of it like a MAC address for the container.
 
-**âœ… Verify it's running:**
+**✓ Verify it's running:**
 ```bash
 podman ps
 ```
 You should see `chromadb/chromadb` in the IMAGE column.
 
-**âŒ Common error:**
+**✗ Common error:**
 If you see `port 8000 already in use`, another program is using that port. See [Port Conflicts](troubleshooting.md#port-conflicts).
 ```
 
@@ -1270,7 +995,7 @@ If you see `port 8000 already in use`, another program is using that port. See [
 
 ### Example 2: Explaining a Concept
 
-#### âŒ BAD
+#### ✗ BAD
 ```markdown
 ChromaDB uses vector embeddings to enable semantic search over document collections through cosine similarity metrics.
 ```
@@ -1281,7 +1006,7 @@ ChromaDB uses vector embeddings to enable semantic search over document collecti
 - No practical explanation
 - Assumes technical knowledge
 
-#### âœ… GOOD
+#### ✓ GOOD
 ```markdown
 ### How ChromaDB Finds Relevant Documents
 
@@ -1323,4 +1048,4 @@ These standards ensure that anyone with IT networking experience can successfull
 - Have you given them a way to verify success?
 - Have you documented the common ways this can fail?
 
-If yes to all four, your documentation meets our standards.
+If yes to all four, your documentation meets the standards.
