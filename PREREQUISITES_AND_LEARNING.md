@@ -870,23 +870,23 @@ podman run -d \
 ┌─────────────────────────────────────────────────┐
 │           Your Mac (Host System)                │
 │                                                 │
-│  ┌──────────────┐  ┌──────────────┐           │
-│  │ Container 1  │  │ Container 2  │           │
-│  │              │  │              │           │
-│  │  ChromaDB    │  │    n8n       │           │
-│  │              │  │              │           │
-│  │ Port: 8000   │  │ Port: 5678   │           │
-│  └──────────────┘  └──────────────┘           │
-│         ↑                  ↑                   │
-│         └──────────────────┘                   │
-│         Container Network                      │
+│  ┌──────────────┐  ┌──────────────┐             │
+│  │ Container 1  │  │ Container 2  │             │
+│  │              │  │              │             │
+│  │  ChromaDB    │  │    n8n       │             │
+│  │              │  │              │             │
+│  │ Port: 8000   │  │ Port: 5678   │             │
+│  └──────────────┘  └──────────────┘             │
+│         ↑                  ↑                    │
+│         └──────────────────┘                    │
+│         Container Network                       │
 │                                                 │
-│  ┌──────────────────────────────────────────┐ │
-│  │   Shared Volume (chroma-data)            │ │
-│  │   Persists data between restarts         │ │
-│  └──────────────────────────────────────────┘ │
+│  ┌──────────────────────────────────────────┐   │
+│  │   Shared Volume (chroma-data)            │   │
+│  │   Persists data between restarts         │   │
+│  └──────────────────────────────────────────┘   │
 │                                                 │
-│  Podman Engine (manages containers)            │
+│  Podman Engine (manages containers)             │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -2600,7 +2600,7 @@ n8n keeps last 100 executions:
      │              │             │
      │              │             │
 ┌────▼──────────────▼─────────────▼──────┐
-│           Ollama                        │
+│           Ollama                       │
 │  (LLM + Embedding Model)               │
 └────────────────────────────────────────┘
 ```
@@ -2963,7 +2963,7 @@ Your Server receives POST:
 ```
 User in Webex                    Your Mac (n8n)              Webex Cloud
      │                                 │                           │
-     │  "@RagBot What's the budget?"  │                           │
+     │  "@RagBot What's the budget?"   │                           │
      ├────────────────────────────────>│                           │
      │                                 │   Detects @mention        │
      │                                 │<──────────────────────────┤
@@ -2983,7 +2983,7 @@ User in Webex                    Your Mac (n8n)              Webex Cloud
      │                                 │   POST /messages          │
      │                                 │   Body: {answer: "..."}   │
      │                                 ├──────────────────────────>│
-     │   "The budget is $500,000"     │                           │
+     │   "The budget is $500,000"      │                           │
      │<────────────────────────────────────────────────────────────┤
      │                                 │                           │
 ```
@@ -3212,7 +3212,7 @@ Your App                              API Server
     │                                     │
     │  POST /api/messages                 │
     │  Headers: Authorization: Bearer ... │
-    │  Body: {"text": "Hello"}           │
+    │  Body: {"text": "Hello"}            │
     ├────────────────────────────────────>│
     │                                     │
     │                                     │ Process
@@ -4715,20 +4715,5 @@ That's exactly what this guide is for.
 *No coding required. Full local control.*  
 *Your journey to AI-powered document analysis starts now.*
 
----
-
-## Document Information
-
-**Last Updated:** 2024-01-16  
-**Version:** 1.0  
-**Maintained by:** Community Contributors  
-**License:** MIT License
-
-**Feedback Welcome:**
-- Report issues: GitHub Issues
-- Suggest improvements: GitHub Discussions
-- Contribute: Pull Requests
-
-**This is a living document** - it improves based on community feedback and experience.
 
 ---
