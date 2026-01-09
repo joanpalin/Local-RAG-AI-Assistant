@@ -504,28 +504,6 @@ Special thanks to the open source communities behind Ollama, ChromaDB, n8n, and 
 
 ---
 
-## 🚀 Quick Links
-
-### Getting Started
-- [Prerequisites Guide](PREREQUISITES_AND_LEARNING.md) - Start here if new to CLI
-- [Environment Setup](GUIDE_1_ENVIRONMENT_SETUP.md) - Install base system
-- [RAG System Setup](GUIDE_2_RAG_SYSTEM.md) - Configure document analysis
-
-### Integration
-- [Webex Bot Setup](GUIDE_3_WEBEX_INTEGRATION.md) - Add messaging integration
-
-### Reference
-- [Troubleshooting](TROUBLESHOOTING.md) - Fix common issues
-- [What's Next](WHATS_NEXT.md) - Advanced features
-- [Documentation Standards](DOCUMENTATION_STANDARDS.md) - Contributing guidelines
-
-### Community
-- [GitHub Issues](../../issues) - Report bugs, request features
-- [Discussions](../../discussions) - Ask questions, share ideas
-- [Project Board](../../projects) - See what's being worked on
-
----
-
 ## ⭐ Star This Repo
 
 If you find this project useful:
@@ -570,20 +548,6 @@ If you find this project useful:
 - Single collection limitation (multi-collection in v2.0)
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
-
----
-
-## 🎓 Learning Resources
-
-### For Beginners
-- [Prerequisites & Learning](PREREQUISITES_AND_LEARNING.md) - Background knowledge
-- [RAG Concepts Explained](docs/RAG_Concepts.md) - What is RAG?
-- [Container Basics](docs/Container_Basics.md) - Understanding Podman/Docker
-
-### For Advanced Users
-- [Advanced Customization](WHATS_NEXT.md) - Tune for your needs
-- [Performance Optimization](docs/Performance.md) - Get faster responses
-- [Security Best Practices](docs/Security.md) - Production deployment
 
 ---
 
