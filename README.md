@@ -547,8 +547,6 @@ If you find this project useful:
 - macOS-specific (Linux/Windows adaptations needed)
 - Single collection limitation (multi-collection in v2.0)
 
-See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
-
 ---
 
 **Built with ❤️ for IT engineers who value privacy and control**
