@@ -2,14 +2,6 @@
 
 > **Privacy-first AI document analysis with Webex Teams integration. No external APIs, full control, runs on your local machine.**
 
-[📸 Add demo GIF/screenshot here showing Webex conversation]
-
-```
-User in Webex: "What is the network uptime for Q4?"
-Bot responds: "According to the Q4 assessment, network uptime 
-              was 99.94% with MTTR of 2.4 hours..."
-```
-
 ---
 
 ## ✨ What This Is
