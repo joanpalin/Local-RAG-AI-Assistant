@@ -1535,7 +1535,7 @@ curl -X POST http://localhost:5678/webhook/upload-doc \
 - [ ] Error handling works gracefully
 - [ ] Performance is acceptable
 
-**✓✓✓ If all boxes checked: Your RAG system is PRODUCTION READY!**
+**✓✓✓ If all boxes checked: Your RAG system is PILOT READY!**
 
 ---
 
