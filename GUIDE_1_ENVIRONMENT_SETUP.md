@@ -249,40 +249,40 @@ Local Machine
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                     YOUR LOCAL MACHINE                   │
+│                     YOUR LOCAL MACHINE                  │
 ├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  ┌────────────────┐         ┌─────────────────┐        │
-│  │  You (User)    │────────>│   n8n Workflow  │        │
-│  │  Ask Question  │         │   Orchestrates  │        │
-│  └────────────────┘         └────────┬────────┘        │
+│                                                         │
+│  ┌────────────────┐         ┌─────────────────┐         │
+│  │  You (User)    │────────>│   n8n Workflow  │         │
+│  │  Ask Question  │         │   Orchestrates  │         │
+│  └────────────────┘         └────────┬────────┘         │
 │                                      │                  │
 │                                      v                  │
-│                          ┌───────────────────┐         │
-│                          │   Question goes   │         │
-│                          │   to Ollama for   │         │
-│                          │   embedding       │         │
-│                          └─────────┬─────────┘         │
+│                          ┌───────────────────┐          │
+│                          │   Question goes   │          │
+│                          │   to Ollama for   │          │
+│                          │   embedding       │          │
+│                          └─────────┬─────────┘          │
 │                                    │                    │
 │                                    v                    │
-│                          ┌───────────────────┐         │
-│                          │   ChromaDB        │         │
-│                          │   Searches for    │         │
-│                          │   similar vectors │         │
-│                          └─────────┬─────────┘         │
+│                          ┌───────────────────┐          │
+│                          │   ChromaDB        │          │
+│                          │   Searches for    │          │
+│                          │   similar vectors │          │
+│                          └─────────┬─────────┘          │
 │                                    │                    │
 │                                    v                    │
-│                          ┌───────────────────┐         │
-│                          │   Relevant chunks │         │
-│                          │   sent to Ollama  │         │
-│                          │   (llama model)   │         │
-│                          └─────────┬─────────┘         │
+│                          ┌───────────────────┐          │
+│                          │   Relevant chunks │          │
+│                          │   sent to Ollama  │          │
+│                          │   (llama model)   │          │
+│                          └─────────┬─────────┘          │
 │                                    │                    │
 │                                    v                    │
-│  ┌────────────────┐         ┌───────────────┐         │
-│  │  You receive   │<────────│  Answer       │         │
-│  │  answer        │         │  generated    │         │
-│  └────────────────┘         └───────────────┘         │
+│  ┌────────────────┐         ┌───────────────┐           │
+│  │  You receive   │<────────│  Answer       │           │
+│  │  answer        │         │  generated    │           │ 
+│  └────────────────┘         └───────────────┘           │
 │                                                         │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -1524,23 +1524,6 @@ sleep 20
 3. Try restarting: `podman restart [container-name]`
 4. Verify permissions: `ls -la ~/cisco-rag-demo/`
 5. Consult troubleshooting section
-
----
-
-## Document Information
-
-**Version:** 2.0.0  
-**Last Updated:** January 2026  
-**Part of:** Local RAG System Implementation Guides  
-**Next Guide:** [GUIDE_2_RAG_SYSTEM.md](GUIDE_2_RAG_SYSTEM.md)  
-
-**This guide is based on:**
-- Actual deployment on modern hardware with sufficient RAM
-- Real troubleshooting experiences documented
-- Testing with technical documentation
-- Production-ready configurations
-
-**Feedback:** If you encounter issues not covered here, please document them for future updates.
 
 ---
 
