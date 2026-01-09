@@ -4,7 +4,7 @@
 **Part 1 of 3: Implementation Guides**  
 **Time Required:** 45-60 minutes  
 **Difficulty:** Beginner-friendly (step-by-step)  
-**Prerequisites:** Mac with Apple Silicon, 16GB+ RAM
+**Prerequisites:** Computer with sufficient resources, 16GB+ RAM
 
 ---
 
@@ -27,9 +27,9 @@
 
 ## Introduction
 
-Welcome! This guide will help you set up the foundation for your local AI document assistant. By the end of this guide, you'll have all the necessary software installed and verified working on your Mac.
+Welcome! This guide will help you set up the foundation for your local AI document assistant. By the end of this guide, you'll have all the necessary software installed and verified working on your local machine.
 
-**What makes this guide different:** Every instruction has been tested on actual hardware (Mac M4 Pro). All common issues have been identified and documented. If you follow the steps exactly as written, you'll have a working system.
+**What makes this guide different:** Every instruction has been tested on actual hardware. All common issues have been identified and documented. If you follow the steps exactly as written, you'll have a working system.
 
 ### What to Expect
 
@@ -47,7 +47,7 @@ Welcome! This guide will help you set up the foundation for your local AI docume
 4. **Read error messages carefully** - they usually tell you what's wrong
 5. **Start fresh** - sometimes it's easier to remove and reinstall
 
-âž¡ï¸ **Ready? Let's build your AI assistant!**
+⚡ **Ready? Let's build your AI assistant!**
 
 ---
 
@@ -55,14 +55,14 @@ Welcome! This guide will help you set up the foundation for your local AI docume
 
 By completing this guide, you will have:
 
-âœ… **Podman** - Container runtime (like Docker) running virtual environments  
-âœ… **Ollama** - AI model manager with two models downloaded  
-âœ… **ChromaDB** - Document storage system that AI can search  
-âœ… **n8n** - Visual workflow builder (no coding needed)  
-âœ… **Python setup** - For quick testing scripts  
+✓ **Podman** - Container runtime (like Docker) running virtual environments  
+✓ **Ollama** - AI model manager with two models downloaded  
+✓ **ChromaDB** - Document storage system that AI can search  
+✓ **n8n** - Visual workflow builder (no coding needed)  
+✓ **Python setup** - For quick testing scripts  
 
 **What this enables:**
-- Process documents locally (no data leaves your Mac)
+- Process documents locally (no data leaves your machine)
 - Run AI models without internet connection
 - Build visual workflows without writing code
 - Query documents through multiple interfaces
@@ -74,28 +74,30 @@ By completing this guide, you will have:
 ### Hardware Requirements
 
 **Minimum (Will work, but slower):**
-- Mac with Apple Silicon (M1 or newer)
+- Modern computer with sufficient processing power
 - 16GB RAM
 - 50GB free disk space
-- macOS Monterey (12.0) or later
+- Modern operating system (Windows 10+, macOS 12+, or recent Linux)
 
 **Recommended (Better performance):**
-- Mac with M2, M3, or M4 chip
+- Multi-core processor (6+ cores)
 - 24GB+ RAM
 - 100GB free disk space
-- macOS Sonoma (14.0) or later
+- Latest operating system updates
+
+**Note:** This guide focuses on macOS with Apple Silicon, but the principles apply to other platforms with appropriate adjustments.
 
 ### Pre-Installation Checklist
 
 Before you begin, verify:
 
-- [ ] You have administrator access to your Mac
-- [ ] You can open Terminal (Applications > Utilities > Terminal)
+- [ ] You have administrator access to your machine
+- [ ] You can open a terminal/command line interface
 - [ ] You have an internet connection for downloads
 - [ ] You have 45-60 minutes of uninterrupted time
 - [ ] You've read this introduction
 
-ðŸ'¡ **Tip:** Close unnecessary applications to free up RAM before starting.
+💡 **Tip:** Close unnecessary applications to free up RAM before starting.
 
 ---
 
@@ -112,33 +114,33 @@ Before installing anything, let's understand what each component does and why we
 **Real-world analogy:** Like a virtual machine, but lighter weight
 
 **Think of it this way:** 
-Imagine you're a network engineer setting up a demo in a conference room. Instead of bringing physical servers, you bring virtual machines on a laptop. Podman does something similar - it runs "virtual computers" (containers) inside your Mac, each with its own isolated environment.
+Imagine you're a network engineer setting up a demo in a conference room. Instead of bringing physical servers, you bring virtual machines on a laptop. Podman does something similar - it runs "virtual computers" (containers) inside your machine, each with its own isolated environment.
 
 **Why containers matter:**
 - Consistent behavior (works the same every time)
 - Easy to start/stop
-- Doesn't conflict with other software on your Mac
+- Doesn't conflict with other software on your system
 - Easy to remove if needed (no leftover files)
 
 **Example:** 
-If ChromaDB needs Python 3.9 but your Mac has Python 3.11, no problem - the container has its own Python 3.9 that doesn't interfere with your system's Python.
+If ChromaDB needs Python 3.9 but your system has Python 3.11, no problem - the container has its own Python 3.9 that doesn't interfere with your system's Python.
 
 **Why Podman instead of Docker?**
 - Free and open source (no licensing issues)
 - Better security model (doesn't need root)
-- Works well on Apple Silicon Macs
+- Works well on modern systems
 - Similar commands to Docker (easy to learn)
 
 ---
 
 ### Component 2: Ollama
 
-**What it is:** Software that runs AI language models on your Mac  
+**What it is:** Software that runs AI language models locally  
 **Why we need it:** Provides the "intelligence" - reads and understands documents  
 **Real-world analogy:** Like having a really smart colleague who never sleeps
 
 **Think of it this way:**
-Remember when network monitoring meant someone physically checking lights on routers? Then we got SNMP agents that automated the monitoring. Ollama is similar - instead of sending questions to a remote AI service, you have an AI "agent" running locally on your Mac that can read documents and answer questions.
+Remember when network monitoring meant someone physically checking lights on routers? Then we got SNMP agents that automated the monitoring. Ollama is similar - instead of sending questions to a remote AI service, you have an AI "agent" running locally that can read documents and answer questions.
 
 **What Ollama does:**
 1. **Hosts AI models** - The actual "brains" that understand language
@@ -207,13 +209,13 @@ Remember drawing network diagrams in Visio - boxes for routers, lines for connec
 
 **Example workflow:**
 ```
-[User uploads document] â†' [Break into chunks] â†' [Convert to vectors] â†' [Store in ChromaDB]
+[User uploads document] → [Break into chunks] → [Convert to vectors] → [Store in ChromaDB]
 ```
 
 Each box is a "node" - you configure what it does, then connect the arrows.
 
 **Why n8n specifically?**
-- Self-hosted (runs on your Mac, no cloud service needed)
+- Self-hosted (runs locally, no cloud service needed)
 - Free and open source
 - Large library of pre-built nodes
 - Active community
@@ -228,452 +230,238 @@ Each box is a "node" - you configure what it does, then connect the arrows.
 Here's the complete picture:
 
 ```
-Your Mac
-â"‚
-â"œâ"€ Ollama (running natively on macOS)
-â"‚   â"œâ"€ llama3.2:3b model (answers questions)
-â"‚   â""â"€ nomic-embed-text model (converts text to vectors)
-â"‚
-â""â"€ Podman (container engine)
-    â"‚
-    â"œâ"€ ChromaDB container (vector database)
-    â"‚   â""â"€ Stores your documents as searchable vectors
-    â"‚
-    â""â"€ n8n container (workflow automation)
-        â""â"€ Coordinates everything
+Local Machine
+│
+├── Ollama (running natively)
+│   ├── llama3.2:3b model (answers questions)
+│   └── nomic-embed-text model (converts text to vectors)
+│
+└── Podman (container engine)
+    │
+    ├── ChromaDB container (vector database)
+    │   └── Stores your documents as searchable vectors
+    │
+    └── n8n container (workflow automation)
+        └── Coordinates everything
+```
+
+**Data Flow Visualization:**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     YOUR LOCAL MACHINE                   │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  ┌────────────────┐         ┌─────────────────┐        │
+│  │  You (User)    │────────>│   n8n Workflow  │        │
+│  │  Ask Question  │         │   Orchestrates  │        │
+│  └────────────────┘         └────────┬────────┘        │
+│                                      │                  │
+│                                      v                  │
+│                          ┌───────────────────┐         │
+│                          │   Question goes   │         │
+│                          │   to Ollama for   │         │
+│                          │   embedding       │         │
+│                          └─────────┬─────────┘         │
+│                                    │                    │
+│                                    v                    │
+│                          ┌───────────────────┐         │
+│                          │   ChromaDB        │         │
+│                          │   Searches for    │         │
+│                          │   similar vectors │         │
+│                          └─────────┬─────────┘         │
+│                                    │                    │
+│                                    v                    │
+│                          ┌───────────────────┐         │
+│                          │   Relevant chunks │         │
+│                          │   sent to Ollama  │         │
+│                          │   (llama model)   │         │
+│                          └─────────┬─────────┘         │
+│                                    │                    │
+│                                    v                    │
+│  ┌────────────────┐         ┌───────────────┐         │
+│  │  You receive   │<────────│  Answer       │         │
+│  │  answer        │         │  generated    │         │
+│  └────────────────┘         └───────────────┘         │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
 ```
 
 **Example Query Flow:**
 1. **You ask:** "What's the datacenter budget?"
 2. **n8n receives** your question via web interface
 3. **Ollama (embedding model)** converts question to vector
-4. **ChromaDB searches** for similar vectors
+4. **ChromaDB searches** its database for similar vectors
 5. **ChromaDB returns** relevant document chunks
-6. **Ollama (language model)** reads chunks and writes answer
-7. **n8n shows** answer to you
+6. **Ollama (language model)** reads chunks and generates answer
+7. **n8n returns** the answer to you
 
-**All of this happens in 5-10 seconds**, completely on your Mac, with no data sent to the internet.
+**Network analogy:** 
+- n8n is like your network controller (orchestrates traffic)
+- ChromaDB is like your routing table (finds best paths)
+- Ollama is like your packet processor (analyzes and handles data)
+- You are the client sending requests
 
----
-
-### Why This Architecture?
-
-**Separation of concerns:**
-- Ollama = AI capabilities (runs on your Mac for performance)
-- ChromaDB = Data storage (runs in container for isolation)
-- n8n = Workflow orchestration (runs in container for easy management)
-- Podman = Container runtime (manages isolated environments)
-
-**Benefits:**
-- âœ… Each component does one thing well
-- âœ… Easy to update individual pieces
-- âœ… Failure in one doesn't break others
-- âœ… Can replace components if needed
-
-**Network analogy:** Just like how you separate routing, switching, and security into different devices rather than putting everything on one box, we separate AI models, data storage, and workflow orchestration into different components.
+**Important:** Everything happens locally - no data leaves your machine.
 
 ---
 
 ## Part 2: Installing Podman
 
 **Time:** 15 minutes  
-**What you'll do:** Install Podman and create a virtual machine for running containers  
-**Why:** Provides the foundation for ChromaDB and n8n containers
+**What you'll do:** Install Podman and verify it works
+
+### Understanding What We're Installing
+
+**Podman** is our container engine. It will:
+- Run ChromaDB and n8n in isolated environments
+- Manage container lifecycle (start, stop, restart)
+- Handle networking between containers
+- Map local folders into containers
+
+### Installation Steps
+
+#### Step 1: Download Podman Desktop
+
+**Action:**
+1. Visit: https://podman-desktop.io/downloads
+2. Download for your operating system
+3. Run the installer
+4. Follow the installation wizard
+
+**Expected time:** 5 minutes
+
+**What happens:** Podman Desktop installs both:
+- Podman CLI (command-line tool)
+- Podman Desktop (graphical interface)
 
 ---
 
-### Background: How Podman Works on macOS
+#### Step 2: Initialize Podman Machine
 
-**Important to understand:**
-Containers are a Linux technology. Since your Mac runs macOS (not Linux), Podman creates a tiny Linux virtual machine behind the scenes. This VM runs inside your Mac and hosts the containers.
-
-**What this means for you:**
-- Podman commands work just like on Linux
-- Small startup time when you first start Podman (~5 seconds)
-- VM needs CPU, RAM, and disk space (we'll allocate these)
-
-**Don't worry:** This all happens automatically. You won't see the VM - you'll just use simple Podman commands.
-
----
-
-### Step 2.1: Install Homebrew (If Not Already Installed)
-
-**What is Homebrew?**  
-A package manager for macOS - think of it as an app store for command-line tools. It makes installing software like Podman much easier.
-
-**Check if you already have it:**
+**Action:**
 ```bash
-# Run this command in Terminal
-brew --version
-```
-
-**If you see a version number:** âœ… Skip to Step 2.2  
-**If you see "command not found:"** Continue below
-
-**Install Homebrew:**
-```bash
-# Copy and paste this entire command:
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Open Terminal and run:
+podman machine init --cpus 4 --memory 12288 --disk-size 50
 ```
 
 **What this does:**
-- Downloads the Homebrew installer
-- Installs Homebrew to your Mac
-- Sets up necessary paths
-
-**During installation:**
-- You'll be prompted for your Mac password
-- Installation takes 5-10 minutes
-- You'll see lots of text scroll by (this is normal)
-
-**Verify installation:**
-```bash
-brew --version
-```
+- Creates a virtual machine for running containers
+- Allocates 4 CPU cores
+- Allocates 12GB RAM (12288 MB)
+- Allocates 50GB disk space
 
 **Expected output:**
 ```
-Homebrew 4.x.x
-```
-
-âœ… **Success checkpoint:** Homebrew version displays
-
----
-
-### Step 2.2: Install Podman
-
-**Now install Podman using Homebrew:**
-```bash
-brew install podman
-```
-
-**What this does:**
-- Downloads Podman software
-- Installs it to your Mac
-- Sets up the `podman` command
-
-**This takes:** 3-5 minutes
-
-**During installation, you'll see:**
-```
-==> Downloading podman...
-==> Installing podman...
-==> Summary
-🍺  /opt/homebrew/Cellar/podman/5.x.x: XX files, XXMB
-```
-
-**Verify installation:**
-```bash
-podman --version
-```
-
-**Expected output:**
-```
-podman version 5.x.x
-```
-
-ðŸ'¡ **Tip:** Exact version doesn't matter as long as it's 5.0 or higher.
-
-âœ… **Success checkpoint:** Podman version displays
-
----
-
-### Step 2.3: Initialize the Podman Machine
-
-**What's happening:** Creating the Linux virtual machine that will run your containers.
-
-**Think of it like:** Provisioning a new virtual server - you need to specify how many CPUs, how much RAM, and how much disk space it gets.
-
-**Create the machine:**
-```bash
-podman machine init --cpus 6 --memory 12288 --disk-size 60
-```
-
-**What each parameter means:**
-
-- `--cpus 6` → Allocate 6 CPU cores to the VM
-  - **Why 6?** Leaves cores for macOS and other apps
-  - Your Mac likely has 8-12 cores, so 6 is a good balance
-  
-- `--memory 12288` → Allocate 12GB of RAM (12288 MB)
-  - **Why 12GB?** Enough for ChromaDB + n8n + AI models
-  - If you have 16GB total: 12GB for VM, 4GB for macOS
-  - If you have 24GB total: 12GB for VM, 12GB for macOS
-  
-- `--disk-size 60` → Allocate 60GB of disk space
-  - **Why 60GB?** Space for containers, AI models, and your documents
-  - **This isn't immediately used** - it's a maximum limit
-  - Actual usage starts around 10GB
-
-**During initialization:**
-```
-Downloading VM image: fedora-coreos...
+Downloading VM image: fedora-coreos-XX.XXXXXX.X.X-qemu.aarch64.qcow2.xz: done
 Extracting compressed file
-Creating machine podman-machine-default
+Image resized.
+Machine init complete
 ```
 
-**This takes:** 5-10 minutes (downloading the Linux VM image)
-
-**Expected completion message:**
-```
-Machine "podman-machine-default" has been successfully initialized
-```
-
-âœ… **Success checkpoint:** Initialization completes without errors
+**Time:** 3-5 minutes (includes download)
 
 ---
 
-### Step 2.4: Start the Podman Machine
+#### Step 3: Start Podman Machine
 
-**Start the virtual machine:**
+**Action:**
 ```bash
 podman machine start
 ```
 
-**What this does:**
-- Boots the Linux VM
-- Sets up networking
-- Prepares to run containers
-
-**During startup:**
+**Expected output:**
 ```
 Starting machine "podman-machine-default"
-API forwarding listening on: /var/run/...
-...
+Waiting for VM...
 Machine "podman-machine-default" started successfully
 ```
 
-**This takes:** 15-30 seconds
-
-**Expected completion message:**
-```
-Machine "podman-machine-default" started successfully
-```
-
-ðŸ'¡ **Good to know:** After a Mac restart, you'll need to run `podman machine start` again. The VM doesn't auto-start.
+**Time:** 30 seconds
 
 ---
 
-### Step 2.5: Verify Podman is Working
+#### Step 4: Verify Installation
 
-**Check that everything is running:**
+**Action:**
 ```bash
+podman --version
 podman ps
 ```
 
 **Expected output:**
 ```
+podman version 4.X.X
+
 CONTAINER ID  IMAGE  COMMAND  CREATED  STATUS  PORTS  NAMES
 ```
 
 **What this means:**
-- Empty list = Good! (We haven't created any containers yet)
-- If you see an error, see Troubleshooting section
-
-**Check machine status:**
-```bash
-podman machine list
-```
-
-**Expected output:**
-```
-NAME                     VM TYPE     CREATED      LAST UP            CPUS        MEMORY      DISK SIZE
-podman-machine-default   qemu        X mins ago   Currently running  6           12.00GB     60.00GB
-```
-
-**What to verify:**
-- âœ… "Currently running" status
-- âœ… CPUs: 6
-- âœ… Memory: 12.00GB
-- âœ… Disk: 60.00GB
+- First command: Shows Podman version (confirms installation)
+- Second command: Lists running containers (should be empty now)
 
 ---
 
-### Understanding Podman Commands (Quick Reference)
+### Success Checkpoint
 
-You'll use these commands frequently:
+You've successfully installed Podman when:
+- ✓ `podman --version` shows a version number
+- ✓ `podman ps` returns without errors
+- ✓ Podman Desktop app opens (if you installed it)
 
-```bash
-# List running containers
-podman ps
-
-# List all containers (including stopped)
-podman ps -a
-
-# Start a stopped container
-podman start [container-name]
-
-# Stop a running container
-podman stop [container-name]
-
-# View container logs (for troubleshooting)
-podman logs [container-name]
-
-# Remove a container
-podman rm [container-name]
-
-# Remove an image
-podman rmi [image-name]
-```
-
-**Network analogy:** Think of Podman commands like CLI commands on a switch:
-- `podman ps` = `show interfaces status` (what's running?)
-- `podman logs` = `show logging` (what happened?)
-- `podman stop/start` = `shutdown/no shutdown` (control state)
-
----
-
-### Step 2.6: Success Checkpoint
-
-Before moving to the next section, verify:
-
-- [ ] Podman is installed (`podman --version` works)
-- [ ] Podman machine exists (`podman machine list` shows it)
-- [ ] Machine is running (status shows "Currently running")
-- [ ] Can run podman commands (`podman ps` works, even if empty)
-
-âœ… **If all checkboxes are checked, you're ready for Ollama!**
-
----
-
-### Troubleshooting Podman Installation
-
-#### Issue: "podman: command not found"
-
-**Cause:** Homebrew didn't add Podman to your PATH
-
-**Fix:**
-```bash
-# Add Homebrew to PATH
-echo 'export PATH="/opt/homebrew/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
-
-# Try again
-podman --version
-```
-
----
-
-#### Issue: Machine won't start - "port already in use"
-
-**Cause:** Previous Podman installation or Docker is using the same ports
-
-**Fix:**
-```bash
-# Stop any Docker desktop
-# Then try starting Podman again
-podman machine start
-```
-
----
-
-#### Issue: "Machine already exists"
-
-**Cause:** You ran `podman machine init` twice
-
-**Fix:**
-```bash
-# Remove existing machine
-podman machine rm podman-machine-default
-
-# Create fresh machine
-podman machine init --cpus 6 --memory 12288 --disk-size 60
-podman machine start
-```
-
----
-
-#### Issue: Low disk space warning
-
-**Cause:** Mac doesn't have 60GB free
-
-**Fix Option 1:** Free up space on your Mac  
-**Fix Option 2:** Use smaller disk allocation
-```bash
-podman machine rm podman-machine-default
-podman machine init --cpus 6 --memory 12288 --disk-size 40
-podman machine start
-```
-
-ðŸ'¡ **Note:** 40GB is minimum - system will be tight on space.
+**If something failed:** See Troubleshooting section at end of guide
 
 ---
 
 ## Part 3: Installing Ollama
 
-**Time:** 10 minutes  
-**What you'll do:** Install Ollama and download two AI models  
-**Why:** Provides the AI "intelligence" for reading and answering questions
+**Time:** 20 minutes  
+**What you'll do:** Install Ollama, download AI models, verify they work
 
----
+### Understanding What We're Installing
 
-### Background: What Ollama Does
+**Ollama** will:
+- Run AI models directly on your machine
+- Provide an API for other tools to use
+- Manage model loading/unloading
+- Handle all AI inference locally
 
-Ollama is software that:
-1. **Downloads AI models** from the internet (one-time)
-2. **Runs them locally** on your Mac
-3. **Provides an API** that other software (like n8n) can use
-4. **Manages memory** - loads/unloads models as needed
+### Installation Steps
 
-**Unlike ChatGPT or Claude:**
-- No internet required after initial download
-- No monthly fees
-- No data sent to external servers
-- Runs on your Mac's hardware
+#### Step 1: Download and Install Ollama
 
-**Performance:**
-- First question: 10-15 seconds (loading model into RAM)
-- Subsequent questions: 5-8 seconds
-- Perfectly acceptable for document queries
-
----
-
-### Step 3.1: Install Ollama
-
-**Install using Homebrew:**
+**For macOS:**
 ```bash
-brew install ollama
+# Download and install
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+**For Linux:**
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+**For Windows:**
+1. Visit: https://ollama.com/download
+2. Download Windows installer
+3. Run installer
+
+**Expected time:** 2 minutes
+
+---
+
+#### Step 2: Start Ollama Service
+
+**Action:**
+```bash
+# Start Ollama in background
+ollama serve > /dev/null 2>&1 &
 ```
 
 **What this does:**
-- Downloads Ollama software (small, ~50MB)
-- Installs it to your Mac
-- Sets up the `ollama` command
-
-**This takes:** 1-2 minutes
-
-**Verify installation:**
-```bash
-ollama --version
-```
-
-**Expected output:**
-```
-ollama version is 0.x.x
-```
-
-âœ… **Success checkpoint:** Ollama version displays
-
----
-
-### Step 3.2: Start the Ollama Service
-
-**Important:** Ollama needs to run as a background service.
-
-**Start Ollama:**
-```bash
-ollama serve &
-```
-
-**What this does:**
-- Starts Ollama in the background
-- The `&` keeps it running even when you close Terminal
-- Ollama listens on port 11434 for requests
-
-**During startup:**
-```
-Ollama is running
-```
+- Starts Ollama service
+- Runs in background (`&`)
+- Redirects output to null (keeps terminal clean)
 
 **Verify it's running:**
 ```bash
@@ -685,366 +473,188 @@ curl http://localhost:11434
 Ollama is running
 ```
 
-ðŸ'¡ **Good to know:** 
-- After Mac restart, run `ollama serve &` again
-- Or, it will auto-start when you first use it
-- You can safely run `ollama serve &` multiple times (it just says "already running")
-
 ---
 
-### Step 3.3: Download AI Models
+#### Step 3: Download Language Model
 
-**Now for the bigger downloads - the actual AI models.**
-
-**Download the language model (answers questions):**
+**Action:**
 ```bash
 ollama pull llama3.2:3b
 ```
 
-**What's happening:**
-- Downloading llama 3.2 model with 3 billion parameters
-- Size: ~2GB
-- Time: 3-7 minutes (depending on internet speed)
+**What this does:**
+- Downloads llama3.2 model (3 billion parameters)
+- Stores it locally for future use
+- This is the model that answers questions
 
-**During download:**
+**Expected output:**
 ```
 pulling manifest
-pulling 6a0746a1ec1a... 100% â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ 2.0 GB                          
-pulling 4fa551d4f938... 100% â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ 1.4 KB                          
-...
+pulling 8eeb52dfb3bb... 100% ▕████████████████▏ 2.0 GB
+pulling 73b313b5552d... 100% ▕████████████████▏ 1.4 KB
+pulling 0ba8f0e314b4... 100% ▕████████████████▏  12 KB
+pulling 56bb8bd477a5... 100% ▕████████████████▏   96 B
+pulling 1a4c3c319823... 100% ▕████████████████▏  485 B
+verifying sha256 digest
+writing manifest
 success
 ```
 
-**Expected completion:** "success"
+**Time:** 5-10 minutes (depends on internet speed)  
+**File size:** ~2GB
 
 ---
 
-**Download the embedding model (converts text to vectors):**
+#### Step 4: Download Embedding Model
+
+**Action:**
 ```bash
 ollama pull nomic-embed-text
 ```
 
-**What's happening:**
-- Downloading nomic embedding model
-- Size: ~274MB
-- Time: 30-90 seconds
+**What this does:**
+- Downloads embedding model
+- This model converts text to vectors
+- Required for document search
 
-**During download:**
+**Expected output:**
 ```
 pulling manifest
-pulling 0a109f422b47... 100% â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ 274 MB
-...
+pulling 0a109f422b47... 100% ▕████████████████▏ 274 MB
+pulling 5f291a30d295... 100% ▕████████████████▏  426 B
+pulling 88cce50c2536... 100% ▕████████████████▏  682 B
+pulling f02dd72bb242... 100% ▕████████████████▏   30 B
+verifying sha256 digest
+writing manifest
 success
 ```
 
-**Expected completion:** "success"
+**Time:** 2-3 minutes  
+**File size:** ~274MB
 
 ---
 
-### Step 3.4: Verify Models Are Downloaded
+#### Step 5: Verify Models
 
-**List installed models:**
+**Action:**
 ```bash
 ollama list
 ```
 
 **Expected output:**
 ```
-NAME                    ID              SIZE      MODIFIED
-llama3.2:3b            abc123def...    2.0 GB    X minutes ago
-nomic-embed-text       def456ghi...    274 MB    X minutes ago
+NAME                     ID              SIZE      MODIFIED
+llama3.2:3b             8eeb52dfb3bb    2.0 GB    X minutes ago
+nomic-embed-text:latest 0a109f422b47    274 MB    X minutes ago
 ```
-
-**What to verify:**
-- âœ… Both models listed
-- âœ… Sizes approximately match (2.0GB and 274MB)
-- âœ… Modified time is recent
 
 ---
 
-### Step 3.5: Test the Models (Optional but Recommended)
+#### Step 6: Test Language Model
 
-**Test the language model:**
+**Action:**
 ```bash
-ollama run llama3.2:3b "What is the capital of France?"
+ollama run llama3.2:3b "What is 2+2?"
 ```
 
-**What this does:**
-- Loads llama3.2 into memory (first time only, 5-10 seconds)
-- Sends the question
-- Gets an answer
-- Unloads after a minute of inactivity
-
-**Expected response:**
+**Expected output:**
 ```
-The capital of France is Paris.
+2+2 equals 4.
 ```
 
-**First run timing:**
-- First question: 10-15 seconds (loading model)
-- Answer generation: 2-3 seconds
+**Note:** First run takes 10-15 seconds (loading model). Subsequent runs are faster (3-5 seconds).
 
-**If you run another question immediately:**
-- Model stays in memory
-- Responds in 3-5 seconds
+**To exit:** Type `/bye` or press Ctrl+D
 
 ---
 
-**Test the embedding model:**
+#### Step 7: Test Embedding Model
+
+**Action:**
 ```bash
 curl http://localhost:11434/api/embeddings -d '{
   "model": "nomic-embed-text",
-  "prompt": "hello world"
+  "prompt": "The sky is blue"
 }'
 ```
 
-**Expected response (shortened for display):**
+**Expected output:**
 ```json
 {
-  "embedding": [0.123, -0.456, 0.789, ... (274 more numbers)]
+  "embedding": [0.123, -0.456, 0.789, ... ] // 768 numbers
 }
 ```
 
-**What this means:**
-- âœ… Embedding model works
-- The numbers are the "vector" representation of "hello world"
-- You won't normally see these - ChromaDB uses them automatically
+**What this means:** The model successfully converted text into a vector (list of numbers).
 
 ---
 
-### Understanding Model Sizes and Performance
+### Success Checkpoint
 
-**llama3.2:3b (2GB):**
-- **3b** = 3 billion parameters (the "intelligence")
-- **Smaller than ChatGPT** (175B parameters) but perfectly capable
-- **Tradeoff:** Smaller = faster on your Mac, less complex reasoning
-- **Perfect for:** Document Q&A, summarization, information extraction
-
-**Think of it like:**
-- ChatGPT = Core datacenter router (massive capacity, handles everything)
-- llama3.2:3b = Branch router (right-sized for specific needs)
-
-**nomic-embed-text (274MB):**
-- **Specialized model** - only does one thing (text → vectors)
-- **Fast** - converts text in milliseconds
-- **Essential** - without this, document search wouldn't work
-
----
-
-### Step 3.6: Success Checkpoint
-
-Before moving to the next section, verify:
-
-- [ ] Ollama is installed (`ollama --version` works)
-- [ ] Ollama service is running (`curl http://localhost:11434` responds)
-- [ ] Both models downloaded (`ollama list` shows 2 models)
-- [ ] Models respond to test queries (optional but recommended)
-
-âœ… **If all checkboxes are checked, you're ready for ChromaDB!**
-
----
-
-### Troubleshooting Ollama Installation
-
-#### Issue: "ollama: command not found"
-
-**Cause:** Homebrew path issue (same as Podman)
-
-**Fix:**
-```bash
-echo 'export PATH="/opt/homebrew/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
-ollama --version
-```
-
----
-
-#### Issue: Model download fails - "connection reset"
-
-**Cause:** Network interruption or firewall
-
-**Fix:**
-```bash
-# Try again - Ollama resumes partial downloads
-ollama pull llama3.2:3b
-```
-
-**If repeatedly fails:**
-```bash
-# Try different model (might be temporarily unavailable)
-ollama pull llama3.1:latest
-
-# Or check firewall settings
-```
-
----
-
-#### Issue: "Error: could not connect to ollama app"
-
-**Cause:** Ollama service not running
-
-**Fix:**
-```bash
-# Start Ollama service
-ollama serve &
-
-# Wait 5 seconds
-sleep 5
-
-# Try command again
-ollama list
-```
-
----
-
-#### Issue: Model is slow (30+ seconds per query)
-
-**Possible causes:**
-1. First query (model loading into RAM) - normal
-2. Mac is low on RAM - close other applications
-3. Mac is using swap memory - restart Mac
-
-**Check RAM usage:**
-```bash
-# Open Activity Monitor
-# Check "Memory" tab
-# If "Memory Pressure" is red, you need to close applications
-```
+You've successfully installed Ollama when:
+- ✓ `ollama list` shows both models
+- ✓ Language model responds to test question
+- ✓ Embedding model returns vectors
+- ✓ `curl http://localhost:11434` returns "Ollama is running"
 
 ---
 
 ## Part 4: Setting Up ChromaDB
 
-**Time:** 15 minutes  
-**What you'll do:** Deploy ChromaDB in a container, set permissions, and create your first collection  
-**Why:** Provides the "smart filing cabinet" where documents are stored and searched
+**Time:** 10 minutes  
+**What you'll do:** Create data directory, start ChromaDB container, verify it works
+
+### Understanding What We're Installing
+
+**ChromaDB** will:
+- Store document content as vectors
+- Enable fast semantic search
+- Persist data across restarts
+- Provide REST API for queries
+
+### Important Version Note
+
+We're using **ChromaDB version 0.4.24** specifically because:
+- It has the complete v1 API
+- It's stable and well-tested
+- Newer versions have incomplete APIs
+- All our workflows are built for this version
 
 ---
 
-### Background: Understanding ChromaDB
+### Installation Steps
 
-**What ChromaDB does:**
-1. **Stores documents** as text chunks with vector representations
-2. **Searches quickly** - finds relevant chunks in milliseconds
-3. **Returns context** - gives the AI what it needs to answer questions
+#### Step 1: Create Data Directory
 
-**Version note (IMPORTANT):**
-We use **ChromaDB 0.4.24** specifically (not latest). Here's why:
-
-- **Latest versions** have incomplete v2 APIs (some endpoints return 404 errors)
-- **Version 0.4.24** has the complete v1 API - everything works
-- **Tested and proven** - this is the version used in actual deployments
-
-ðŸ'¡ **Key insight:** In production, "latest" isn't always best. Pinning to tested versions prevents unexpected breaks.
-
----
-
-### Step 4.1: Create Project Directory
-
-**Create the directory structure:**
+**Action:**
 ```bash
-mkdir -p ~/cisco-rag-demo/{chroma-data,n8n-data,documents}
+# Create project directory
+mkdir -p ~/cisco-rag-demo/chroma-data
+
+# Set permissions
+chmod 777 ~/cisco-rag-demo/chroma-data
 ```
-
-**What this does:**
-- Creates `~/cisco-rag-demo/` as the main project folder
-- Creates `chroma-data/` for ChromaDB's database files
-- Creates `n8n-data/` for n8n's workflow files
-- Creates `documents/` for your test documents
-
-**Verify it worked:**
-```bash
-ls -la ~/cisco-rag-demo/
-```
-
-**Expected output:**
-```
-drwxr-xr-x  5 you  staff  160 Dec 18 10:30 .
-drwxr-xr-x  20 you  staff  640 Dec 18 10:30 ..
-drwxr-xr-x  2 you  staff   64 Dec 18 10:30 chroma-data
-drwxr-xr-x  2 you  staff   64 Dec 18 10:30 documents
-drwxr-xr-x  2 you  staff   64 Dec 18 10:30 n8n-data
-```
-
----
-
-### Step 4.2: Set Permissions (CRITICAL for macOS + Podman)
 
 **Why this matters:**
-Podman runs containers in a Linux VM. The Linux user inside the container has a different user ID (UID) than your Mac user. This causes permission conflicts when the container tries to write to macOS folders.
-
-**The solution:** Set permissions to 777 (read, write, execute for everyone)
-
-**Is 777 safe?**
-- **For local development: YES** - only you have access to your Mac
-- **For servers: NO** - but this isn't a server
-- **Alternative:** Complex UID mapping (not worth the hassle for local dev)
-
-**Set permissions:**
-```bash
-chmod -R 777 ~/cisco-rag-demo/chroma-data
-chmod -R 777 ~/cisco-rag-demo/n8n-data
-```
-
-**What this does:**
-- `-R` = Recursive (applies to all files and subdirectories)
-- `777` = Full permissions for user, group, and others
-- Allows the container to create/modify files
+- `~/cisco-rag-demo/chroma-data` - Stores all your vectors and documents
+- `chmod 777` - Ensures container can read/write (required for Podman on macOS)
+- Data persists even if container is deleted
 
 **Verify:**
 ```bash
 ls -la ~/cisco-rag-demo/
 ```
 
-**Look for:** `drwxrwxrwx` (that's 777 permissions)
-
-ðŸ'¡ **Remember:** If you ever see "permission denied" errors with containers, this is the first thing to check.
-
----
-
-### Step 4.3: Pull ChromaDB Image (Specific Version)
-
-**Pull the specific working version:**
-```bash
-podman pull chromadb/chroma:0.4.24
-```
-
-**What this does:**
-- Downloads ChromaDB container image
-- Version 0.4.24 specifically (not latest!)
-- Size: ~500MB
-- Time: 2-4 minutes
-
-**During download:**
-```
-Trying to pull chromadb/chroma:0.4.24...
-Getting image source signatures
-Copying blob 123abc456def done
-...
-Writing manifest to image destination
-```
-
-**Expected completion:**
-```
-123abc456def789...
-```
-(This is the image ID - a long hexadecimal string)
-
-**Verify image is downloaded:**
-```bash
-podman images | grep chroma
-```
-
 **Expected output:**
 ```
-docker.io/chromadb/chroma  0.4.24  123abc456def  2 weeks ago  500 MB
+drwxrwxrwx  chroma-data
 ```
 
 ---
 
-### Step 4.4: Create ChromaDB Container
+#### Step 2: Start ChromaDB Container
 
-**Create and start the container:**
+**Action:**
 ```bash
 podman run -d \
   --name chromadb \
@@ -1055,385 +665,172 @@ podman run -d \
   chromadb/chroma:0.4.24
 ```
 
-**Let's break down each part:**
+**What each part means:**
+- `-d` - Run in background (detached)
+- `--name chromadb` - Name the container "chromadb"
+- `-p 8000:8000` - Map port 8000 (host) to 8000 (container)
+- `-v ~/cisco-rag-demo/chroma-data:/chroma/chroma` - Mount local folder into container
+- `-e IS_PERSISTENT=TRUE` - Enable data persistence
+- `-e ANONYMIZED_TELEMETRY=FALSE` - Disable telemetry
+- `chromadb/chroma:0.4.24` - Use specific version
 
-`podman run` - Create and start a new container
+**Expected output:**
+```
+Trying to pull docker.io/chromadb/chroma:0.4.24...
+Getting image source signatures
+Copying blob...
+...
+Writing manifest to image destination
+Storing signatures
+[40-character container ID]
+```
 
-`-d` - **Detached mode** (runs in background)
-  - Container keeps running even after command completes
-  - Like running a daemon process
-
-`--name chromadb` - **Name the container** "chromadb"
-  - You'll use this name in other commands
-  - Easier than remembering container IDs
-
-`-p 8000:8000` - **Port mapping**
-  - First 8000: Port on your Mac
-  - Second 8000: Port inside container
-  - Makes ChromaDB accessible at `http://localhost:8000`
-
-`-v ~/cisco-rag-demo/chroma-data:/chroma/chroma` - **Volume mount**
-  - Left side: Folder on your Mac
-  - Right side: Folder inside container
-  - Database files persist on your Mac (survive container restarts)
-
-`-e IS_PERSISTENT=TRUE` - **Environment variable**
-  - Tells ChromaDB to save data to disk (not just RAM)
-  - Without this, data disappears when container stops
-
-`-e ANONYMIZED_TELEMETRY=FALSE` - **Environment variable**
-  - Disables anonymous usage stats
-  - Keeps everything local
-
-`chromadb/chroma:0.4.24` - **Which image to use**
-  - Must match what you pulled earlier
+**Time:** 2-3 minutes (first time, includes download)
 
 ---
 
-**During creation:**
-```
-a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
-```
-(This is the container ID - save this just in case)
+#### Step 3: Verify Container Running
 
-**Verify container is running:**
+**Action:**
 ```bash
 podman ps
 ```
 
 **Expected output:**
 ```
-CONTAINER ID  IMAGE                            COMMAND  CREATED         STATUS         PORTS                   NAMES
-a1b2c3d4e5f6  docker.io/chromadb/chroma:0.4.24 ...      10 seconds ago  Up 10 seconds  0.0.0.0:8000->8000/tcp  chromadb
+CONTAINER ID  IMAGE                          COMMAND     CREATED        STATUS        PORTS                   NAMES
+abc123def456  chromadb/chroma:0.4.24         uvicorn...  X seconds ago  Up X seconds  0.0.0.0:8000->8000/tcp  chromadb
 ```
 
-**What to verify:**
-- âœ… STATUS shows "Up"
-- âœ… PORTS shows "8000->8000"
-- âœ… NAMES shows "chromadb"
+**What to look for:**
+- STATUS should be "Up X seconds"
+- PORTS should show 8000->8000
 
 ---
 
-### Step 4.5: Wait for ChromaDB to Start
+#### Step 4: Test ChromaDB API
 
-**Why wait?**
-ChromaDB takes 10-15 seconds to fully initialize after the container starts.
-
-**Wait for startup:**
+**Wait a moment for startup:**
 ```bash
-sleep 15
+sleep 10
 ```
 
-**Or, check logs to confirm it's ready:**
-```bash
-podman logs chromadb
-```
-
-**Look for these lines:**
-```
-Starting component ChromaServer
-Running migrations...
-ChromaDB is ready to use
-```
-
-ðŸ'¡ **Tip:** If you see error messages, see Troubleshooting section.
-
----
-
-### Step 4.6: Verify ChromaDB is Accessible
-
-**Test the API endpoint:**
+**Test heartbeat:**
 ```bash
 curl http://localhost:8000/api/v1/heartbeat
 ```
 
-**Expected response:**
+**Expected output:**
 ```json
-{
-  "nanosecond heartbeat": 1702909876543210000
-}
+{"nanosecond heartbeat":1234567890123456789}
 ```
 
-**What this means:**
-- âœ… ChromaDB is running
-- âœ… API is accessible
-- âœ… Ready to accept requests
-
-**If you see connection refused:**
-```bash
-# Check if container is still running
-podman ps | grep chromadb
-
-# If not running, check logs
-podman logs chromadb
-
-# Look for permission errors
-```
+**What this means:** ChromaDB is running and responding to API requests.
 
 ---
 
-### Step 4.7: Create Your First Collection
+#### Step 5: Create Test Collection
 
-**What's a collection?**
-Think of it like a database table or a VLAN - a logical grouping for organizing data. In ChromaDB, each collection stores related documents.
-
-**For this project:**
-- **Collection name:** `cisco_docs`
-- **Purpose:** Store all your document chunks
-- **You could have multiple collections** (e.g., "policies", "assessments", "tickets")
-
-**Create the collection:**
+**Action:**
 ```bash
 curl -X POST http://localhost:8000/api/v1/collections \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"cisco_docs"}'
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "cisco_docs",
+    "metadata": {"description": "Cisco network documentation"}
+  }'
 ```
 
-**What each part means:**
-
-`curl -X POST` - Send a POST request  
-`http://localhost:8000/api/v1/collections` - ChromaDB collections endpoint  
-`-H 'Content-Type: application/json'` - Tell server we're sending JSON  
-`-d '{"name":"cisco_docs"}'` - The JSON data (collection name)
-
----
-
-**Expected response:**
+**Expected output:**
 ```json
 {
   "name": "cisco_docs",
   "id": "12345678-1234-1234-1234-123456789abc",
-  "metadata": null,
-  "tenant": "default_tenant",
-  "database": "default_database"
+  "metadata": {"description": "Cisco network documentation"}
 }
 ```
 
-**Important parts:**
-- `"name": "cisco_docs"` - Your collection name
-- `"id": "12345678-1234-1234-1234-123456789abc"` - **The UUID** (unique identifier)
-
-ðŸ'¡ **Key concept:** ChromaDB v1 API uses UUIDs internally, not names. Your scripts will look up the UUID by name automatically - you don't need to memorize it.
+**What this does:** Creates a "collection" - think of it as a database table for storing document vectors.
 
 ---
 
-**Verify collection was created:**
+#### Step 6: Verify Collection Exists
+
+**Action:**
 ```bash
 curl http://localhost:8000/api/v1/collections
 ```
 
-**Expected response:**
+**Expected output:**
 ```json
 [
   {
     "name": "cisco_docs",
     "id": "12345678-1234-1234-1234-123456789abc",
-    "metadata": null,
-    "tenant": "default_tenant",
-    "database": "default_database"
+    "metadata": {"description": "Cisco network documentation"}
   }
 ]
 ```
 
-**What this shows:**
-- Array with one collection
-- Your cisco_docs collection
-- Ready to store documents
-
 ---
 
-### Understanding ChromaDB's v1 API (Important for Later)
+### Success Checkpoint
 
-**Key insight discovered through troubleshooting:**
-
-ChromaDB v1 API requires **UUIDs** in URLs, not collection names.
-
-**Wrong (doesn't work):**
-```
-POST /api/v1/collections/cisco_docs/add
-```
-
-**Right (works):**
-```
-POST /api/v1/collections/12345678-1234-1234-1234-123456789abc/add
-```
-
-**Don't worry:** All the Python scripts and n8n workflows in this project handle this automatically. They:
-1. Look up the UUID by collection name
-2. Use the UUID in the API call
-3. You just use the friendly "cisco_docs" name
-
-**Why this matters:**
-- If you ever get "InvalidUUID" errors, this is why
-- The working code in this project solves this automatically
-- Just know that UUIDs are being used behind the scenes
-
----
-
-### Step 4.8: Success Checkpoint
-
-Before moving to the next section, verify:
-
-- [ ] ChromaDB container is running (`podman ps` shows it)
-- [ ] Permissions are set correctly (777 on chroma-data folder)
-- [ ] ChromaDB API responds (`curl http://localhost:8000/api/v1/heartbeat`)
-- [ ] Collection exists (`curl http://localhost:8000/api/v1/collections`)
-- [ ] You see "cisco_docs" collection in the response
-
-âœ… **If all checkboxes are checked, you're ready for n8n!**
-
----
-
-### Troubleshooting ChromaDB Setup
-
-#### Issue: Container stops immediately after starting
-
-**Symptoms:**
-```bash
-podman ps
-# chromadb not listed
-
-podman ps -a
-# Shows chromadb with "Exited (1)" status
-```
-
-**Most common cause:** Permission denied
-
-**Fix:**
-```bash
-# Check logs for "permission denied"
-podman logs chromadb
-
-# Fix permissions
-chmod -R 777 ~/cisco-rag-demo/chroma-data
-
-# Remove failed container
-podman rm chromadb
-
-# Recreate container (re-run podman run command from Step 4.4)
-```
-
----
-
-#### Issue: "Connection refused" to port 8000
-
-**Diagnostic:**
-```bash
-# Is container running?
-podman ps | grep chromadb
-
-# Is something else on port 8000?
-lsof -i :8000
-```
-
-**Fix option 1:** Start the container
-```bash
-podman start chromadb
-sleep 15
-curl http://localhost:8000/api/v1/heartbeat
-```
-
-**Fix option 2:** Port conflict - use different port
-```bash
-podman stop chromadb
-podman rm chromadb
-
-# Use port 8001 instead
-podman run -d \
-  --name chromadb \
-  -p 8001:8000 \
-  -v ~/cisco-rag-demo/chroma-data:/chroma/chroma \
-  -e IS_PERSISTENT=TRUE \
-  -e ANONYMIZED_TELEMETRY=FALSE \
-  chromadb/chroma:0.4.24
-
-# Test with new port
-curl http://localhost:8001/api/v1/heartbeat
-```
-
----
-
-#### Issue: Collection creation fails - "Already exists"
-
-**This is actually fine!** It means you already created it.
-
-**Verify:**
-```bash
-curl http://localhost:8000/api/v1/collections
-# Should show cisco_docs
-```
-
-**If you want to delete and recreate:**
-```bash
-# Get the UUID
-UUID=$(curl -s http://localhost:8000/api/v1/collections | jq -r '.[] | select(.name=="cisco_docs") | .id')
-
-# Delete collection
-curl -X DELETE http://localhost:8000/api/v1/collections/$UUID
-
-# Create again
-curl -X POST http://localhost:8000/api/v1/collections \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"cisco_docs"}'
-```
-
----
-
-#### Issue: Wrong ChromaDB version - API doesn't work
-
-**Symptoms:**
-- 404 errors when using collections
-- Missing endpoints
-
-**Check version:**
-```bash
-podman inspect chromadb | grep Image
-```
-
-**Should show:** `chromadb/chroma:0.4.24`
-
-**If wrong version:**
-```bash
-# Stop and remove
-podman stop chromadb
-podman rm chromadb
-
-# Pull correct version
-podman pull chromadb/chroma:0.4.24
-
-# Recreate (re-run podman run command from Step 4.4)
-```
+You've successfully set up ChromaDB when:
+- ✓ `podman ps` shows chromadb container running
+- ✓ Heartbeat endpoint responds
+- ✓ Can create collections
+- ✓ Data directory exists: `~/cisco-rag-demo/chroma-data`
 
 ---
 
 ## Part 5: Setting Up n8n
 
 **Time:** 10 minutes  
-**What you'll do:** Deploy n8n workflow automation platform  
-**Why:** Provides visual interface for building AI workflows without coding
+**What you'll do:** Create data directory, start n8n container, access web interface
+
+### Understanding What We're Installing
+
+**n8n** will:
+- Provide visual workflow builder
+- Connect Ollama, ChromaDB, and other services
+- Enable document upload workflows
+- Create chat interfaces
+- No coding required
 
 ---
 
-### Background: What n8n Provides
+### Installation Steps
 
-**n8n is your "no-code" interface for:**
-- Building workflows visually (drag and drop)
-- Connecting ChromaDB, Ollama, and Webex
-- Creating interactive chat interfaces
-- Building document upload forms
-- Testing and debugging flows
+#### Step 1: Create Data Directory
 
-**Think of it like:**
-- Visio for network diagrams → n8n for workflow diagrams
-- Each box (node) = one action
-- Arrows show data flow
-- Configure settings visually (no code needed)
+**Action:**
+```bash
+# Create n8n data directory
+mkdir -p ~/cisco-rag-demo/n8n-data
+
+# Set permissions
+chmod 777 ~/cisco-rag-demo/n8n-data
+```
+
+**Why:** Stores your workflows, credentials, and settings
+
+**Verify:**
+```bash
+ls -la ~/cisco-rag-demo/
+```
+
+**Expected output:**
+```
+drwxrwxrwx  chroma-data
+drwxrwxrwx  n8n-data
+```
 
 ---
 
-### Step 5.1: Create n8n Container
+#### Step 2: Start n8n Container
 
-**Deploy n8n:**
+**Action:**
 ```bash
 podman run -d \
   --name n8n \
@@ -1442,752 +839,454 @@ podman run -d \
   -e N8N_HOST=localhost \
   -e N8N_PORT=5678 \
   -e N8N_PROTOCOL=http \
-  docker.io/n8nio/n8n:latest
+  -e WEBHOOK_URL=http://localhost:5678/ \
+  docker.n8n.io/n8nio/n8n:latest
 ```
 
-**Let's break down each part:**
-
-`podman run -d` - Create container in background
-
-`--name n8n` - Name it "n8n"
-
-`-p 5678:5678` - **Port mapping**
-  - Access n8n at `http://localhost:5678`
-  - Port 5678 is n8n's default
-
-`-v ~/cisco-rag-demo/n8n-data:/home/node/.n8n` - **Volume mount**
-  - Workflows and credentials persist on your Mac
-  - Survives container restarts
-
-`-e N8N_HOST=localhost` - **Set host** for local access
-
-`-e N8N_PORT=5678` - **Set port** (matches our mapping)
-
-`-e N8N_PROTOCOL=http` - **Use HTTP** (not HTTPS for local dev)
-
-`docker.io/n8nio/n8n:latest` - **Official n8n image**
-  - Note: We use latest for n8n (gets updates)
-  - Unlike ChromaDB where we pinned a version
-
----
-
-**During creation:**
-```
-a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
-```
-(Container ID)
-
-**Note:** n8n takes 15-30 seconds to fully start. Be patient!
-
----
-
-**Verify container is running:**
-```bash
-podman ps
-```
+**What each part means:**
+- `-d` - Run in background
+- `--name n8n` - Name the container "n8n"
+- `-p 5678:5678` - Map port 5678
+- `-v ~/cisco-rag-demo/n8n-data:/home/node/.n8n` - Mount data directory
+- `-e N8N_HOST=localhost` - Set hostname
+- `-e WEBHOOK_URL=http://localhost:5678/` - Set webhook base URL
 
 **Expected output:**
 ```
-CONTAINER ID  IMAGE                        COMMAND  CREATED         STATUS         PORTS                   NAMES
-a1b2c3d4e5f6  docker.io/n8nio/n8n:latest  ...      20 seconds ago  Up 20 seconds  0.0.0.0:5678->5678/tcp  n8n
-...
+Trying to pull docker.io/n8nio/n8n:latest...
+[Download progress]
+[Container ID]
 ```
 
-**What to verify:**
-- âœ… STATUS shows "Up"
-- âœ… PORTS shows "5678->5678"
-- âœ… NAMES shows "n8n"
-
-ðŸ'¡ **If n8n stops immediately:** Check permissions on n8n-data folder (same fix as ChromaDB)
+**Time:** 3-5 minutes (first time, includes download)
 
 ---
 
-### Step 5.2: Wait for n8n to Start
+#### Step 3: Wait for Startup
 
-**n8n needs time to initialize:**
+**Action:**
 ```bash
-sleep 20
+# Wait for n8n to fully start
+sleep 30
+
+# Check if it's running
+podman logs n8n --tail 20
 ```
 
-**Or watch the logs:**
-```bash
-podman logs -f n8n
+**Expected output (in logs):**
 ```
-(Press Ctrl+C to stop watching)
-
-**Look for:**
-```
-Version: X.XX.X
+n8n ready on 0.0.0.0:5678
 Editor is now accessible via:
 http://localhost:5678/
 ```
 
 ---
 
-### Step 5.3: Access n8n Web Interface
+#### Step 4: Access n8n Web Interface
 
-**Open n8n in your browser:**
-```bash
-open http://localhost:5678
-```
+**Action:**
+1. Open browser
+2. Go to: `http://localhost:5678`
 
-**Or manually navigate to:** `http://localhost:5678`
+**Expected result:**
+- n8n welcome page appears
+- Prompts for email/password setup
 
-**What you'll see:**
-- Welcome screen
-- Setup wizard
+**First-time setup:**
+1. **Email:** Enter any email (can be fake, only for local login)
+2. **Password:** Choose a secure password
+3. Click "Get started"
 
----
-
-### Step 5.4: First-Time Setup
-
-**n8n will ask you to create an account.**
-
-**âš ï¸ IMPORTANT - Choose "Local" account:**
-
-1. **Enter your information:**
-   - First name, Last name
-   - Email (can be anything - not verified)
-   - Password (create a secure password)
-
-2. **â›" Skip cloud/sync features:**
-   - When asked about cloud sync: Click "Skip" or "Not now"
-   - **Why?** For privacy, keep everything local
-   - No data should go to n8n's cloud
-
-3. **â›" Decline telemetry:**
-   - When asked about usage statistics: Click "No" or "Decline"
-   - Keeps your workflows private
-
-**What you should NOT do:**
-- Don't create n8n cloud account (not needed)
-- Don't enable synchronization (breaks privacy model)
-- Don't share workflows to cloud (keep local)
+**What you see:**
+- Clean interface with "+" button to create workflows
+- Side menu with workflows, credentials, executions
+- Welcome screen with tutorials
 
 ---
 
-### Step 5.5: Quick n8n Interface Tour
+#### Step 5: Test n8n Connectivity
 
-After setup, you'll see:
+**Create a simple test workflow:**
 
-**Left Sidebar:**
-- **Workflows** - Your saved workflows
-- **Credentials** - Saved API keys (we'll add Webex token later)
-- **Executions** - Workflow run history
-- **Settings** - Configuration options
+1. Click "+" to create new workflow
+2. Click "Add node"
+3. Search for "Webhook"
+4. Select "Webhook" node
+5. Configure:
+   - HTTP Method: GET
+   - Path: test
+6. Click "Test step" or "Listen for test event"
+7. Open new browser tab
+8. Visit: `http://localhost:5678/webhook-test/test`
 
-**Top Menu:**
-- **New** - Create new workflow
-- **Templates** - Pre-built workflows (we'll import ours)
-- **Help** - Documentation
+**Expected result:**
+- n8n shows "Webhook received!"
+- Browser shows JSON response
 
-**Main Canvas:**
-- Empty workspace where you'll build workflows
-- Drag nodes from left panel
-- Connect them with arrows
-
-**Don't worry about learning everything now** - detailed n8n usage comes in Part 2 (RAG System Guide).
-
----
-
-### Step 5.6: Verify n8n Can Reach Other Services
-
-**Important:** n8n runs in a container, so it needs special URLs to reach other services.
-
-**Network architecture:**
-```
-n8n container
- â"‚
- â"œâ"€â"€ To Ollama (on Mac): http://host.containers.internal:11434
- â"œâ"€â"€ To ChromaDB (in container): http://chromadb:8000
- â""â"€â"€ To internet: Works normally
-```
-
-**Key URLs to remember:**
-
-**From n8n to Ollama:**
-- âœ… Use: `http://host.containers.internal:11434`
-- âŒ Never use: `http://localhost:11434` (won't work)
-
-**From n8n to ChromaDB:**
-- âœ… Use: `http://chromadb:8000`
-- Also works: `http://host.containers.internal:8000`
-
-**Why "host.containers.internal"?**
-- Special hostname that Podman provides
-- Points to your Mac (the host machine)
-- Allows containers to access services running on your Mac
-
-**Network analogy:** Think of it like static routes:
-- "localhost" = loopback (container talking to itself)
-- "host.containers.internal" = default gateway (container talking to host Mac)
-- "chromadb" = hostname in same subnet (container to container)
+**What this proves:** n8n can receive HTTP requests and execute workflows.
 
 ---
 
-### Step 5.7: Success Checkpoint
+#### Step 6: Verify Both Containers
 
-Before moving to the next section, verify:
-
-- [ ] n8n container is running (`podman ps` shows it)
-- [ ] Can access web interface (`http://localhost:5678` opens)
-- [ ] Completed first-time setup (created local account)
-- [ ] See the n8n workflow canvas
-
-âœ… **If all checkboxes are checked, you're ready for Python setup!**
-
----
-
-### Troubleshooting n8n Setup
-
-#### Issue: n8n container stops immediately
-
-**Most common cause:** Permission denied (same as ChromaDB)
-
-**Fix:**
-```bash
-# Check logs
-podman logs n8n
-
-# If you see "EACCES: permission denied":
-chmod -R 777 ~/cisco-rag-demo/n8n-data
-
-# Remove and recreate
-podman rm n8n
-# Re-run podman run command from Step 5.1
-```
-
----
-
-#### Issue: Can't access web interface
-
-**Diagnostic:**
-```bash
-# Is container running?
-podman ps | grep n8n
-
-# Can you reach the port?
-curl http://localhost:5678
-```
-
-**Fix option 1:** Wait longer
-```bash
-# n8n can take 30+ seconds to start
-sleep 30
-open http://localhost:5678
-```
-
-**Fix option 2:** Check logs
-```bash
-podman logs n8n
-# Look for errors
-```
-
----
-
-#### Issue: Forgot password
-
-**Fix:**
-```bash
-# Reset by removing n8n database
-podman stop n8n
-rm ~/cisco-rag-demo/n8n-data/database.sqlite
-podman start n8n
-
-# Navigate to http://localhost:5678
-# Go through setup again
-```
-
----
-
-## Part 6: Python Setup
-
-**Time:** 5 minutes  
-**What you'll do:** Verify Python is installed and add required libraries  
-**Why:** Enables quick testing scripts for document loading and querying
-
----
-
-### Background: Why Python?
-
-While n8n provides visual workflows (which you'll use most of the time), Python scripts are useful for:
-
-- **Quick testing** - Verify system works before building workflows
-- **Bulk operations** - Load multiple documents at once
-- **Debugging** - Isolate problems to specific components
-- **Automation** - Schedule document updates
-
-**You don't need to know Python** - we'll provide complete working scripts in Part 2. This section just sets up the environment.
-
----
-
-### Step 6.1: Check Python Version
-
-**Your Mac comes with Python pre-installed.** Verify:
-
-```bash
-python3 --version
-```
-
-**Expected output:**
-```
-Python 3.9.x
-```
-or
-```
-Python 3.10.x
-```
-or
-```
-Python 3.11.x
-```
-
-**Any Python 3.9 or newer works fine.**
-
-**If you see "command not found":**
-- Highly unusual on modern Macs
-- Install Python from python.org
-- Or: `brew install python3`
-
-âœ… **Success checkpoint:** Python 3.9+ is installed
-
----
-
-### Step 6.2: Install Required Library
-
-**We need one Python library:** `requests` (for making HTTP calls to ChromaDB and Ollama)
-
-**Install it:**
-```bash
-pip3 install requests
-```
-
-**What this does:**
-- Downloads the `requests` library
-- Installs it to your Python environment
-- Takes 10-30 seconds
-
-**During installation:**
-```
-Collecting requests
-  Downloading requests-2.31.0-py3-none-any.whl
-Installing collected packages: requests
-Successfully installed requests-2.31.0
-```
-
----
-
-**Verify installation:**
-```bash
-python3 -c "import requests; print('âœ" requests library installed')"
-```
-
-**Expected output:**
-```
-âœ" requests library installed
-```
-
-**If you see "No module named 'requests'":**
-```bash
-# Try with sudo (sometimes needed)
-sudo pip3 install requests
-
-# Or use user installation
-pip3 install --user requests
-```
-
-âœ… **Success checkpoint:** requests library imports successfully
-
----
-
-### Understanding Python Scripts (Preview)
-
-**In Part 2 (RAG System Guide), you'll create two Python scripts:**
-
-1. **load_document.py** - Uploads documents to ChromaDB
-   - Reads text files
-   - Breaks them into chunks (800 characters each)
-   - Converts to vectors using Ollama
-   - Stores in ChromaDB
-
-2. **query_rag.py** - Asks questions about your documents
-   - Takes your question
-   - Finds relevant document chunks
-   - Uses Ollama to generate answer
-   - Displays response
-
-**Don't worry:** Complete, working scripts will be provided. You'll just copy-paste them.
-
----
-
-### Step 6.3: Test Python + requests Library
-
-**Quick test to ensure everything works:**
-
-```bash
-python3 << 'TESTSCRIPT'
-import requests
-import json
-
-# Test Ollama
-print("Testing Ollama...")
-response = requests.get("http://localhost:11434")
-print(f"Ollama: {response.text.strip()}")
-
-# Test ChromaDB
-print("\nTesting ChromaDB...")
-response = requests.get("http://localhost:8000/api/v1/heartbeat")
-data = response.json()
-print(f"ChromaDB: Connected (heartbeat: {data.get('nanosecond heartbeat', 'N/A')})")
-
-print("\nâœ… Python environment is ready!")
-TESTSCRIPT
-```
-
-**Expected output:**
-```
-Testing Ollama...
-Ollama: Ollama is running
-
-Testing ChromaDB...
-ChromaDB: Connected (heartbeat: 1702909876543210000)
-
-âœ… Python environment is ready!
-```
-
-**What this test does:**
-- Imports necessary libraries
-- Connects to Ollama
-- Connects to ChromaDB
-- Confirms both are accessible from Python
-
-**If you see errors:**
-- Ollama not running → `ollama serve &`
-- ChromaDB not running → `podman start chromadb`
-- Network issues → Check firewall settings
-
----
-
-### Step 6.4: Success Checkpoint
-
-Before moving to final verification, confirm:
-
-- [ ] Python 3.9+ is installed
-- [ ] requests library is installed
-- [ ] Test script runs successfully
-- [ ] Both Ollama and ChromaDB are reachable from Python
-
-âœ… **If all checkboxes are checked, you're ready for final verification!**
-
----
-
-### Troubleshooting Python Setup
-
-#### Issue: "pip3: command not found"
-
-**Fix:**
-```bash
-# Use python3 -m pip instead
-python3 -m pip install requests
-
-# Verify
-python3 -c "import requests; print('âœ" works')"
-```
-
----
-
-#### Issue: "Permission denied" when installing
-
-**Fix option 1:** Use --user flag
-```bash
-pip3 install --user requests
-```
-
-**Fix option 2:** Use sudo (not recommended but works)
-```bash
-sudo pip3 install requests
-```
-
----
-
-#### Issue: Test script can't reach Ollama
-
-**Diagnostic:**
-```bash
-# Check if Ollama is running
-curl http://localhost:11434
-
-# If nothing, start Ollama
-ollama serve &
-sleep 5
-```
-
----
-
-#### Issue: Test script can't reach ChromaDB
-
-**Diagnostic:**
-```bash
-# Check if container is running
-podman ps | grep chromadb
-
-# If not running
-podman start chromadb
-sleep 15
-```
-
----
-
-## Part 7: Final Verification
-
-**Time:** 5 minutes  
-**What you'll do:** Run comprehensive checks on entire environment  
-**Why:** Confirm everything is working before building the RAG system
-
----
-
-### Step 7.1: Check All Services Status
-
-**Check running containers:**
+**Action:**
 ```bash
 podman ps
 ```
 
 **Expected output:**
 ```
-CONTAINER ID  IMAGE                            COMMAND  CREATED  STATUS      PORTS                   NAMES
-abc123def456  docker.io/chromadb/chroma:0.4.24 ...      X mins   Up X mins   0.0.0.0:8000->8000/tcp  chromadb
-def456ghi789  docker.io/n8nio/n8n:latest       ...      X mins   Up X mins   0.0.0.0:5678->5678/tcp  n8n
+CONTAINER ID  IMAGE                      CREATED        STATUS        PORTS
+abc123...     chromadb/chroma:0.4.24    X minutes ago  Up X minutes  0.0.0.0:8000->8000/tcp
+def456...     n8n:latest                X minutes ago  Up X minutes  0.0.0.0:5678->5678/tcp
 ```
 
 **What to verify:**
-- âœ… Both containers listed
-- âœ… STATUS shows "Up"
-- âœ… PORTS are mapped correctly
+- Both containers show "Up" status
+- Correct ports mapped
+- No restart loops
 
 ---
 
-**Check Ollama models:**
+### Success Checkpoint
+
+You've successfully set up n8n when:
+- ✓ `podman ps` shows n8n container running
+- ✓ Can access web interface at `http://localhost:5678`
+- ✓ Completed first-time setup
+- ✓ Can create and test workflows
+
+---
+
+## Part 6: Python Setup
+
+**Time:** 10 minutes  
+**What you'll do:** Install Python libraries for quick testing
+
+### Understanding Python Tools
+
+While n8n provides visual workflows, Python scripts are useful for:
+- Quick testing
+- Debugging
+- One-off operations
+- Learning how the APIs work
+
+**Note:** You don't need to be a Python expert - just copy/paste the commands.
+
+---
+
+### Installation Steps
+
+#### Step 1: Check Python Installation
+
+**Action:**
 ```bash
-ollama list
+python3 --version
 ```
 
 **Expected output:**
 ```
-NAME                    ID              SIZE      MODIFIED
-llama3.2:3b            abc123def...    2.0 GB    X minutes ago
-nomic-embed-text       def456ghi...    274 MB    X minutes ago
+Python 3.X.X
 ```
 
-**What to verify:**
-- âœ… Both models listed
-- âœ… Sizes are correct (2.0 GB and 274 MB)
+**If Python not installed:**
+- macOS: `brew install python3`
+- Linux: `sudo apt install python3 python3-pip`
+- Windows: Download from python.org
 
 ---
 
-### Step 7.2: Test Network Connectivity
+#### Step 2: Install Required Libraries
 
-**Test 1: Ollama accessibility**
+**Action:**
 ```bash
-curl http://localhost:11434
+pip3 install requests chromadb==0.4.24
 ```
 
-**Expected:** `Ollama is running`
+**What this installs:**
+- `requests` - For making HTTP API calls
+- `chromadb==0.4.24` - ChromaDB Python client (specific version)
+
+**Expected output:**
+```
+Collecting requests
+Collecting chromadb==0.4.24
+[Download and installation progress]
+Successfully installed requests-X.X.X chromadb-0.4.24 [and dependencies]
+```
+
+**Time:** 2-3 minutes
 
 ---
 
-**Test 2: ChromaDB accessibility**
+#### Step 3: Create Test Script
+
+**Action:**
 ```bash
-curl http://localhost:8000/api/v1/heartbeat
-```
+# Create script directory
+mkdir -p ~/cisco-rag-demo/scripts
 
-**Expected:** JSON with heartbeat timestamp
+# Create test script
+cat > ~/cisco-rag-demo/scripts/test_connection.py << 'EOF'
+#!/usr/bin/env python3
+"""
+Test script to verify all services are accessible
+"""
+import requests
+import sys
 
----
+def test_ollama():
+    """Test Ollama API"""
+    try:
+        response = requests.get("http://localhost:11434")
+        if response.status_code == 200:
+            print("✓ Ollama: Running")
+            return True
+        else:
+            print("✗ Ollama: Not responding")
+            return False
+    except Exception as e:
+        print(f"✗ Ollama: Error - {e}")
+        return False
 
-**Test 3: n8n accessibility**
-```bash
-curl -s http://localhost:5678 | grep "n8n"
-```
+def test_chromadb():
+    """Test ChromaDB API"""
+    try:
+        response = requests.get("http://localhost:8000/api/v1/heartbeat")
+        if response.status_code == 200:
+            print("✓ ChromaDB: Running")
+            return True
+        else:
+            print("✗ ChromaDB: Not responding")
+            return False
+    except Exception as e:
+        print(f"✗ ChromaDB: Error - {e}")
+        return False
 
-**Expected:** Some HTML mentioning "n8n"
+def test_n8n():
+    """Test n8n web interface"""
+    try:
+        response = requests.get("http://localhost:5678", timeout=5)
+        if response.status_code == 200:
+            print("✓ n8n: Running")
+            return True
+        else:
+            print("✗ n8n: Not responding")
+            return False
+    except Exception as e:
+        print(f"✗ n8n: Error - {e}")
+        return False
 
----
+def main():
+    print("Testing all services...\n")
+    
+    results = []
+    results.append(test_ollama())
+    results.append(test_chromadb())
+    results.append(test_n8n())
+    
+    print("\n" + "="*50)
+    if all(results):
+        print("✓ All services are running!")
+        return 0
+    else:
+        print("✗ Some services are not running")
+        print("Run 'podman ps' to check container status")
+        return 1
 
-**Test 4: ChromaDB collection exists**
-```bash
-curl http://localhost:8000/api/v1/collections
-```
-
-**Expected:** JSON array showing cisco_docs collection
-
----
-
-### Step 7.3: Comprehensive System Check Script
-
-**Create a system check script for daily use:**
-
-```bash
-cat > ~/cisco-rag-demo/system-check.sh << 'CHECKSCRIPT'
-#!/bin/bash
-echo "====================================="
-echo "RAG System Status Check"
-echo "====================================="
-echo ""
-
-# Check Podman
-echo "ðŸ"¦ Podman Containers:"
-podman ps --format "  {{.Names}}: {{.Status}}"
-echo ""
-
-# Check Ollama
-echo "ðŸ¤– Ollama Models:"
-ollama list | tail -n +2 | awk '{print "  " $1 " (" $3 " " $4 ")"}'
-echo ""
-
-# Check Ollama service
-echo "ðŸŒ Network Services:"
-if curl -s http://localhost:11434 > /dev/null; then
-    echo "  Ollama (11434): âœ…"
-else
-    echo "  Ollama (11434): âŒ"
-fi
-
-if curl -s http://localhost:8000/api/v1/heartbeat > /dev/null; then
-    echo "  ChromaDB (8000): âœ…"
-else
-    echo "  ChromaDB (8000): âŒ"
-fi
-
-if curl -s http://localhost:5678 > /dev/null; then
-    echo "  n8n (5678): âœ…"
-else
-    echo "  n8n (5678): âŒ"
-fi
-echo ""
-
-# Check Python
-echo "ðŸ Python Environment:"
-if python3 -c "import requests" 2>/dev/null; then
-    echo "  Python 3 + requests: âœ…"
-else
-    echo "  Python 3 + requests: âŒ"
-fi
-echo ""
-
-# Check collections
-echo "ðŸ"š ChromaDB Collections:"
-curl -s http://localhost:8000/api/v1/collections | \
-    python3 -c "import sys, json; data = json.load(sys.stdin); print('  ' + data[0]['name'] if data else '  None found')"
-echo ""
-
-echo "====================================="
-echo "âœ… System check complete"
-echo "====================================="
-CHECKSCRIPT
+if __name__ == "__main__":
+    sys.exit(main())
+EOF
 
 # Make executable
+chmod +x ~/cisco-rag-demo/scripts/test_connection.py
+```
+
+---
+
+#### Step 4: Test the Script
+
+**Action:**
+```bash
+python3 ~/cisco-rag-demo/scripts/test_connection.py
+```
+
+**Expected output:**
+```
+Testing all services...
+
+✓ Ollama: Running
+✓ ChromaDB: Running
+✓ n8n: Running
+
+==================================================
+✓ All services are running!
+```
+
+**If any service shows error:**
+- Check container status: `podman ps`
+- Check Ollama: `curl http://localhost:11434`
+- Restart services if needed
+
+---
+
+#### Step 5: Create System Check Script
+
+**Action:**
+```bash
+cat > ~/cisco-rag-demo/system-check.sh << 'EOF'
+#!/bin/bash
+# Quick system check script
+
+echo "=========================================="
+echo "System Status Check"
+echo "=========================================="
+echo ""
+
+echo "1. Podman Machine Status:"
+podman machine list
+echo ""
+
+echo "2. Running Containers:"
+podman ps
+echo ""
+
+echo "3. Ollama Status:"
+curl -s http://localhost:11434 || echo "Ollama not running"
+echo ""
+
+echo "4. ChromaDB Status:"
+curl -s http://localhost:8000/api/v1/heartbeat | head -c 50 || echo "ChromaDB not running"
+echo ""
+
+echo "5. n8n Status:"
+curl -s http://localhost:5678 | grep -q "n8n" && echo "n8n: Running" || echo "n8n: Not running"
+echo ""
+
+echo "6. Ollama Models:"
+ollama list
+echo ""
+
+echo "=========================================="
+echo "Detailed Python Test:"
+echo "=========================================="
+python3 ~/cisco-rag-demo/scripts/test_connection.py
+EOF
+
 chmod +x ~/cisco-rag-demo/system-check.sh
 ```
 
----
-
-**Run the system check:**
+**Test it:**
 ```bash
 ~/cisco-rag-demo/system-check.sh
 ```
 
-**Expected output:**
-```
-=====================================
-RAG System Status Check
-=====================================
+---
 
-ðŸ"¦ Podman Containers:
-  chromadb: Up X minutes
-  n8n: Up X minutes
+### Success Checkpoint
 
-ðŸ¤– Ollama Models:
-  llama3.2:3b (2.0 GB)
-  nomic-embed-text (274 MB)
-
-ðŸŒ Network Services:
-  Ollama (11434): âœ…
-  ChromaDB (8000): âœ…
-  n8n (5678): âœ…
-
-ðŸ Python Environment:
-  Python 3 + requests: âœ…
-
-ðŸ"š ChromaDB Collections:
-  cisco_docs
-
-=====================================
-âœ… System check complete
-=====================================
-```
-
-**What to verify:**
-- All services show âœ…
-- Both Ollama models present
-- Both containers running
-- cisco_docs collection exists
+You've successfully set up Python tools when:
+- ✓ Python libraries installed
+- ✓ Test script runs successfully
+- ✓ All services respond to Python requests
+- ✓ System check script works
 
 ---
 
-### Step 7.4: Environment Summary
+## Part 7: Final Verification
 
-**At this point, you have:**
+**Time:** 5 minutes  
+**What you'll do:** Complete system test, verify everything works together
 
-âœ… **Podman** - Container runtime configured and running  
-âœ… **Ollama** - AI models downloaded and accessible  
-  - llama3.2:3b (answers questions)  
-  - nomic-embed-text (creates vectors)  
-âœ… **ChromaDB 0.4.24** - Vector database with collection created  
-âœ… **n8n** - Workflow automation platform ready  
-âœ… **Python + requests** - Testing environment configured  
+### Comprehensive System Check
 
-**Your system is ready for:**
-- Loading documents (Part 2)
-- Building chat interface (Part 2)
-- Creating Webex bot (Part 3)
+#### Step 1: Run System Check Script
 
----
-
-### Step 7.5: Post-Restart Checklist
-
-**Important:** After restarting your Mac, you'll need to:
-
+**Action:**
 ```bash
-# 1. Start Podman machine
-podman machine start
-
-# 2. Start Ollama service
-ollama serve &
-
-# 3. Start containers (if not auto-started)
-podman start chromadb n8n
-
-# 4. Wait for services
-sleep 20
-
-# 5. Run system check
 ~/cisco-rag-demo/system-check.sh
 ```
 
-ðŸ'¡ **Tip:** Save these commands in `~/cisco-rag-demo/startup.sh` for quick restarts.
+**Verify all sections show "Running" or "✓"**
 
 ---
 
-### Step 7.6: Final Success Checkpoint
+#### Step 2: Test Complete Workflow
 
-**Complete environment checklist:**
+**Test embedding generation:**
+```bash
+curl -X POST http://localhost:11434/api/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "nomic-embed-text",
+    "prompt": "This is a test document about network switches"
+  }' | head -c 200
+```
 
-**Core Services:**
+**Expected:** JSON response with embedding array
+
+---
+
+#### Step 3: Test ChromaDB Storage
+
+**Add a test document:**
+```bash
+curl -X POST http://localhost:8000/api/v1/collections/cisco_docs/add \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ids": ["test-doc-1"],
+    "documents": ["Network switches enable connectivity between devices"],
+    "metadatas": [{"source": "test"}]
+  }'
+```
+
+**Query the document:**
+```bash
+curl -X POST http://localhost:8000/api/v1/collections/cisco_docs/query \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query_texts": ["What enables device connectivity?"],
+    "n_results": 1
+  }'
+```
+
+**Expected:** Returns the document we just added
+
+---
+
+#### Step 4: Verify Data Persistence
+
+**Action:**
+```bash
+# Restart ChromaDB container
+podman restart chromadb
+
+# Wait for startup
+sleep 10
+
+# Check if collection still exists
+curl http://localhost:8000/api/v1/collections
+```
+
+**Expected:** Collection "cisco_docs" still exists (proves data persists)
+
+---
+
+### Final Checklist
+
+Verify everything before proceeding:
+
+**Services:**
 - [ ] Podman machine running (`podman machine list`)
 - [ ] Ollama service running (`curl http://localhost:11434`)
-- [ ] ChromaDB container running (visible in `podman ps`)
-- [ ] n8n container running (visible in `podman ps`)
+- [ ] ChromaDB container running (`podman ps`)
+- [ ] n8n container running (`podman ps`)
+
+**Functionality:**
+- [ ] Ollama models downloaded (`ollama list` shows 2 models)
+- [ ] ChromaDB responds to API calls
+- [ ] n8n web interface accessible
+- [ ] Python test script passes
 
 **Accessibility:**
 - [ ] Can access ChromaDB API (`curl http://localhost:8000/api/v1/heartbeat`)
@@ -2199,13 +1298,13 @@ sleep 20
 - [ ] ChromaDB collection exists (`cisco_docs` visible)
 - [ ] Python environment ready (requests library installed)
 
-**âœ… If all boxes are checked, your environment is production-ready!**
+**✓ If all boxes are checked, your environment is production-ready!**
 
 ---
 
 ## Troubleshooting
 
-### Common Issues After Mac Restart
+### Common Issues After System Restart
 
 #### Issue: All containers stopped
 
@@ -2232,7 +1331,7 @@ podman ps
 **Fix:**
 ```bash
 # Start Ollama service
-ollama serve &
+ollama serve > /dev/null 2>&1 &
 
 # Wait a moment
 sleep 5
@@ -2248,20 +1347,23 @@ curl http://localhost:11434
 #### Issue: Everything is slow (>20 seconds per query)
 
 **Possible causes:**
-1. Low RAM - Mac is using swap memory
+1. Low RAM - System is using swap memory
 2. Other apps consuming resources
 3. Models unloading/reloading frequently
 
 **Check RAM usage:**
 ```bash
-# Open Activity Monitor
+# On macOS: Open Activity Monitor
 # Check "Memory" tab
 # Look at "Memory Pressure"
+
+# On Linux:
+free -h
 ```
 
-**If Memory Pressure is yellow/red:**
+**If Memory Pressure is high:**
 - Close other applications
-- Restart Mac
+- Restart system
 - Consider reducing Podman memory allocation:
   ```bash
   podman machine stop
@@ -2327,8 +1429,13 @@ chmod +x ~/cisco-rag-demo/backup.sh
 
 1. **System info:**
    ```bash
+   # macOS:
    system_profiler SPHardwareDataType | grep -A 5 "Hardware Overview"
    sw_vers
+   
+   # Linux:
+   uname -a
+   lsb_release -a
    ```
 
 2. **Service status:**
@@ -2364,7 +1471,7 @@ chmod +x ~/cisco-rag-demo/backup.sh
 
 ## Next Steps
 
-ðŸŽ‰ **Congratulations!** You've completed the environment setup.
+🎉 **Congratulations!** You've completed the environment setup.
 
 **What you've accomplished:**
 - Installed and configured Podman for container management
@@ -2397,10 +1504,10 @@ chmod +x ~/cisco-rag-demo/backup.sh
 
 ### Important Reminders
 
-**After Mac restart:**
+**After system restart:**
 ```bash
 podman machine start
-ollama serve &
+ollama serve > /dev/null 2>&1 &
 podman start chromadb n8n
 sleep 20
 ~/cisco-rag-demo/system-check.sh
@@ -2422,19 +1529,19 @@ sleep 20
 
 ## Document Information
 
-**Version:** 1.0.0  
-**Last Updated:** December 18, 2024  
+**Version:** 2.0.0  
+**Last Updated:** January 2026  
 **Part of:** Local RAG System Implementation Guides  
 **Next Guide:** [GUIDE_2_RAG_SYSTEM.md](GUIDE_2_RAG_SYSTEM.md)  
 
 **This guide is based on:**
-- Actual deployment on Mac M4 Pro with 24GB RAM
+- Actual deployment on modern hardware with sufficient RAM
 - Real troubleshooting experiences documented
-- Testing with Cisco network assessment documents
+- Testing with technical documentation
 - Production-ready configurations
 
 **Feedback:** If you encounter issues not covered here, please document them for future updates.
 
 ---
 
-âž¡ï¸ **Ready to build your RAG system? Proceed to [GUIDE_2_RAG_SYSTEM.md](GUIDE_2_RAG_SYSTEM.md)**
+⚡ **Ready to build your RAG system? Proceed to [GUIDE_2_RAG_SYSTEM.md](GUIDE_2_RAG_SYSTEM.md)**
