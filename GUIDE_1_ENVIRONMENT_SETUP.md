@@ -392,7 +392,7 @@ podman ps
 
 **Expected output:**
 ```
-podman version 4.X.X
+podman version 4.X.X or later
 
 CONTAINER ID  IMAGE  COMMAND  CREATED  STATUS  PORTS  NAMES
 ```
