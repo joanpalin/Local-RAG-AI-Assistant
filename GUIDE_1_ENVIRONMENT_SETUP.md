@@ -86,7 +86,7 @@ By completing this guide, you will have:
 - 100GB free disk space
 - Latest operating system updates
 
-**Note:** This guide focuses on macOS with Apple Silicon, but the principles apply to other platforms with appropriate adjustments.
+**Note:** This guide focuses on macOS with Apple Silicon, but the principles apply to other platforms with appropriate adjustments. If you need Windows or other OS guides, give this guide to your AI GPT and ask them to replace the steps with the appropiate ones based on your system.
 
 ### Pre-Installation Checklist
 
