@@ -46,6 +46,7 @@ Welcome! This guide will help you set up the foundation for your local AI docume
 3. **Verify prerequisites** - did you complete previous steps?
 4. **Read error messages carefully** - they usually tell you what's wrong
 5. **Start fresh** - sometimes it's easier to remove and reinstall
+6. Remember that you have the most powerful troubleshooting tool to assist you... your preferred AI GPT. Tell them what you are doing, share this guide, provide the step and the issue you are having, and will guide you through to solve it.
 
 ⚡ **Ready? Let's build your AI assistant!**
 
