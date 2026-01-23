@@ -29,7 +29,7 @@
 
 Welcome! This guide will help you set up the foundation for your local AI document assistant. By the end of this guide, you'll have all the necessary software installed and verified working on your local machine.
 
-**What makes this guide different:** Every instruction has been tested on actual hardware. All common issues have been identified and documented. If you follow the steps exactly as written, you'll have a working system.
+**What makes this guide different:** Every instruction has been tested on actual hardware. All common issues have been identified and documented. If you follow the steps exactly as written, you'll be very close to have a working system.
 
 ### What to Expect
 
