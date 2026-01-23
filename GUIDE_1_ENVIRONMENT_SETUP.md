@@ -434,7 +434,7 @@ You've successfully installed Podman when:
 **For macOS:**
 ```bash
 # Download and install
-curl -fsSL https://ollama.com/install.sh | sh
+open https://ollama.com/download
 ```
 
 **For Linux:**
