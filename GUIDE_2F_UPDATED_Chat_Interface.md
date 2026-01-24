@@ -53,7 +53,7 @@ cd ~/cisco-rag-demo/workflows/
 
 # Download the workflow JSON
 # (Replace with actual GitHub raw URL once repo is published)
-curl -O https://raw.githubusercontent.com/YOUR-REPO/Local-RAG-AI-Assistant/main/RAG_Chat_Interface_WORKING.json
+curl -O https://raw.githubusercontent.com/joanpalin/Local-RAG-AI-Assistant/main/RAG_Chat_Interface_WORKING.json
 ```
 
 **Or manually download:**
