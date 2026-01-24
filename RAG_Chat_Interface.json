@@ -1,0 +1,249 @@
+{
+  "name": "RAG Chat Interface",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1,
+      "position": [
+        48,
+        32
+      ],
+      "webhookId": "rag-chat",
+      "id": "5d8ff83c-7b4a-4341-82ad-77ffbe61325b"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build LLM prompt with retrieved context\nconst searchResults = $input.first().json;\nconst question = $('Prepare Search').first().json.question;\n\nconst contexts = searchResults.documents[0];\n\nif (!contexts || contexts.length === 0) {\n  throw new Error('No documents found in ChromaDB. Load documents first.');\n}\n\nconst contextText = contexts.map((ctx, i) => \n  `[Source ${i + 1}]\\n${ctx}`\n).join('\\n\\n---\\n\\n');\n\nconst systemPrompt = `You are a helpful AI assistant analyzing Cisco network assessment documents. \nProvide accurate, concise answers based on the context provided. \nIf the context doesn't contain enough information to answer fully, say so.`;\n\nconst prompt = `${systemPrompt}\\n\\nCONTEXT FROM DOCUMENTS:\\n${contextText}\\n\\nUSER QUESTION: ${question}\\n\\nYour answer (be specific and cite relevant details from the context):`;\n\nconsole.log(`Retrieved ${contexts.length} chunks for question: ${question}`);\n\nreturn [{\n  json: {\n    llm_request: {\n      model: 'llama3.2:3b',\n      prompt: prompt,\n      stream: false,\n      options: {\n        temperature: 0.7,\n        top_p: 0.9\n      }\n    }\n  }\n}];"
+      },
+      "name": "Build Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        32
+      ],
+      "id": "d8fa7712-5d19-465d-a02c-6dc29f30b5be"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get UUID and prepare query embedding request\nconst collections = $input.all().map(item => item.json);\nconst question = $('Chat Trigger').first().json.chatInput;\n\n// Flatten nested arrays (handle both [[{...}]] and [{...}] formats)\nlet flatCollections = collections.flat();\n\n// Find cisco_docs collection\nlet collectionUuid = null;\nfor (const coll of flatCollections) {\n  if (coll.name === 'cisco_docs') {\n    collectionUuid = coll.id;\n    break;\n  }\n}\n\nif (!collectionUuid) {\n  throw new Error(\"Collection 'cisco_docs' not found! Load documents first.\");\n}\n\nreturn [{\n  json: {\n    collection_uuid: collectionUuid,\n    question: question,\n    embedding_request: {\n      model: 'nomic-embed-text',\n      prompt: question\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        32
+      ],
+      "id": "c2ecbc29-bce4-4987-945e-0875be07d390",
+      "name": "Prepare Query"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare ChromaDB search request\nconst embedding = $input.first().json.embedding;\nconst queryData = $('Prepare Query').first().json;\n\nreturn [{\n  json: {\n    collection_uuid: queryData.collection_uuid,\n    question: queryData.question,\n    search_request: {\n      query_embeddings: [embedding],\n      n_results: 3\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        32
+      ],
+      "id": "0d7959ad-2521-49fd-a7ad-b11ff60a169f",
+      "name": "Prepare Search"
+    },
+    {
+      "parameters": {
+        "url": "http://chromadb:8000/api/v1/collections",
+        "options": {
+          "timeout": 5000
+        }
+      },
+      "name": "Get Collection UUID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        224,
+        32
+      ],
+      "id": "f132df78-0a06-4934-a1ad-731ce8e1684c"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://chromadb:8000/api/v1/collections/{{ $json.collection_uuid }}/query",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.search_request) }}",
+        "options": {
+          "timeout": 5000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1024,
+        32
+      ],
+      "id": "220eae9b-21fe-4a39-864e-90679de6331d",
+      "name": "Search ChromaDB"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format response for chat interface\nconst llmData = $input.first().json;\nconst answer = llmData.response;\n\nconst cleanAnswer = answer.trim();\n\nconsole.log('Generated ' + cleanAnswer.length + ' character response');\n\n// Return in format expected by Chat Trigger\nreturn [{\n  json: {\n    output: cleanAnswer\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        32
+      ],
+      "id": "b6e315d3-ec94-4c70-8e70-93ef93c16294",
+      "name": "Format Response"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.containers.internal:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.llm_request) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1472,
+        32
+      ],
+      "id": "b7da2483-2ddf-4f8d-a57d-0b1074732475",
+      "name": "Generate Answer"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.containers.internal:11434/api/embeddings",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.embedding_request) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        624,
+        32
+      ],
+      "id": "ef7967a3-5fa8-4cfd-bc5a-81b0a47f700c",
+      "name": "Generate Query Embedding"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Collection UUID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Prompt": {
+      "main": [
+        [
+          {
+            "node": "Generate Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Query": {
+      "main": [
+        [
+          {
+            "node": "Generate Query Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Collection UUID": {
+      "main": [
+        [
+          {
+            "node": "Prepare Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Search": {
+      "main": [
+        [
+          {
+            "node": "Search ChromaDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search ChromaDB": {
+      "main": [
+        [
+          {
+            "node": "Build Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Answer": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Query Embedding": {
+      "main": [
+        [
+          {
+            "node": "Prepare Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "736bf97e-7521-4ab0-ab53-48faebddf382",
+  "meta": {
+    "instanceId": "6fa23a8d1b651a4bc39c80909c6ffb56117e9e4a8c53ae3f221584b59b6c390b"
+  },
+  "id": "q4J-v-MCyKQM-1tW5xZee",
+  "tags": []
+}
