@@ -1008,15 +1008,15 @@ I don't have enough information to answer that question.
 │      DOCUMENT UPLOAD WORKFLOW (FORM-BASED)          │
 ├─────────────────────────────────────────────────────┤
 │                                                     │
-│  [Form]  →  [Extract]  →  [Parse]  →  [Get UUID]   │
+│  [Form]  →  [Extract]  →  [Parse]  →  [Get UUID]    │
 │     ↓           ↓            ↓            ↓         │
-│  Upload    Validate      Extract      Find         │
-│  file      file type     text       collection     │
+│  Upload    Validate      Extract      Find          │
+│  file      file type     text       collection      │
 │                                                     │
-│  [Process]  →  [Embed]  →  [Prepare]  →  [Store]   │
+│  [Process]  →  [Embed]  →  [Prepare]  →  [Store]    │
 │      ↓            ↓           ↓            ↓        │
-│  Chunk       Generate     Build       Save to      │
-│  text        vectors      payload    ChromaDB      │
+│  Chunk       Generate     Build       Save to       │
+│  text        vectors      payload    ChromaDB       │
 │                                                     │
 └─────────────────────────────────────────────────────┘
 ```
@@ -1638,12 +1638,7 @@ curl -s "http://localhost:8000/api/v1/collections/$UUID/count"
 # 3. Python query works
 python3 ~/cisco-rag-demo/scripts/query_rag.py "What is network uptime?"
 
-# 4. n8n upload workflow
-curl -X POST http://localhost:5678/webhook/upload-doc \
-  -H "Content-Type: application/json" \
-  -d '{"text":"Test document for verification","source":"Verification Test"}'
-
-# 5. Chat interface - test manually in browser
+# 4. Chat interface - test manually in browser
 ```
 
 ---
