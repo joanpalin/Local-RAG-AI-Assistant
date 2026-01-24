@@ -936,7 +936,7 @@ to repair (MTTR) of 2.4 hours.
 **Question about hardware:**
 
 ```bash
-python3 ~/cisco-rag-demo/scripts/query_rag.py "What switches are installed?"
+python3 ~/cisco-rag-demo/scripts/query_rag.py "What is hte peak bandwitdth?"
 ```
 
 **Expected answer should include:**
