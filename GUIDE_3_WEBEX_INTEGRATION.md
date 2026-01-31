@@ -329,7 +329,7 @@ Tip: Clear description helps users know how to use it
 
 **Your bot token looks like:**
 ```
-YmJkYzJjZjAtMjZhNy00YTUwLWIwMzUtZGJmZmFhZjY1MDZjMmU3OTZmYzctNTI1_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f
+YmJkYzJjZjAtMjZhNy00YTUwLWIwMzUtZGJmZmF1NWY1MDZjMmU3OTZmYzctNTI1_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f
 ```
 
 **Action - Save it immediately:**
