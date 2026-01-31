@@ -55,7 +55,7 @@ curl http://localhost:11434/api/tags  # Should show models
 ollama list  # Should show llama3.2:3b and nomic-embed-text
 
 # Test RAG works
-cd ~/cisco-rag-demo
+cd ~/cisco-rag-demo/scripts
 ./query_rag.py "test query"  # Should return AI answer
 ```
 
