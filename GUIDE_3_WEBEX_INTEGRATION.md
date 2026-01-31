@@ -37,7 +37,7 @@
 **What this guide adds:**
 - 📱 **Mobile access** - Query from phone/tablet via Webex app
 - 👥 **Team collaboration** - Share bot with colleagues
-- 💼 **Enterprise-ready** - IT-approved messaging platform
+- 💼 **Pilot-ready** - IT-approved messaging platform
 - 🌍 **Access anywhere** - As long as your local machine is on
 
 **Time investment:** ~45 minutes to complete setup
