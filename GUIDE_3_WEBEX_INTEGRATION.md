@@ -125,34 +125,34 @@ cd ~/cisco-rag-demo/scripts
 
 ```
 ┌───────────────────────────────────────────────────┐
-│                  WEBEX CLOUD                        │
-│  (Cisco's servers - handles message routing)       │
-└─────────┬───────────────────────────────┬──────────┘
+│                  WEBEX CLOUD                      │
+│  (Cisco's servers - handles message routing)      │
+└─────────┬───────────────────────────────┬─────────┘
          │                                │
          │ [3] Webhook POST               │ [9] API POST
          │                                │
          ↓                                ↑
 ┌───────────────────────────────────────────────────┐
-│               TUNNEL (ngrok)                       │
-│  (Secure pathway through your firewall)            │
+│               TUNNEL (ngrok)                      │
+│  (Secure pathway through your firewall)           │
 └─────────┬─────────────────────────────────────────┘
          │
          │ Forwards to localhost:5678
          │
          ↓
 ┌───────────────────────────────────────────────────┐
-│                   YOUR MAC                          │
-│                                                     │
+│                   YOUR MAC                        │
+│                                                   │
 │  ┌─────────────────────────────────────────────┐  │
-│  │              n8n (port 5678)              │  │
-│  │  Receives webhook, processes, responds    │  │
+│  │              n8n (port 5678)                │  │
+│  │  Receives webhook, processes, responds      │  │
 │  └───────┬─────────────────────────────────────┘  │
-│          │                                         │
+│          │                                        │
 │          ├──→ [ChromaDB] Vector search            │
 │          ├──→ [Ollama] AI processing              │
 │          └──→ [Webex API] Send response           │
-│                                                     │
-│  ALL PROCESSING HAPPENS HERE (Private)             │
+│                                                   │
+│  ALL PROCESSING HAPPENS HERE (Private)            │
 └───────────────────────────────────────────────────┘
 ```
 
@@ -687,7 +687,8 @@ curl https://YOUR-NGROK-URL.ngrok-free.app
 
 The workflow JSON is provided in the project files. Save the following as `Webex_RAG_Bot.json`:
 
-```json
+```bash
+cat > ~/cisco-rag-demo/workflows/webex_rag_bot.json << 'EOF'
 {
   "name": "Webex RAG Bot",
   "nodes": [
@@ -1109,6 +1110,7 @@ The workflow JSON is provided in the project files. Save the following as `Webex
   "id": "90lJ7Jo_zdejn5uohmljk",
   "tags": []
 }
+EOF
 ```
 
 ---
