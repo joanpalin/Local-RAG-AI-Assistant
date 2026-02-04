@@ -702,19 +702,25 @@ The workflow JSON is provided in the project files. Save the following as `Webex
       "name": "Webex Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1.1,
-      "position": [32, 64],
+      "position": [
+        32,
+        64
+      ],
       "webhookId": "webex-bot-webhook",
       "notes": "Receives webhooks from Webex when messages are posted"
     },
     {
       "parameters": {
-        "jsCode": "// Extract webhook data from correct location (body.data)\nconst webhookData = $input.first().json.body.data;\nconst webhookMeta = $input.first().json.body;\n\n// Validate we received the required fields\nif (!webhookData || !webhookData.id) {\n  throw new Error('Missing webhook data. Check that Webex webhook is configured correctly.');\n}\n\n// Extract key information\nconst messageId = webhookData.id;\nconst roomId = webhookData.roomId;\nconst personId = webhookData.personId;\nconst personEmail = webhookData.personEmail;\n\n// CRITICAL: Extract bot's person ID from webhook metadata\nconst botPersonId = webhookMeta.createdBy;\n\n// Validate all required fields exist\nif (!messageId || !roomId || !personEmail) {\n  throw new Error(`Missing required fields: messageId=${!!messageId}, roomId=${!!roomId}, personEmail=${!!personEmail}`);\n}\n\nconsole.log(`Processing message from ${personEmail} in room ${roomId}`);\nconsole.log(`Bot person ID: ${botPersonId}`);\n\n// Store for use in next nodes\nreturn [{\n  json: {\n    messageId: messageId,\n    roomId: roomId,\n    personId: personId,\n    personEmail: personEmail,\n    botPersonId: botPersonId,\n    webhookReceived: true\n  }\n}];"
+        "jsCode": "// Extract webhook data from correct location (body.data)\nconst webhookData = $input.first().json.body.data;\nconst webhookMeta = $input.first().json.body;\n\n// Validate we received the required fields\nif (!webhookData || !webhookData.id) {\n  throw new Error('Missing webhook data. Check that Webex webhook is configured correctly.');\n}\n\n// Extract key information\nconst messageId = webhookData.id;\nconst roomId = webhookData.roomId;\nconst personId = webhookData.personId;\nconst personEmail = webhookData.personEmail;\n\n// CRITICAL: Extract bot's person ID from webhook metadata\nconst botPersonId = webhookMeta.createdBy;\n\n// Validate all required fields exist\nif (!messageId || !roomId || !personEmail) {\n  throw new Error(`Missing required fields: messageId=${!!messageId}, roomId=${!!roomId}, personEmail=${!!personEmail}`);\n}\n\nconsole.log(`Processing message from ${personEmail} in room ${roomId}`);\nconsole.log(`Bot person ID: ${botPersonId}`);\n\n// Store for use in next nodes\nreturn [{\n  json: {\n    messageId: messageId,\n    roomId: roomId,\n    personId: personId,\n    personEmail: personEmail,\n    botPersonId: botPersonId,  // ← ADD THIS!\n    webhookReceived: true\n  }\n}];"
       },
       "id": "6ea2b827-c1ee-45ac-8037-379e44453dc6",
       "name": "Extract Webhook Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [192, 64],
+      "position": [
+        192,
+        64
+      ],
       "notes": "Extracts message metadata from Webex webhook"
     },
     {
@@ -722,42 +728,55 @@ The workflow JSON is provided in the project files. Save the following as `Webex
         "url": "=https://webexapis.com/v1/messages/{{ $json.messageId }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
-        "options": {"timeout": 10000}
+        "options": {
+          "timeout": 10000
+        }
       },
       "id": "fdad13af-ba8e-4f50-a38b-102be736bbe9",
       "name": "Get Message Details",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [368, 64],
+      "position": [
+        368,
+        64
+      ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "PLACEHOLDER_CREDENTIAL_ID",
-          "name": "Webex Bot Token"
+          "id": "D0YLYycSvpB9tjy3",
+          "name": "Header Auth account 2"
         }
       },
       "notes": "Fetches full message content from Webex API"
     },
     {
       "parameters": {
-        "jsCode": "// Check if message is from bot itself and extract question\nconst messageData = $input.first().json;\nconst webhookData = $('Extract Webhook Data').first().json;\n\n// IMPORTANT: Replace this with your actual bot email from credentials file\nconst BOT_EMAIL = 'YOUR-BOT-EMAIL@webex.bot';\n\nconsole.log(`Message from: ${messageData.personEmail}`);\nconsole.log(`Bot email: ${BOT_EMAIL}`);\n\n// CRITICAL: Check if message is from the bot itself\nif (messageData.personEmail === BOT_EMAIL) {\n  console.log('✓ Ignoring message from bot itself to prevent loop');\n  return [];\n}\n\n// Extract message text\nlet question = messageData.text;\n\nconsole.log(`Original message text: \"${question}\"`);\n\n// Remove @mentions (appears as <spark-mention> HTML in text)\nif (messageData.mentionedPeople && messageData.mentionedPeople.length > 0) {\n  // Remove HTML spark-mention tags\n  question = question.replace(/<spark-mention[^>]*>.*?<\\/spark-mention>/gi, '');\n  \n  // Also remove plain @mentions\n  question = question.replace(/@\\w+/g, '');\n  \n  // Remove any remaining HTML tags\n  question = question.replace(/<[^>]*>/g, '');\n}\n\n// Clean up whitespace\nquestion = question.trim();\n\n// Validate we have content\nif (!question || question.length === 0) {\n  throw new Error('Empty message received after cleaning');\n}\n\nconsole.log(`Cleaned question: \"${question}\"`);\n\nreturn [{\n  json: {\n    question: question,\n    roomId: webhookData.roomId,\n    messageId: webhookData.messageId,\n    personEmail: messageData.personEmail\n  }\n}];"
+        "jsCode": "// Check if message is from bot itself and extract question\nconst messageData = $input.first().json;\nconst webhookData = $('Extract Webhook Data').first().json;\n\n// IMPORTANT: Replace this with your actual bot email from credentials file\nconst BOT_EMAIL = 'ragdemotest1@webex.bot';\n\nconsole.log(`Message from: ${messageData.personEmail}`);\nconsole.log(`Bot email: ${BOT_EMAIL}`);\n\n// CRITICAL: Check if message is from the bot itself\nif (messageData.personEmail === BOT_EMAIL) {\n  console.log('✓ Ignoring message from bot itself to prevent loop');\n  return [];\n}\n\n// Extract message text\nlet question = messageData.text;\n\nconsole.log(`Original message text: \"${question}\"`);\n\n// Remove @mentions (appears as <spark-mention> HTML in text)\nif (messageData.mentionedPeople && messageData.mentionedPeople.length > 0) {\n  // Remove HTML spark-mention tags\n  question = question.replace(/<spark-mention[^>]*>.*?<\\/spark-mention>/gi, '');\n  \n  // Also remove plain @mentions\n  question = question.replace(/@\\w+/g, '');\n  \n  // Remove any remaining HTML tags\n  question = question.replace(/<[^>]*>/g, '');\n}\n\n// Clean up whitespace\nquestion = question.trim();\n\n// Validate we have content\nif (!question || question.length === 0) {\n  throw new Error('Empty message received after cleaning');\n}\n\nconsole.log(`Cleaned question: \"${question}\"`);\n\nreturn [{\n  json: {\n    question: question,\n    roomId: webhookData.roomId,\n    messageId: webhookData.messageId,\n    personEmail: messageData.personEmail\n  }\n}];"
       },
       "id": "e32754ce-769d-4416-9c17-e69b6e2a7201",
       "name": "Validate & Extract Question",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [528, 64],
+      "position": [
+        528,
+        64
+      ],
       "notes": "Filters bot's own messages and extracts clean question"
     },
     {
       "parameters": {
         "url": "http://host.docker.internal:8000/api/v1/collections",
-        "options": {"timeout": 5000}
+        "options": {
+          "timeout": 5000
+        }
       },
       "id": "4320c7dc-2bea-4566-95ed-1d641153faa6",
       "name": "Get Collection UUID",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [704, 64],
+      "position": [
+        704,
+        64
+      ],
       "notes": "Looks up ChromaDB collection UUID"
     },
     {
@@ -768,7 +787,10 @@ The workflow JSON is provided in the project files. Save the following as `Webex
       "name": "Prepare Query",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [848, 64],
+      "position": [
+        848,
+        64
+      ],
       "notes": "Prepares embedding request for question"
     },
     {
@@ -778,13 +800,18 @@ The workflow JSON is provided in the project files. Save the following as `Webex
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.embedding_request) }}",
-        "options": {"timeout": 10000}
+        "options": {
+          "timeout": 10000
+        }
       },
       "id": "fb306b9f-c90d-4725-9886-e55de1efb687",
       "name": "Generate Question Embedding",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1008, 64],
+      "position": [
+        1008,
+        64
+      ],
       "notes": "Generates embedding using Ollama"
     },
     {
@@ -794,13 +821,18 @@ The workflow JSON is provided in the project files. Save the following as `Webex
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({\n  query_embeddings: [$json.embedding],\n  n_results: 3\n}) }}",
-        "options": {"timeout": 5000}
+        "options": {
+          "timeout": 5000
+        }
       },
       "id": "7434c7b9-41a2-4459-99fd-be88261ece41",
       "name": "Search ChromaDB",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1168, 64],
+      "position": [
+        1168,
+        64
+      ],
       "notes": "Searches for relevant document chunks"
     },
     {
@@ -811,7 +843,10 @@ The workflow JSON is provided in the project files. Save the following as `Webex
       "name": "Build Prompt",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1328, 64],
+      "position": [
+        1328,
+        64
+      ],
       "notes": "Creates prompt with context for LLM"
     },
     {
@@ -821,13 +856,18 @@ The workflow JSON is provided in the project files. Save the following as `Webex
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.llm_request) }}",
-        "options": {"timeout": 30000}
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "410f6380-4191-460b-b284-366b98a465f6",
       "name": "Generate Answer",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1472, 64],
+      "position": [
+        1472,
+        64
+      ],
       "notes": "Generates AI answer using Ollama"
     },
     {
@@ -839,23 +879,31 @@ The workflow JSON is provided in the project files. Save the following as `Webex
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            {"name": "Content-Type", "value": "application/json"}
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({\n  roomId: $('Validate & Extract Question').first().json.roomId,\n  text: $json.response.trim()\n}) }}",
-        "options": {"timeout": 10000}
+        "options": {
+          "timeout": 10000
+        }
       },
       "id": "42ae94c1-249c-4e2e-a83a-3814c8689aaf",
       "name": "Send to Webex",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1616, 64],
+      "position": [
+        1616,
+        64
+      ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "PLACEHOLDER_CREDENTIAL_ID",
-          "name": "Webex Bot Token"
+          "id": "D0YLYycSvpB9tjy3",
+          "name": "Header Auth account 2"
         }
       },
       "notes": "Sends AI response back to Webex room"
@@ -870,7 +918,10 @@ The workflow JSON is provided in the project files. Save the following as `Webex
       "name": "Webhook Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1760, 64],
+      "position": [
+        1760,
+        64
+      ],
       "notes": "Acknowledges webhook to Webex"
     },
     {
@@ -881,7 +932,10 @@ The workflow JSON is provided in the project files. Save the following as `Webex
         "color": 3
       },
       "type": "n8n-nodes-base.stickyNote",
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "typeVersion": 1,
       "id": "4bd05af4-7709-49e1-9cea-ee4f91601c25",
       "name": "Sticky Note"
@@ -894,7 +948,10 @@ The workflow JSON is provided in the project files. Save the following as `Webex
         "color": 2
       },
       "type": "n8n-nodes-base.stickyNote",
-      "position": [672, 0],
+      "position": [
+        672,
+        0
+      ],
       "typeVersion": 1,
       "id": "8cc6b713-963b-4460-9d79-a7b7b9a9f2c4",
       "name": "Sticky Note1"
@@ -907,7 +964,10 @@ The workflow JSON is provided in the project files. Save the following as `Webex
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
-      "position": [1312, 0],
+      "position": [
+        1312,
+        0
+      ],
       "typeVersion": 1,
       "id": "4a3d9108-13df-4104-85f2-e2c430139479",
       "name": "Sticky Note2"
@@ -916,49 +976,137 @@ The workflow JSON is provided in the project files. Save the following as `Webex
   "pinData": {},
   "connections": {
     "Webex Webhook": {
-      "main": [[{"node": "Extract Webhook Data", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Extract Webhook Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Extract Webhook Data": {
-      "main": [[{"node": "Get Message Details", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Get Message Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Get Message Details": {
-      "main": [[{"node": "Validate & Extract Question", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Validate & Extract Question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Validate & Extract Question": {
-      "main": [[{"node": "Get Collection UUID", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Get Collection UUID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Get Collection UUID": {
-      "main": [[{"node": "Prepare Query", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Prepare Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Prepare Query": {
-      "main": [[{"node": "Generate Question Embedding", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Generate Question Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Generate Question Embedding": {
-      "main": [[{"node": "Search ChromaDB", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Search ChromaDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Search ChromaDB": {
-      "main": [[{"node": "Build Prompt", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Build Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Build Prompt": {
-      "main": [[{"node": "Generate Answer", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Generate Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Generate Answer": {
-      "main": [[{"node": "Send to Webex", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Send to Webex",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Send to Webex": {
-      "main": [[{"node": "Webhook Response", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "PLACEHOLDER_VERSION_ID",
+  "versionId": "3169feaf-c142-4dfd-81fc-df5dcc05be3d",
   "meta": {
-    "instanceId": "PLACEHOLDER_INSTANCE_ID"
+    "instanceId": "e01397b3da8cc95dd77600e45d38feaf0925f5a60febb9aaa5856cd3706790a9"
   },
-  "id": "PLACEHOLDER_WORKFLOW_ID",
+  "id": "90lJ7Jo_zdejn5uohmljk",
   "tags": []
 }
 ```
